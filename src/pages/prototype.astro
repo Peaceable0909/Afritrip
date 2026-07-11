@@ -1,0 +1,318 @@
+---
+// F7 "Yankari sunset" — Phase 0 scroll prototype.
+// The background art is a swappable file: public/scenes/yankari/bg.jpg
+// (see public/scenes/README.md). Everything that moves is a layer on top.
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Waka — F7 scroll prototype</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=Space+Mono:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <main>
+      <section class="scene" id="scene">
+        <div class="viewport">
+          <img class="bg" src="/scenes/yankari/bg.jpg" alt="" />
+
+          <div class="sun" aria-hidden="true"></div>
+
+          <div class="night" aria-hidden="true"></div>
+
+          <div class="stars" aria-hidden="true"></div>
+
+          <svg class="elephants" viewBox="0 0 340 130" aria-hidden="true">
+            <g fill="#150f0d">
+              <!-- adult -->
+              <g>
+                <ellipse cx="90" cy="62" rx="62" ry="38"/>
+                <circle cx="22" cy="52" r="26"/>
+                <ellipse cx="34" cy="50" rx="16" ry="20"/>
+                <path d="M4 44 q-12 18 -4 44 q2 8 10 6 q-8 -24 2 -44 z"/>
+                <rect x="42" y="82" width="15" height="46" rx="7"/>
+                <rect x="72" y="86" width="15" height="42" rx="7"/>
+                <rect x="104" y="86" width="15" height="42" rx="7"/>
+                <rect x="128" y="80" width="15" height="46" rx="7"/>
+                <path d="M148 50 q14 8 8 26" stroke="#150f0d" stroke-width="5" fill="none" stroke-linecap="round"/>
+              </g>
+              <!-- calf -->
+              <g transform="translate(196 58) scale(0.55)">
+                <ellipse cx="90" cy="62" rx="62" ry="38"/>
+                <circle cx="22" cy="52" r="26"/>
+                <ellipse cx="34" cy="50" rx="16" ry="20"/>
+                <path d="M4 44 q-12 18 -4 44 q2 8 10 6 q-8 -24 2 -44 z"/>
+                <rect x="42" y="82" width="15" height="46" rx="7"/>
+                <rect x="72" y="86" width="15" height="42" rx="7"/>
+                <rect x="104" y="86" width="15" height="42" rx="7"/>
+                <rect x="128" y="80" width="15" height="46" rx="7"/>
+                <path d="M148 50 q14 8 8 26" stroke="#150f0d" stroke-width="5" fill="none" stroke-linecap="round"/>
+              </g>
+            </g>
+          </svg>
+
+          <div class="spring" aria-hidden="true"></div>
+
+          <svg class="danfo" viewBox="0 0 120 62" aria-hidden="true">
+            <rect x="4" y="10" width="108" height="38" rx="8" fill="#FFC400" stroke="#191410" stroke-width="3"/>
+            <rect x="4" y="30" width="108" height="7" fill="#191410"/>
+            <g class="danfo-windows">
+              <rect x="14" y="16" width="20" height="12" rx="2" fill="#BFE3E0" stroke="#191410" stroke-width="2"/>
+              <rect x="40" y="16" width="20" height="12" rx="2" fill="#BFE3E0" stroke="#191410" stroke-width="2"/>
+              <rect x="66" y="16" width="20" height="12" rx="2" fill="#BFE3E0" stroke="#191410" stroke-width="2"/>
+              <rect x="92" y="16" width="14" height="12" rx="2" fill="#BFE3E0" stroke="#191410" stroke-width="2"/>
+            </g>
+            <rect x="20" y="4" width="76" height="8" rx="3" fill="#8a6a00" stroke="#191410" stroke-width="2"/>
+            <circle cx="30" cy="50" r="9" fill="#191410"/><circle cx="30" cy="50" r="4" fill="#8f8f8f"/>
+            <circle cx="88" cy="50" r="9" fill="#191410"/><circle cx="88" cy="50" r="4" fill="#8f8f8f"/>
+          </svg>
+
+          <svg class="ground" viewBox="0 0 1600 120" preserveAspectRatio="none" aria-hidden="true">
+            <path d="M0 120 L0 60 Q120 40 260 58 Q300 30 330 56 Q500 44 640 60 Q680 26 706 54 Q900 40 1080 58 Q1120 32 1150 56 Q1350 42 1600 54 L1600 120 Z" fill="#150f0d"/>
+            <g stroke="#150f0d" stroke-width="4" stroke-linecap="round">
+              <path d="M300 52 l-8 -26 M306 52 l4 -24 M314 54 l12 -20" fill="none"/>
+              <path d="M690 50 l-10 -24 M700 50 l2 -26 M710 52 l12 -18" fill="none"/>
+              <path d="M1122 52 l-8 -24 M1130 52 l4 -22 M1138 54 l10 -18" fill="none"/>
+            </g>
+          </svg>
+
+          <div class="fireflies" aria-hidden="true"></div>
+
+          <div class="title">
+            <span class="plate">NORTH EAST · YANKARI</span>
+            <p>The day ends where the elephants drink.</p>
+          </div>
+
+          <div class="hint" aria-hidden="true">scroll ↓</div>
+        </div>
+      </section>
+
+      <section class="after">
+        <h1>That was one scene of nine.</h1>
+        <p>
+          Background art is one swappable file — <code>public/scenes/yankari/bg.jpg</code>.
+          Drop in any 16:9 image and the sun, elephants, danfo, spring, fireflies and
+          nightfall keep working on top of it.
+        </p>
+      </section>
+    </main>
+
+    <style>
+      :root {
+        --danfo: #ffc400;
+        --ink: #191410;
+        --bone: #fcfbf7;
+      }
+      * { box-sizing: border-box; margin: 0; }
+      body { background: #0d0b16; color: var(--bone); font-family: 'Space Mono', monospace; }
+
+      .scene { height: 400vh; position: relative; }
+      .viewport {
+        position: sticky; top: 0; height: 100vh; height: 100dvh;
+        overflow: hidden;
+      }
+
+      .bg {
+        position: absolute; inset: 0; width: 100%; height: 100%;
+        object-fit: cover; object-position: center bottom;
+      }
+
+      .sun {
+        position: absolute; left: 50%; top: 14%;
+        width: 34vmin; height: 34vmin; margin-left: -17vmin;
+        border-radius: 50%;
+        background: radial-gradient(circle, #ffe9a0 0%, #ffca55 55%, rgba(255, 160, 60, 0.55) 78%, rgba(255, 140, 40, 0) 100%);
+        will-change: transform, opacity;
+      }
+
+      .night {
+        position: absolute; inset: 0;
+        background: linear-gradient(180deg, #0d0b28 0%, #241335 55%, #3a1c2e 100%);
+        mix-blend-mode: multiply; opacity: 0;
+        pointer-events: none; will-change: opacity;
+      }
+
+      .stars { position: absolute; inset: 0 0 30% 0; opacity: 0; will-change: opacity; }
+      .stars span {
+        position: absolute; width: 3px; height: 3px; border-radius: 50%;
+        background: #fdf6dc;
+      }
+
+      .elephants {
+        position: absolute; bottom: 13%; right: -50%;
+        width: clamp(220px, 40vmin, 420px); height: auto;
+        will-change: transform;
+      }
+
+      .spring {
+        position: absolute; bottom: 7%; left: 56%;
+        width: clamp(140px, 26vmin, 300px); height: clamp(28px, 5vmin, 60px);
+        border-radius: 50%;
+        background: radial-gradient(ellipse, #57c2b2 0%, #2e8b80 60%, rgba(30, 90, 82, 0) 100%);
+        opacity: 0.85; will-change: opacity, box-shadow;
+      }
+
+      .danfo {
+        position: absolute; bottom: 11%; left: 6%;
+        width: clamp(110px, 18vmin, 190px); height: auto;
+      }
+      .ground {
+        position: absolute; bottom: -2px; left: 0; width: 100%;
+        height: clamp(60px, 12vmin, 130px);
+        will-change: transform;
+      }
+
+      .fireflies { position: absolute; inset: 30% 0 8% 0; opacity: 0; will-change: opacity; }
+      .fireflies span {
+        position: absolute; width: 5px; height: 5px; border-radius: 50%;
+        background: #ffe9a0; box-shadow: 0 0 8px 2px rgba(255, 233, 160, 0.8);
+        animation: drift 5s ease-in-out infinite alternate;
+      }
+      @keyframes drift {
+        from { transform: translate(0, 0); opacity: 0.4; }
+        to { transform: translate(14px, -18px); opacity: 1; }
+      }
+
+      .title {
+        position: absolute; left: 50%; top: 18%; transform: translateX(-50%);
+        text-align: center; opacity: 0; width: max-content; max-width: 90vw;
+        will-change: opacity, transform;
+      }
+      .plate {
+        display: inline-flex; align-items: center; gap: 0.55rem;
+        background: var(--danfo); color: var(--ink);
+        font-weight: 700; font-size: clamp(0.7rem, 2vmin, 0.9rem);
+        letter-spacing: 0.12em;
+        padding: 0.4rem 0.8rem 0.4rem 0.6rem;
+        border-radius: 0.4rem; border: 2px solid var(--ink);
+        box-shadow: 2.5px 2.5px 0 var(--ink);
+      }
+      .plate::before {
+        content: ''; width: 0.8rem; align-self: stretch; border-radius: 2px;
+        background: repeating-linear-gradient(-55deg, var(--ink) 0 3px, transparent 3px 7px);
+      }
+      .title p {
+        font-family: 'Instrument Serif', serif;
+        font-size: clamp(1.5rem, 4.5vmin, 2.6rem);
+        margin-top: 0.9rem; text-shadow: 0 2px 18px rgba(0, 0, 0, 0.5);
+      }
+
+      .hint {
+        position: absolute; bottom: 4%; left: 50%; transform: translateX(-50%);
+        font-size: 0.8rem; letter-spacing: 0.2em; text-transform: uppercase;
+        color: rgba(252, 251, 247, 0.85); text-shadow: 0 1px 8px rgba(0,0,0,0.6);
+        animation: bob 1.6s ease-in-out infinite alternate;
+      }
+      @keyframes bob { from { transform: translate(-50%, 0); } to { transform: translate(-50%, 8px); } }
+
+      .after {
+        min-height: 60vh; display: grid; place-content: center; gap: 1rem;
+        padding: 4rem 1.5rem; text-align: center;
+      }
+      .after h1 { font-family: 'Instrument Serif', serif; font-size: clamp(1.8rem, 5vw, 3rem); font-weight: 400; }
+      .after p { max-width: 52ch; color: #b9b2a6; font-size: 0.9rem; line-height: 1.7; }
+      .after code { color: var(--danfo); }
+
+      @media (prefers-reduced-motion: reduce) {
+        .scene { height: auto; }
+        .viewport { position: relative; height: 100vh; }
+        .sun { top: 60%; transform: scale(0.6); }
+        .night { opacity: 0.55; }
+        .stars, .fireflies, .title { opacity: 1; }
+        .elephants { right: 18%; }
+        .hint { display: none; }
+        .fireflies span, .hint { animation: none; }
+      }
+    </style>
+
+    <script>
+      import { gsap } from 'gsap';
+      import { ScrollTrigger } from 'gsap/ScrollTrigger';
+      import Lenis from 'lenis';
+
+      // a scroll-scrubbed story should always start at its beginning
+      history.scrollRestoration = 'manual';
+      window.scrollTo(0, 0);
+
+      // sprinkle stars + fireflies
+      const stars = document.querySelector('.stars')!;
+      for (let i = 0; i < 70; i++) {
+        const s = document.createElement('span');
+        s.style.left = Math.random() * 100 + '%';
+        s.style.top = Math.random() * 100 + '%';
+        s.style.opacity = String(0.3 + Math.random() * 0.7);
+        s.style.transform = `scale(${0.5 + Math.random()})`;
+        stars.appendChild(s);
+      }
+      const flies = document.querySelector('.fireflies')!;
+      for (let i = 0; i < 14; i++) {
+        const f = document.createElement('span');
+        f.style.left = 5 + Math.random() * 90 + '%';
+        f.style.top = 30 + Math.random() * 65 + '%';
+        f.style.animationDelay = Math.random() * 5 + 's';
+        f.style.animationDuration = 3.5 + Math.random() * 3 + 's';
+        flies.appendChild(f);
+      }
+
+      if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        gsap.registerPlugin(ScrollTrigger);
+
+        const lenis = new Lenis();
+        (window as any)._lenis = lenis;
+        lenis.on('scroll', ScrollTrigger.update);
+        gsap.ticker.add((time) => lenis.raf(time * 1000));
+        gsap.ticker.lagSmoothing(0);
+
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: '#scene',
+            start: 'top top',
+            end: 'bottom bottom',
+            scrub: 0.6,
+            invalidateOnRefresh: true,
+          },
+        });
+
+        tl
+          // sun sinks into the horizon glow and shrinks
+          .fromTo('.sun', { yPercent: 0, scale: 1 }, { yPercent: 175, scale: 0.45, ease: 'none', duration: 60 }, 0)
+          .to('.sun', { opacity: 0, duration: 12 }, 58)
+          // elephants cross from the right and stop to drink at the spring
+          .fromTo(
+            '.elephants',
+            { x: 0 },
+            {
+              x: () => {
+                const el = document.querySelector('.elephants') as SVGElement;
+                return -(window.innerWidth * 0.82 - el.getBoundingClientRect().width / 2);
+              },
+              ease: 'none',
+              duration: 80,
+            },
+            5
+          )
+          // night falls
+          .to('.night', { opacity: 0.8, ease: 'none', duration: 45 }, 35)
+          .to('.stars', { opacity: 1, duration: 25 }, 50)
+          // ground creeps up slightly (foreground parallax)
+          .fromTo('.ground', { yPercent: 10 }, { yPercent: 0, ease: 'none', duration: 100 }, 0)
+          // fireflies and the glowing spring at night
+          .to('.fireflies', { opacity: 1, duration: 20 }, 62)
+          .to('.spring', { boxShadow: '0 0 60px 18px rgba(87,194,178,0.35)', duration: 25 }, 60)
+          // danfo windows light up (tween, so it reverses cleanly when scrubbing back)
+          .to('.danfo-windows rect', { fill: '#ffe9a0', duration: 10 }, 66)
+          // title
+          .fromTo('.title', { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 18 }, 72)
+          // hint away
+          .to('.hint', { opacity: 0, duration: 6 }, 6);
+      }
+    </script>
+  </body>
+</html>
