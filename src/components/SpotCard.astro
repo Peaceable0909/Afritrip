@@ -1,0 +1,20 @@
+---
+import { categoryLabels, safetyLabels, type Spot } from '../data/spots';
+
+interface Props {
+  spot: Spot;
+}
+
+const { spot } = Astro.props;
+---
+
+<a class="spot-card" href={`/spots/${spot.slug}/`} data-category={spot.category}>
+  <span class="eyebrow">{categoryLabels[spot.category]} · {spot.area}</span>
+  <h3>{spot.name}</h3>
+  <p class="blurb">{spot.blurb}</p>
+  <span class="plate">{spot.price}</span>
+  <div class="safety-row">
+    <span class={`safety-dot ${spot.safetyDay}`}>Day: {safetyLabels[spot.safetyDay].label}</span>
+    <span class={`safety-dot ${spot.safetyNight}`}>Night: {safetyLabels[spot.safetyNight].label}</span>
+  </div>
+</a>

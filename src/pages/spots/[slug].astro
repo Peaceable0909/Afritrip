@@ -1,0 +1,67 @@
+---
+import Base from '../../layouts/Base.astro';
+import { spots, categoryLabels, safetyLabels } from '../../data/spots';
+
+export function getStaticPaths() {
+  return spots.map((spot) => ({ params: { slug: spot.slug }, props: { spot } }));
+}
+
+const { spot } = Astro.props;
+---
+
+<Base title={`${spot.name} — Waka Lagos`} description={spot.blurb}>
+  <section class="detail-head">
+    <div class="wrap">
+      <a class="back-link" href="/spots/">← All spots</a>
+      <p class="eyebrow" style="margin-top: 1.2rem;">
+        {categoryLabels[spot.category]} · {spot.area}
+      </p>
+      <h1>{spot.name}</h1>
+      <span class="plate">{spot.price}</span>
+      <div class="safety-row">
+        <span class={`safety-dot ${spot.safetyDay}`}>
+          Day: {safetyLabels[spot.safetyDay].label} — {safetyLabels[spot.safetyDay].gloss}
+        </span>
+        <span class={`safety-dot ${spot.safetyNight}`}>
+          Night: {safetyLabels[spot.safetyNight].label} — {safetyLabels[spot.safetyNight].gloss}
+        </span>
+      </div>
+    </div>
+  </section>
+
+  <div class="wrap detail-body">
+    <article>
+      <p class="lede">{spot.description}</p>
+
+      <h2>Sabi tips</h2>
+      <ul class="tips">
+        {spot.tips.map((tip) => <li>{tip}</li>)}
+      </ul>
+
+      <h2>Getting there</h2>
+      <p>{spot.gettingThere}</p>
+    </article>
+
+    <aside class="fact-box" aria-label="Quick facts">
+      <dl>
+        <div>
+          <dt>Typical price</dt>
+          <dd>{spot.price}</dd>
+        </div>
+        <div>
+          <dt>Hours</dt>
+          <dd>{spot.hours}</dd>
+        </div>
+        <div>
+          <dt>Best time</dt>
+          <dd>{spot.bestTime}</dd>
+        </div>
+        <div>
+          <dt>Area</dt>
+          <dd>{spot.area}</dd>
+        </div>
+      </dl>
+      <p class="price-note"><strong>Price talk:</strong> {spot.priceNote}</p>
+    </aside>
+  </div>
+</Base>

@@ -1,0 +1,64 @@
+---
+import Base from '../../layouts/Base.astro';
+import SpotCard from '../../components/SpotCard.astro';
+import { spots, categoryLabels, type Category } from '../../data/spots';
+
+const categories = Object.keys(categoryLabels) as Category[];
+---
+
+<Base title="All spots — Waka Lagos">
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">Lagos · {spots.length} spots and counting</p>
+          <h2>Every spot, one honest list</h2>
+        </div>
+      </div>
+
+      <div class="chip-row" role="group" aria-label="Filter by category">
+        <button class="chip" data-cat="all" aria-pressed="true">All</button>
+        {categories.map((cat) => (
+          <button class="chip" data-cat={cat} aria-pressed="false">
+            {categoryLabels[cat]}
+          </button>
+        ))}
+      </div>
+
+      <div class="spot-grid" id="spot-grid">
+        {spots.map((spot) => <SpotCard spot={spot} />)}
+      </div>
+    </div>
+  </section>
+</Base>
+
+<script>
+  const chips = document.querySelectorAll<HTMLButtonElement>('.chip');
+  const cards = document.querySelectorAll<HTMLElement>('.spot-card');
+
+  function applyFilter(cat: string) {
+    chips.forEach((chip) =>
+      chip.setAttribute('aria-pressed', String(chip.dataset.cat === cat))
+    );
+    cards.forEach((card) => {
+      card.style.display =
+        cat === 'all' || card.dataset.category === cat ? '' : 'none';
+    });
+  }
+
+  chips.forEach((chip) =>
+    chip.addEventListener('click', () => {
+      const cat = chip.dataset.cat ?? 'all';
+      applyFilter(cat);
+      const url = new URL(window.location.href);
+      if (cat === 'all') url.searchParams.delete('cat');
+      else url.searchParams.set('cat', cat);
+      history.replaceState(null, '', url);
+    })
+  );
+
+  const initial = new URLSearchParams(window.location.search).get('cat');
+  if (initial && [...chips].some((c) => c.dataset.cat === initial)) {
+    applyFilter(initial);
+  }
+</script>

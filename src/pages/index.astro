@@ -1,0 +1,106 @@
+---
+import Base from '../layouts/Base.astro';
+import SpotCard from '../components/SpotCard.astro';
+import { spots, safetyLabels } from '../data/spots';
+
+const featured = spots.slice(0, 6);
+---
+
+<Base title="Waka — Lagos, minus the guesswork">
+  <section class="hero">
+    <div class="wrap">
+      <p class="eyebrow">Waka · Lagos, Nigeria</p>
+      <h1>Lagos, minus the <em>guesswork</em>.</h1>
+      <p>
+        Real prices before you reach the gate. Straight-talk safety notes for day and night.
+        Curated by people wey sabi road — not by whoever paid for an ad.
+      </p>
+      <div class="hero-ctas">
+        <a class="btn btn-primary" href="/spots/">Explore spots</a>
+        <a class="btn btn-ghost" href="#how-we-score">How we score am</a>
+      </div>
+    </div>
+  </section>
+
+  <div class="route-board" aria-hidden="true">
+    <div class="wrap">
+      <span>Beaches</span>
+      <span>Culture</span>
+      <span>Nightlife</span>
+      <span>Nature</span>
+      <span>Real prices</span>
+      <span>No wahala</span>
+    </div>
+  </div>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">Pick your waka</p>
+          <h2>Where you dey go?</h2>
+        </div>
+      </div>
+      <div class="cat-grid">
+        <a class="cat-tile" href="/spots/?cat=beach">
+          <strong>Beaches</strong>
+          <span>Island escapes &amp; party sand</span>
+        </a>
+        <a class="cat-tile" href="/spots/?cat=culture">
+          <strong>Culture</strong>
+          <span>Art, history &amp; theatre</span>
+        </a>
+        <a class="cat-tile" href="/spots/?cat=nightlife">
+          <strong>Nightlife</strong>
+          <span>Afrobeat to craft beer</span>
+        </a>
+        <a class="cat-tile" href="/spots/?cat=nature">
+          <strong>Nature</strong>
+          <span>Forest walks in the city</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top: 0;">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">Hand-picked</p>
+          <h2>Spots wey sure</h2>
+        </div>
+        <a href="/spots/">See all {spots.length} spots →</a>
+      </div>
+      <div class="spot-grid">
+        {featured.map((spot) => <SpotCard spot={spot} />)}
+      </div>
+    </div>
+  </section>
+
+  <section class="section legend" id="how-we-score">
+    <div class="wrap">
+      <p class="eyebrow">How we score am</p>
+      <h2>Three words. No fine print energy.</h2>
+      <div class="legend-grid">
+        <div class="legend-card">
+          <span class="safety-dot good">{safetyLabels.good.label}</span>
+          <p>Relaxed. Go with the usual big-city sense you would use anywhere.</p>
+        </div>
+        <div class="legend-card">
+          <span class="safety-dot caution">{safetyLabels.caution.label}</span>
+          <p>Fine, but stay alert — go with company, watch your phone, plan your ride home.</p>
+        </div>
+        <div class="legend-card">
+          <span class="safety-dot avoid">{safetyLabels.avoid.label}</span>
+          <p>Skip it at this hour. There is always a better option — we will point you to it.</p>
+        </div>
+      </div>
+      <p class="honesty">
+        <strong>On prices:</strong> every spot shows the range locals actually pay, plus the extras
+        nobody warns you about — gate fees, chair money, boat haggling. Conditions change fast in
+        Lagos, so treat every number as a recent typical range, not a promise. When in doubt, agree
+        the price before you sit, board, or order.
+      </p>
+    </div>
+  </section>
+</Base>

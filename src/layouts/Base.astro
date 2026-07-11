@@ -1,0 +1,55 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description = 'Waka — real prices and straight-talk safety notes for the best spots in Lagos, Nigeria.' } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <title>{title}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="wrap">
+        <a class="logo" href="/" aria-label="Waka — home">
+          <span class="plate">WAKA</span>
+        </a>
+        <nav class="site-nav" aria-label="Main">
+          <a href="/spots/">All spots</a>
+          <a href="/#how-we-score">Safety scores</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <slot />
+    </main>
+
+    <footer class="site-footer">
+      <div class="wrap">
+        <p class="logo-line">WAKA<span>.</span> Lagos edition</p>
+        <p>Real prices. Honest safety notes. Curated by people wey sabi road.</p>
+        <p class="disclaimer">
+          Prices and conditions in Lagos change fast. Everything here is a typical range from recent
+          visits and local knowledge, not a guarantee — confirm at the gate, agree prices before you
+          commit, and use your own judgement. Safety notes describe general conditions, not promises.
+        </p>
+      </div>
+    </footer>
+  </body>
+</html>
