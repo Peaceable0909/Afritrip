@@ -218,6 +218,9 @@ const categories = [
     .portrait {
       position: absolute; right: clamp(0rem, 7vw, 9rem); bottom: 0; z-index: 5;
       height: min(80vh, 92%); width: auto;
+      /* never squash the subject: keep true aspect ratio and let it bleed off-frame
+         (works for any image shape the owner uploads) */
+      max-width: none;
       filter: saturate(1.1) contrast(1.05) drop-shadow(-18px 24px 60px rgba(0,0,0,0.6));
     }
 
@@ -328,7 +331,7 @@ const categories = [
     .cat-sub { font-size: 0.75rem; color: var(--text-dim); }
 
     @media (max-width: 56rem) {
-      .portrait { height: 52vh; right: -22%; }
+      .portrait { height: 46vh; right: -30%; }
       .splash { width: 78vw; right: -22%; }
       .word { inset: 16% 0 auto 0; }
       .copy { bottom: 12%; max-width: 78vw; }
