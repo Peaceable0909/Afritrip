@@ -112,7 +112,7 @@ const rail = [
   </section>
 
   <style>
-    .hero { position: relative; min-height: 92vh; display: grid; align-content: center; overflow: hidden; }
+    .hero { position: relative; min-height: 92vh; min-height: 92dvh; display: grid; align-content: center; overflow: hidden; }
     .hero-bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
     .hero-shade {
       position: absolute; inset: 0;
@@ -153,7 +153,7 @@ const rail = [
       font-family: var(--font-mono); font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase;
       text-decoration: none; text-align: center;
       background: rgba(22,20,28,0.75); border: 1px solid var(--line); border-radius: 0.6rem;
-      padding: 0.55rem 0.7rem; backdrop-filter: blur(6px);
+      padding: 0.55rem 0.7rem; min-height: 44px; min-width: 44px; display: grid; place-content: center; backdrop-filter: blur(6px);
     }
     .side-nav a:hover { border-color: var(--danfo); color: var(--danfo); }
 
