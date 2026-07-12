@@ -20,11 +20,43 @@ const categories = [
 
 <Cinematic title="Waka — Welcome to Nigeria">
   <section class="hero">
-    <img class="hero-bg" src="/img/cinematic/hero-home.jpg" alt="" fetchpriority="high" />
-    <div class="hero-shade" aria-hidden="true"></div>
-    <div class="hero-content">
+    <div class="bg-wrap" aria-hidden="true">
+      <img class="bg-img" src="/img/cinematic/hero-land.jpg" alt="" fetchpriority="high" />
+    </div>
+
+    <img class="clouds" src="/img/cinematic/hero-clouds.jpg" alt="" aria-hidden="true" />
+
+    <svg class="birds" viewBox="0 0 120 40" aria-hidden="true">
+      <g fill="none" stroke="#1a140f" stroke-width="2" stroke-linecap="round">
+        <path d="M10 20 Q16 12 22 18 Q28 12 34 20" />
+        <path d="M50 10 Q55 4 60 9 Q65 4 70 10" opacity="0.85" />
+        <path d="M84 28 Q88 23 92 27 Q96 23 100 28" opacity="0.7" />
+      </g>
+    </svg>
+
+    <h1 class="word">NIGERIA</h1>
+
+    <img class="splash" src="/img/cinematic/hero-splash.jpg" alt="" aria-hidden="true" />
+
+    <img
+      class="portrait"
+      src="/img/cinematic/hero-portrait.png"
+      alt="Nigerian woman in a colorful gele headwrap"
+      fetchpriority="high"
+    />
+
+    <div class="mist" aria-hidden="true"></div>
+
+    <div class="dust" aria-hidden="true">
+      {Array.from({ length: 16 }).map((_, i) => (
+        <span
+          style={`left:${(i * 61) % 100}%; top:${((i * 37) % 70) + 12}%; animation-delay:${(i * 0.7) % 6}s; animation-duration:${5 + (i % 5)}s`}
+        />
+      ))}
+    </div>
+
+    <div class="copy">
       <p class="script welcome">Welcome to</p>
-      <h1>NIGERIA</h1>
       <p class="lede">
         A land of vibrant cultures, breathtaking landscapes, rich history and
         unforgettable experiences.
@@ -36,6 +68,8 @@ const categories = [
         </a>
       </div>
     </div>
+
+    <div class="grade" aria-hidden="true"></div>
     <p class="scroll-hint" aria-hidden="true">Scroll to explore</p>
   </section>
 
@@ -87,24 +121,25 @@ const categories = [
       gsap.ticker.add((time) => lenis.raf(time * 1000));
       gsap.ticker.lagSmoothing(0);
 
-      // entrance: the hero paints itself in
+      // entrance: the scene assembles like a film title
       gsap.timeline()
-        .from('.welcome', { opacity: 0, y: 20, duration: 0.7, ease: 'power2.out' })
-        .from('.hero h1', { opacity: 0, y: 34, duration: 0.8, ease: 'power2.out' }, 0.15)
-        .from('.lede, .hero-ctas', { opacity: 0, y: 24, stagger: 0.12, duration: 0.7, ease: 'power2.out' }, 0.4);
+        .from('.word', { opacity: 0, y: 50, duration: 1, ease: 'power3.out' })
+        .from('.splash', { opacity: 0, scale: 0.6, duration: 0.9, ease: 'power2.out' }, 0.35)
+        .from('.portrait', { opacity: 0, y: 90, duration: 1, ease: 'power3.out' }, 0.45)
+        .from('.welcome', { opacity: 0, y: 20, duration: 0.6, ease: 'power2.out' }, 0.9)
+        .from('.lede, .hero-ctas', { opacity: 0, y: 22, stagger: 0.12, duration: 0.6, ease: 'power2.out' }, 1.05);
 
-      // hero parallax: image drifts slower than the page, content lifts away
-      gsap.to('.hero-bg', {
-        yPercent: 18,
-        scale: 1.08,
+      // scroll parallax: every layer moves at its own depth
+      const heroScrub = { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true };
+      gsap.to('.bg-wrap', { yPercent: 14, ease: 'none', scrollTrigger: heroScrub });
+      gsap.to('.word', { yPercent: -60, ease: 'none', scrollTrigger: heroScrub });
+      gsap.to('.portrait', { yPercent: 10, ease: 'none', scrollTrigger: heroScrub });
+      gsap.to('.splash', { yPercent: 22, ease: 'none', scrollTrigger: heroScrub });
+      gsap.to('.copy', {
+        yPercent: -30,
+        opacity: 0,
         ease: 'none',
-        scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true },
-      });
-      gsap.to('.hero-content', {
-        yPercent: -14,
-        opacity: 0.15,
-        ease: 'none',
-        scrollTrigger: { trigger: '.hero', start: 'top top', end: '75% top', scrub: true },
+        scrollTrigger: { trigger: '.hero', start: 'top top', end: '70% top', scrub: true },
       });
 
       // shared reveal for stats, city cards, categories
@@ -131,28 +166,104 @@ const categories = [
   </script>
 
   <style>
-    .hero { position: relative; min-height: 100vh; min-height: 100dvh; display: grid; align-items: center; overflow: hidden; }
-    .hero-bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center 30%; }
-    .hero-shade {
-      position: absolute; inset: 0;
-      background:
-        linear-gradient(90deg, rgba(11,10,14,0.82) 0%, rgba(11,10,14,0.35) 45%, rgba(11,10,14,0.1) 70%),
-        linear-gradient(180deg, rgba(11,10,14,0.3) 0%, rgba(11,10,14,0) 30%, rgba(11,10,14,0.9) 100%);
+    .hero { position: relative; height: 100vh; height: 100dvh; overflow: hidden; }
+
+    /* L1 — landscape (GSAP parallax on wrapper, ambient Ken Burns zoom on img) */
+    .bg-wrap { position: absolute; inset: -6% 0; z-index: 1; }
+    .bg-img { width: 100%; height: 100%; object-fit: cover; object-position: center 40%; animation: kenburns 28s ease-in-out infinite alternate; }
+    @keyframes kenburns { from { transform: scale(1); } to { transform: scale(1.07); } }
+
+    /* L2 — drifting clouds (screen blend kills the black) */
+    .clouds {
+      position: absolute; top: -3%; left: -10%; width: 130%; z-index: 2;
+      mix-blend-mode: screen; opacity: 0.5;
+      animation: drift 70s ease-in-out infinite alternate;
     }
-    .hero-content { position: relative; padding: 6rem clamp(1.25rem, 6vw, 5rem) 4rem; max-width: 44rem; }
+    @keyframes drift { from { transform: translateX(0); } to { transform: translateX(-8%); } }
+
+    /* L3 — birds crossing the sky */
+    .birds {
+      position: absolute; top: 16%; left: 0; width: clamp(5rem, 9vw, 8rem); z-index: 2;
+      animation: fly 42s linear infinite;
+    }
+    @keyframes fly {
+      0% { transform: translate(-15vw, 0); }
+      50% { transform: translate(50vw, -4vh); }
+      100% { transform: translate(115vw, 1vh); }
+    }
+
+    /* L4 — the wordmark: landscape inside the letters, grunge scratched over it */
+    .word {
+      position: absolute; inset: 12% 0 auto 0; z-index: 3; margin: 0;
+      text-align: center;
+      font-family: var(--font-display); font-weight: 800;
+      font-size: clamp(4.2rem, 16.5vw, 15rem); line-height: 0.9; letter-spacing: 0.01em;
+      background-image: url('/img/cinematic/hero-grunge.jpg'), url('/img/cinematic/hero-land.jpg');
+      background-size: cover, 145% auto;
+      background-position: center, center 12%;
+      background-blend-mode: soft-light;
+      -webkit-background-clip: text; background-clip: text; color: transparent;
+      filter: saturate(1.35) contrast(1.1) brightness(1.32) drop-shadow(0 8px 34px rgba(0,0,0,0.65));
+    }
+
+    /* L5 — paint splash halo behind the portrait */
+    .splash {
+      position: absolute; right: -6%; bottom: 4%; z-index: 4;
+      width: min(58vw, 42rem);
+      mix-blend-mode: screen; opacity: 0.75;
+      pointer-events: none;
+    }
+
+    /* L6 — the portrait breaks the wordmark */
+    .portrait {
+      position: absolute; right: clamp(0rem, 7vw, 9rem); bottom: 0; z-index: 5;
+      height: min(80vh, 92%); width: auto;
+      filter: saturate(1.1) contrast(1.05) drop-shadow(-18px 24px 60px rgba(0,0,0,0.6));
+    }
+
+    /* L7 — mist grounding the bottom */
+    .mist {
+      position: absolute; inset: auto 0 0 0; height: 34%; z-index: 6;
+      background: linear-gradient(180deg, transparent, rgba(11,10,14,0.55) 55%, var(--ink));
+      pointer-events: none;
+    }
+
+    /* L8 — drifting dust motes */
+    .dust { position: absolute; inset: 0; z-index: 7; pointer-events: none; }
+    .dust span {
+      position: absolute; width: 4px; height: 4px; border-radius: 50%;
+      background: rgba(255, 220, 150, 0.75); filter: blur(0.5px);
+      animation: mote 6s ease-in-out infinite alternate;
+    }
+    @keyframes mote {
+      from { transform: translate(0, 0); opacity: 0; }
+      30% { opacity: 0.9; }
+      to { transform: translate(18px, -34px); opacity: 0; }
+    }
+
+    /* L9 — copy block */
+    .copy { position: absolute; left: clamp(1.25rem, 6vw, 5rem); bottom: 10%; z-index: 8; max-width: 34rem; }
     .welcome {
       font-size: clamp(1.6rem, 4vw, 2.4rem); color: var(--danfo);
-      text-shadow: 0 2px 16px rgba(0,0,0,0.6); margin-bottom: -0.4rem;
+      text-shadow: 0 2px 16px rgba(0,0,0,0.6); margin-bottom: 0.4rem;
     }
-    .hero h1 {
-      font-family: var(--font-display); font-weight: 800;
-      font-size: clamp(3.4rem, 12vw, 8rem); line-height: 0.95; letter-spacing: 0.01em;
-      background: linear-gradient(100deg, #3f9e63 8%, #f3efe6 38%, #f0a04a 75%, #d96b2f 100%);
-      -webkit-background-clip: text; background-clip: text; color: transparent;
-      filter: drop-shadow(0 4px 22px rgba(0,0,0,0.55));
+    .lede { max-width: 40ch; font-size: 1.02rem; color: var(--text); text-shadow: 0 1px 10px rgba(0,0,0,0.8); }
+    .hero-ctas { display: flex; flex-wrap: wrap; align-items: center; gap: 1.2rem; margin-top: 1.6rem; }
+
+    /* L10 — cinematic color grade: warm highlights, cool shadows, vignette */
+    .grade {
+      position: absolute; inset: 0; z-index: 9; pointer-events: none;
+      background:
+        linear-gradient(205deg, rgba(255, 150, 40, 0.18), transparent 42%),
+        linear-gradient(25deg, rgba(28, 48, 110, 0.22), transparent 46%),
+        radial-gradient(120% 90% at 50% 40%, transparent 60%, rgba(8, 7, 12, 0.5) 100%);
+      mix-blend-mode: overlay;
     }
-    .lede { margin-top: 1.2rem; max-width: 40ch; font-size: 1.05rem; color: var(--text); text-shadow: 0 1px 10px rgba(0,0,0,0.7); }
-    .hero-ctas { display: flex; flex-wrap: wrap; align-items: center; gap: 1.2rem; margin-top: 2rem; }
+
+    @media (prefers-reduced-motion: reduce) {
+      .bg-img, .clouds, .dust span { animation: none; }
+      .birds { display: none; }
+    }
     .btn-solid {
       background: var(--danfo); color: #191410; font-weight: 700; text-decoration: none;
       padding: 0.8rem 1.6rem; border-radius: 999px; border: 2px solid #191410; box-shadow: 3px 3px 0 #000;
@@ -165,7 +276,7 @@ const categories = [
     }
     .btn-play:hover .play { border-color: var(--danfo); color: var(--danfo); }
     .scroll-hint {
-      position: absolute; bottom: 1.4rem; left: 50%; transform: translateX(-50%);
+      position: absolute; bottom: 1.4rem; left: 50%; transform: translateX(-50%); z-index: 10;
       font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.3em; text-transform: uppercase;
       color: rgba(243,239,230,0.75);
     }
@@ -217,6 +328,10 @@ const categories = [
     .cat-sub { font-size: 0.75rem; color: var(--text-dim); }
 
     @media (max-width: 56rem) {
+      .portrait { height: 52vh; right: -22%; }
+      .splash { width: 78vw; right: -22%; }
+      .word { inset: 16% 0 auto 0; }
+      .copy { bottom: 12%; max-width: 78vw; }
       .stats { grid-template-columns: repeat(2, 1fr); margin-top: 0; border-radius: 0; margin-inline: 0; border-inline: none; }
       .stat:nth-child(odd) { border-left: none; }
       .stat:nth-child(5) { grid-column: span 2; border-left: none; border-top: 1px solid var(--line); }
