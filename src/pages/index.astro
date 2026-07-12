@@ -1,106 +1,190 @@
 ---
-import Base from '../layouts/Base.astro';
-import SpotCard from '../components/SpotCard.astro';
-import { spots, safetyLabels } from '../data/spots';
+import Cinematic from '../layouts/Cinematic.astro';
 
-const featured = spots.slice(0, 6);
+const cities = [
+  { slug: 'lagos', name: 'Lagos', tag: 'The city that never sleeps', img: '/img/cinematic/city-lagos.jpg', href: '/states/lagos/' },
+  { slug: 'abuja', name: 'Abuja', tag: 'The heart of Nigeria', img: '/img/cinematic/city-abuja.jpg' },
+  { slug: 'calabar', name: 'Calabar', tag: "Nature's paradise", img: '/img/cinematic/city-calabar.jpg' },
+  { slug: 'kano', name: 'Kano', tag: 'Ancient & timeless', img: '/img/cinematic/city-kano.jpg' },
+  { slug: 'osun', name: 'Osun', tag: 'Cultural heritage', img: '/img/cinematic/city-osun.jpg' },
+];
+
+const categories = [
+  { name: 'Beaches', sub: 'Stunning coastlines', color: 'var(--danfo)' },
+  { name: 'Adventures', sub: 'Thrills & nature', color: 'var(--neon-green)' },
+  { name: 'Culture', sub: 'Traditions & festivals', color: 'var(--neon-pink)' },
+  { name: 'Food', sub: 'A taste of Nigeria', color: 'var(--danfo)' },
+  { name: 'Nightlife', sub: 'Party all night', color: 'var(--neon-teal)' },
+];
 ---
 
-<Base title="Waka — Lagos, minus the guesswork">
+<Cinematic title="Waka — Welcome to Nigeria">
   <section class="hero">
-    <div class="wrap">
-      <p class="eyebrow">Waka · Lagos, Nigeria</p>
-      <h1>Lagos, minus the <em>guesswork</em>.</h1>
-      <p>
-        Real prices before you reach the gate. Straight-talk safety notes for day and night.
-        Curated by people wey sabi road — not by whoever paid for an ad.
+    <img class="hero-bg" src="/img/cinematic/hero-home.jpg" alt="" fetchpriority="high" />
+    <div class="hero-shade" aria-hidden="true"></div>
+    <div class="hero-content">
+      <p class="script welcome">Welcome to</p>
+      <h1>NIGERIA</h1>
+      <p class="lede">
+        A land of vibrant cultures, breathtaking landscapes, rich history and
+        unforgettable experiences.
       </p>
       <div class="hero-ctas">
-        <a class="btn btn-primary" href="/spots/">Explore spots</a>
-        <a class="btn btn-ghost" href="#how-we-score">How we score am</a>
-      </div>
-    </div>
-  </section>
-
-  <div class="route-board" aria-hidden="true">
-    <div class="wrap">
-      <span>Beaches</span>
-      <span>Culture</span>
-      <span>Nightlife</span>
-      <span>Nature</span>
-      <span>Real prices</span>
-      <span>No wahala</span>
-    </div>
-  </div>
-
-  <section class="section">
-    <div class="wrap">
-      <div class="section-head">
-        <div>
-          <p class="eyebrow">Pick your waka</p>
-          <h2>Where you dey go?</h2>
-        </div>
-      </div>
-      <div class="cat-grid">
-        <a class="cat-tile" href="/spots/?cat=beach">
-          <strong>Beaches</strong>
-          <span>Island escapes &amp; party sand</span>
-        </a>
-        <a class="cat-tile" href="/spots/?cat=culture">
-          <strong>Culture</strong>
-          <span>Art, history &amp; theatre</span>
-        </a>
-        <a class="cat-tile" href="/spots/?cat=nightlife">
-          <strong>Nightlife</strong>
-          <span>Afrobeat to craft beer</span>
-        </a>
-        <a class="cat-tile" href="/spots/?cat=nature">
-          <strong>Nature</strong>
-          <span>Forest walks in the city</span>
+        <a class="btn-solid" href="#explore">Start Exploring</a>
+        <a class="btn-play" href="/states/lagos/">
+          <span class="play" aria-hidden="true">▶</span> Watch Nigeria Reel
         </a>
       </div>
     </div>
+    <p class="scroll-hint" aria-hidden="true">Scroll to explore</p>
   </section>
 
-  <section class="section" style="padding-top: 0;">
-    <div class="wrap">
-      <div class="section-head">
-        <div>
-          <p class="eyebrow">Hand-picked</p>
-          <h2>Spots wey sure</h2>
-        </div>
-        <a href="/spots/">See all {spots.length} spots →</a>
-      </div>
-      <div class="spot-grid">
-        {featured.map((spot) => <SpotCard spot={spot} />)}
-      </div>
+  <section class="stats" id="states">
+    <div class="stat"><b>36</b><span>States &amp; FCT</span></div>
+    <div class="stat"><b>1000+</b><span>Destinations</span></div>
+    <div class="stat"><b>Live</b><span>Events</span></div>
+    <div class="stat"><b>Plan</b><span>Your Trip</span></div>
+    <div class="stat"><b>Inspire</b><span>Travel Guide</span></div>
+  </section>
+
+  <section class="explore" id="explore">
+    <div class="explore-head">
+      <h2 class="script">Explore Nigeria</h2>
+      <p>From bustling cities to serene landscapes, every corner of Nigeria has a story to tell.</p>
+    </div>
+    <div class="city-row">
+      {cities.map((c) =>
+        c.href ? (
+          <a class="city-card" href={c.href}>
+            <img src={c.img} alt={`${c.name} — ${c.tag}`} loading="lazy" />
+            <div class="city-meta">
+              <strong>{c.name}</strong>
+              <span>{c.tag}</span>
+            </div>
+          </a>
+        ) : (
+          <div class="city-card soon">
+            <img src={c.img} alt={`${c.name} — ${c.tag}`} loading="lazy" />
+            <span class="soon-badge">Coming soon</span>
+            <div class="city-meta">
+              <strong>{c.name}</strong>
+              <span>{c.tag}</span>
+            </div>
+          </div>
+        )
+      )}
     </div>
   </section>
 
-  <section class="section legend" id="how-we-score">
-    <div class="wrap">
-      <p class="eyebrow">How we score am</p>
-      <h2>Three words. No fine print energy.</h2>
-      <div class="legend-grid">
-        <div class="legend-card">
-          <span class="safety-dot good">{safetyLabels.good.label}</span>
-          <p>Relaxed. Go with the usual big-city sense you would use anywhere.</p>
-        </div>
-        <div class="legend-card">
-          <span class="safety-dot caution">{safetyLabels.caution.label}</span>
-          <p>Fine, but stay alert — go with company, watch your phone, plan your ride home.</p>
-        </div>
-        <div class="legend-card">
-          <span class="safety-dot avoid">{safetyLabels.avoid.label}</span>
-          <p>Skip it at this hour. There is always a better option — we will point you to it.</p>
-        </div>
+  <section class="cats" id="categories">
+    {categories.map((cat) => (
+      <div class="cat">
+        <span class="script cat-name" style={`color:${cat.color}`}>{cat.name}</span>
+        <span class="cat-sub">{cat.sub}</span>
       </div>
-      <p class="honesty">
-        <strong>On prices:</strong> every spot shows the range locals actually pay, plus the extras
-        nobody warns you about — gate fees, chair money, boat haggling. Conditions change fast in
-        Lagos, so treat every number as a recent typical range, not a promise. When in doubt, agree
-        the price before you sit, board, or order.
-      </p>
-    </div>
+    ))}
   </section>
-</Base>
+
+  <style>
+    .hero { position: relative; min-height: 100vh; min-height: 100dvh; display: grid; align-items: center; overflow: hidden; }
+    .hero-bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center 30%; }
+    .hero-shade {
+      position: absolute; inset: 0;
+      background:
+        linear-gradient(90deg, rgba(11,10,14,0.82) 0%, rgba(11,10,14,0.35) 45%, rgba(11,10,14,0.1) 70%),
+        linear-gradient(180deg, rgba(11,10,14,0.3) 0%, rgba(11,10,14,0) 30%, rgba(11,10,14,0.9) 100%);
+    }
+    .hero-content { position: relative; padding: 6rem clamp(1.25rem, 6vw, 5rem) 4rem; max-width: 44rem; }
+    .welcome {
+      font-size: clamp(1.6rem, 4vw, 2.4rem); color: var(--danfo);
+      text-shadow: 0 2px 16px rgba(0,0,0,0.6); margin-bottom: -0.4rem;
+    }
+    .hero h1 {
+      font-family: var(--font-display); font-weight: 800;
+      font-size: clamp(3.4rem, 12vw, 8rem); line-height: 0.95; letter-spacing: 0.01em;
+      background: linear-gradient(100deg, #3f9e63 8%, #f3efe6 38%, #f0a04a 75%, #d96b2f 100%);
+      -webkit-background-clip: text; background-clip: text; color: transparent;
+      filter: drop-shadow(0 4px 22px rgba(0,0,0,0.55));
+    }
+    .lede { margin-top: 1.2rem; max-width: 40ch; font-size: 1.05rem; color: var(--text); text-shadow: 0 1px 10px rgba(0,0,0,0.7); }
+    .hero-ctas { display: flex; flex-wrap: wrap; align-items: center; gap: 1.2rem; margin-top: 2rem; }
+    .btn-solid {
+      background: var(--danfo); color: #191410; font-weight: 700; text-decoration: none;
+      padding: 0.8rem 1.6rem; border-radius: 999px; border: 2px solid #191410; box-shadow: 3px 3px 0 #000;
+    }
+    .btn-solid:hover { transform: translate(-1px,-1px); box-shadow: 4px 4px 0 #000; }
+    .btn-play { display: inline-flex; align-items: center; gap: 0.7rem; text-decoration: none; font-weight: 600; font-size: 0.95rem; text-shadow: 0 1px 8px rgba(0,0,0,0.8); }
+    .play {
+      display: grid; place-content: center; width: 2.6rem; height: 2.6rem; border-radius: 50%;
+      border: 2px solid rgba(243,239,230,0.7); font-size: 0.7rem; padding-left: 2px;
+    }
+    .btn-play:hover .play { border-color: var(--danfo); color: var(--danfo); }
+    .scroll-hint {
+      position: absolute; bottom: 1.4rem; left: 50%; transform: translateX(-50%);
+      font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.3em; text-transform: uppercase;
+      color: rgba(243,239,230,0.75);
+    }
+
+    .stats {
+      display: grid; grid-template-columns: repeat(5, 1fr);
+      border-block: 1px solid var(--line);
+      background: rgba(22,20,28,0.6); backdrop-filter: blur(8px);
+      margin-top: -4.5rem; position: relative; z-index: 2;
+      margin-inline: clamp(1rem, 4vw, 3rem); border: 1px solid var(--line); border-radius: 1rem;
+      overflow: hidden;
+    }
+    .stat { display: grid; gap: 0.1rem; place-items: center; padding: 1.3rem 0.5rem; text-align: center; }
+    .stat + .stat { border-left: 1px solid var(--line); }
+    .stat b { font-family: var(--font-mono); font-size: 1.15rem; color: var(--danfo); }
+    .stat span { font-size: 0.78rem; color: var(--text-dim); }
+
+    .explore { padding: 5rem clamp(1rem, 4vw, 3rem) 3rem; }
+    .explore-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 1.5rem; margin-bottom: 2rem; }
+    .explore-head h2 {
+      font-size: clamp(2rem, 5vw, 3rem); color: var(--text); font-weight: 400;
+      text-decoration: underline; text-decoration-color: var(--neon-pink); text-decoration-thickness: 3px; text-underline-offset: 10px;
+    }
+    .explore-head p { color: var(--text-dim); max-width: 34ch; font-size: 0.95rem; }
+    .city-row {
+      display: grid; grid-template-columns: repeat(5, 1fr); gap: 1rem;
+    }
+    .city-card {
+      position: relative; border-radius: 0.9rem; overflow: hidden; text-decoration: none;
+      aspect-ratio: 4 / 5; border: 1px solid var(--line);
+      transition: transform 0.18s ease;
+    }
+    .city-card img { width: 100%; height: 100%; object-fit: cover; }
+    a.city-card:hover { transform: translateY(-5px); border-color: var(--danfo); }
+    .city-meta {
+      position: absolute; inset: auto 0 0 0; padding: 2.2rem 0.9rem 0.9rem;
+      background: linear-gradient(180deg, transparent, rgba(0,0,0,0.85));
+      display: grid; gap: 0.05rem;
+    }
+    .city-meta strong { font-family: var(--font-display); font-size: 1.15rem; }
+    .city-meta span { font-size: 0.75rem; color: var(--text-dim); }
+    .soon { opacity: 0.85; }
+    .soon-badge {
+      position: absolute; top: 0.7rem; right: 0.7rem;
+      font-family: var(--font-mono); font-size: 0.6rem; letter-spacing: 0.12em; text-transform: uppercase;
+      background: rgba(0,0,0,0.65); border: 1px solid var(--line); border-radius: 999px; padding: 0.25rem 0.6rem;
+    }
+
+    .cats {
+      display: grid; grid-template-columns: repeat(5, 1fr);
+      border-top: 1px solid var(--line);
+      padding: 2.2rem clamp(1rem, 4vw, 3rem); gap: 1rem;
+    }
+    .cat { display: grid; gap: 0.15rem; place-items: center; text-align: center; }
+    .cat-name { font-size: 1.3rem; text-shadow: 0 0 18px currentColor; }
+    .cat-sub { font-size: 0.75rem; color: var(--text-dim); }
+
+    @media (max-width: 56rem) {
+      .stats { grid-template-columns: repeat(2, 1fr); margin-top: 0; border-radius: 0; margin-inline: 0; border-inline: none; }
+      .stat:nth-child(odd) { border-left: none; }
+      .stat:nth-child(5) { grid-column: span 2; border-left: none; border-top: 1px solid var(--line); }
+      .city-row { grid-template-columns: repeat(2, 1fr); }
+      .city-card:last-child { grid-column: span 2; aspect-ratio: 16 / 9; }
+      .cats { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</Cinematic>

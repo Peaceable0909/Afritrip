@@ -1,0 +1,132 @@
+---
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description = 'Waka — discover Nigeria. Real prices, honest safety notes, cinematic journeys.' } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <title>{title}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Instrument+Sans:wght@400;500;600&family=Kaushan+Script&family=Space+Mono:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <header class="nav">
+      <a class="logo" href="/" aria-label="Waka — home">
+        <span class="plate">WAKA</span>
+        <span class="logo-sub">Discover Nigeria</span>
+      </a>
+      <nav class="links" aria-label="Main">
+        <a href="/#explore">Explore</a>
+        <a href="/#states">States</a>
+        <a href="/spots/">Experiences</a>
+        <a href="/#categories">Events</a>
+      </nav>
+      <a class="cta-pill" href="/spots/">Plan a Trip</a>
+    </header>
+
+    <main>
+      <slot />
+    </main>
+
+    <footer class="foot">
+      <p class="foot-logo">WAKA<span>.</span></p>
+      <p>Real prices. Honest safety notes. Curated by people wey sabi road.</p>
+      <p class="fine">
+        Hero and mood visuals are artistic impressions. Prices and conditions change fast in Nigeria —
+        treat every figure as a recent typical range and agree prices before you commit.
+      </p>
+    </footer>
+
+    <style is:global>
+      :root {
+        --danfo: #ffc400;
+        --ink: #0b0a0e;
+        --panel: #16141c;
+        --line: #2a2733;
+        --text: #f3efe6;
+        --text-dim: #a79f92;
+        --neon-pink: #ff3d8f;
+        --neon-green: #4ade80;
+        --neon-teal: #2dd4bf;
+        --font-display: 'Bricolage Grotesque', system-ui, sans-serif;
+        --font-script: 'Kaushan Script', cursive;
+        --font-body: 'Instrument Sans', system-ui, sans-serif;
+        --font-mono: 'Space Mono', ui-monospace, monospace;
+      }
+      * { box-sizing: border-box; margin: 0; }
+      html { scroll-behavior: smooth; }
+      body {
+        background: var(--ink); color: var(--text);
+        font-family: var(--font-body); line-height: 1.6;
+        -webkit-font-smoothing: antialiased;
+      }
+      img { max-width: 100%; display: block; }
+      a { color: inherit; }
+      :focus-visible { outline: 3px solid var(--danfo); outline-offset: 2px; border-radius: 2px; }
+
+      .plate {
+        display: inline-flex; align-items: center; gap: 0.5rem;
+        background: var(--danfo); color: #191410;
+        font-family: var(--font-mono); font-weight: 700; font-size: 0.85rem;
+        padding: 0.28rem 0.65rem 0.28rem 0.5rem;
+        border-radius: 0.35rem; border: 2px solid #191410;
+        box-shadow: 2px 2px 0 #000;
+        letter-spacing: 0.08em;
+      }
+      .plate::before {
+        content: ''; width: 0.7rem; align-self: stretch; border-radius: 2px;
+        background: repeating-linear-gradient(-55deg, #191410 0 3px, transparent 3px 7px);
+      }
+
+      .nav {
+        position: fixed; inset: 0 0 auto 0; z-index: 50;
+        display: flex; align-items: center; gap: 1.5rem;
+        padding: 0.9rem clamp(1rem, 4vw, 3rem);
+        background: linear-gradient(180deg, rgba(11,10,14,0.85), rgba(11,10,14,0));
+      }
+      .logo { display: flex; align-items: baseline; gap: 0.6rem; text-decoration: none; }
+      .logo-sub {
+        font-family: var(--font-script); font-size: 0.95rem; color: var(--text);
+        text-shadow: 0 1px 8px rgba(0,0,0,0.8);
+      }
+      .links { display: flex; gap: 1.4rem; margin-left: auto; font-size: 0.9rem; font-weight: 500; }
+      .links a { text-decoration: none; color: var(--text); opacity: 0.85; text-shadow: 0 1px 6px rgba(0,0,0,0.7); }
+      .links a:hover { opacity: 1; text-decoration: underline; text-decoration-color: var(--danfo); text-decoration-thickness: 3px; text-underline-offset: 5px; }
+      .cta-pill {
+        background: var(--danfo); color: #191410; font-weight: 700; font-size: 0.88rem;
+        text-decoration: none; padding: 0.55rem 1.2rem; border-radius: 999px;
+        border: 2px solid #191410; box-shadow: 2px 2px 0 #000; white-space: nowrap;
+      }
+      .cta-pill:hover { transform: translate(-1px,-1px); box-shadow: 3px 3px 0 #000; }
+
+      .foot {
+        border-top: 1px solid var(--line);
+        padding: 3rem clamp(1rem, 4vw, 3rem) 3.5rem;
+        display: grid; gap: 0.8rem; color: var(--text-dim); font-size: 0.9rem;
+      }
+      .foot-logo { font-family: var(--font-display); font-weight: 800; font-size: 1.4rem; color: var(--text); }
+      .foot-logo span { color: var(--danfo); }
+      .fine { font-size: 0.78rem; max-width: 72ch; opacity: 0.8; }
+
+      .script { font-family: var(--font-script); }
+
+      @media (max-width: 46rem) {
+        .links { display: none; }
+        .logo-sub { display: none; }
+        .cta-pill { margin-left: auto; }
+      }
+    </style>
+  </body>
+</html>

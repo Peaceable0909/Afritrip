@@ -1,0 +1,246 @@
+---
+import Cinematic from '../../layouts/Cinematic.astro';
+import { spots } from '../../data/spots';
+
+const rail = [
+  { name: 'Beaches', img: '/img/cinematic/cat-beaches.jpg', href: '/spots/?cat=beach' },
+  { name: 'Nightlife', img: '/img/cinematic/cat-nightlife.jpg', href: '/spots/?cat=nightlife' },
+  { name: 'Restaurants', img: '/img/cinematic/cat-food.jpg', href: '/spots/?cat=culture' },
+  { name: 'Hotels', img: '/img/cinematic/cat-hotels.jpg', href: '/spots/' },
+  { name: 'Events', img: '/img/cinematic/cat-events.jpg', href: '/spots/' },
+  { name: 'Adventures', img: '/img/cinematic/cat-adventures.jpg', href: '/spots/?cat=nature' },
+];
+
+const experiences = [
+  { name: 'Lekki Conservation Centre', img: '/img/cinematic/spot-lekki.jpg', href: '/spots/lekki-conservation-centre/' },
+  { name: 'Nike Art Gallery', img: '/img/cinematic/spot-nike.jpg', href: '/spots/nike-art-gallery/' },
+  { name: 'Tarkwa Bay Beach', img: '/img/cinematic/spot-tarkwa.jpg', href: '/spots/tarkwa-bay/' },
+  { name: 'Freedom Park', img: '/img/cinematic/spot-freedom.jpg', href: '/spots/freedom-park/' },
+  { name: 'Boat Cruise · Lekki', img: '/img/cinematic/spot-boat.jpg', href: '/spots/tarkwa-bay/' },
+];
+
+const mapLabels = [
+  { name: 'Lekki', x: 78, y: 28, color: 'var(--danfo)' },
+  { name: 'Ikoyi', x: 40, y: 46, color: 'var(--neon-green)' },
+  { name: 'Victoria Island', x: 22, y: 62, color: 'var(--neon-green)' },
+  { name: 'Ajah', x: 74, y: 58, color: 'var(--neon-pink)' },
+  { name: 'Badagry', x: 12, y: 80, color: 'var(--neon-teal)' },
+  { name: 'Ikeja', x: 30, y: 16, color: 'var(--neon-pink)' },
+];
+
+const lagosSpotCount = spots.length;
+---
+
+<Cinematic title="Lagos — Waka" description="Where energy meets endless possibilities. Experience Africa's most dynamic city.">
+  <section class="hero">
+    <img class="hero-bg" src="/img/cinematic/hero-lagos.jpg" alt="" fetchpriority="high" />
+    <div class="hero-shade" aria-hidden="true"></div>
+
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <a href="/">Home</a> <span>›</span> <a href="/#states">States</a> <span>›</span> <b>Lagos</b>
+    </nav>
+
+    <div class="hero-content">
+      <p class="script welcome">Welcome to</p>
+      <h1 class="script">Lagos</h1>
+      <div class="brush" aria-hidden="true"></div>
+      <p class="lede">
+        Where energy meets endless possibilities. Experience Africa's most dynamic city.
+      </p>
+      <div class="chips">
+        <div class="chip"><b>20M+</b><span>Population</span></div>
+        <div class="chip"><b>Yoruba + English</b><span>Languages</span></div>
+        <div class="chip"><b>Nov – Feb</b><span>Best time</span></div>
+        <div class="chip"><b>25 – 32°C</b><span>Weather</span></div>
+      </div>
+    </div>
+
+    <aside class="side-nav" aria-label="Sections">
+      <a href="#map">Map</a>
+      <a href="#experiences">Spots</a>
+      <a href="/spots/?cat=nightlife">Nightlife</a>
+      <a href="/spots/?cat=beach">Beaches</a>
+      <a href="/spots/">All</a>
+    </aside>
+  </section>
+
+  <section class="rail-wrap">
+    <div class="rail">
+      {rail.map((r) => (
+        <a class="rail-card" href={r.href}>
+          <img src={r.img} alt={r.name} loading="lazy" />
+          <span>{r.name}</span>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <section class="map-row" id="map">
+    <div class="map-card">
+      <img src="/img/cinematic/lagos-map.jpg" alt="Illustrated map of Lagos areas" loading="lazy" />
+      <p class="script map-title">Explore Lagos</p>
+      {mapLabels.map((l) => (
+        <span class="map-label" style={`left:${l.x}%; top:${l.y}%; background:${l.color}`}>{l.name}</span>
+      ))}
+    </div>
+    <div class="map-side">
+      <div class="know">
+        <h2>Did you know?</h2>
+        <p>
+          Lagos is one of the fastest growing cities in the world and the entertainment
+          capital of Africa — {lagosSpotCount} spots curated so far, every one with real
+          prices and safety notes.
+        </p>
+        <a href="/spots/">See the spots →</a>
+      </div>
+      <a class="reel" href="/prototype">
+        <img src="/img/cinematic/hero-lagos.jpg" alt="" loading="lazy" />
+        <span class="play" aria-hidden="true">▶</span>
+        <span class="reel-label">Experience Lagos</span>
+      </a>
+    </div>
+  </section>
+
+  <section class="exps" id="experiences">
+    <div class="exps-head">
+      <h2 class="script">Top Experiences in Lagos</h2>
+      <a href="/spots/">View all →</a>
+    </div>
+    <div class="exp-row">
+      {experiences.map((e) => (
+        <a class="exp-card" href={e.href}>
+          <img src={e.img} alt={e.name} loading="lazy" />
+          <span>{e.name}</span>
+        </a>
+      ))}
+    </div>
+    <p class="doodle script" aria-hidden="true">Live<br />Love<br />Lagos</p>
+  </section>
+
+  <style>
+    .hero { position: relative; min-height: 92vh; display: grid; align-content: center; overflow: hidden; }
+    .hero-bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+    .hero-shade {
+      position: absolute; inset: 0;
+      background:
+        linear-gradient(90deg, rgba(11,10,14,0.85) 0%, rgba(11,10,14,0.35) 50%, rgba(11,10,14,0.15) 75%),
+        linear-gradient(180deg, rgba(11,10,14,0.5) 0%, rgba(11,10,14,0) 25%, rgba(11,10,14,0.92) 100%);
+    }
+    .crumbs {
+      position: absolute; top: 4.6rem; left: clamp(1.25rem, 5vw, 4rem);
+      font-size: 0.82rem; color: var(--text-dim); display: flex; gap: 0.5rem; align-items: center;
+      text-shadow: 0 1px 6px rgba(0,0,0,0.8); z-index: 2;
+    }
+    .crumbs a { text-decoration: none; }
+    .crumbs a:hover { color: var(--text); }
+    .crumbs b { color: var(--danfo); font-weight: 600; }
+
+    .hero-content { position: relative; padding: 7rem clamp(1.25rem, 5vw, 4rem) 4rem; max-width: 46rem; }
+    .welcome { font-size: clamp(1.4rem, 3.5vw, 2rem); color: var(--danfo); text-shadow: 0 2px 14px rgba(0,0,0,0.7); }
+    .hero h1 {
+      font-size: clamp(4.5rem, 14vw, 9rem); font-weight: 400; color: #fff; line-height: 1;
+      text-shadow: 0 6px 30px rgba(0,0,0,0.6); transform: rotate(-3deg); width: max-content;
+    }
+    .brush { width: clamp(10rem, 24vw, 16rem); height: 0.55rem; background: var(--neon-pink); border-radius: 999px; transform: rotate(-3deg) translateY(-0.4rem); box-shadow: 0 0 18px rgba(255,61,143,0.6); }
+    .lede { margin-top: 1.4rem; max-width: 34ch; text-shadow: 0 1px 10px rgba(0,0,0,0.8); }
+    .chips { display: flex; flex-wrap: wrap; gap: 0.7rem; margin-top: 1.8rem; }
+    .chip {
+      display: grid; gap: 0; padding: 0.55rem 1rem; border-radius: 0.7rem;
+      background: rgba(22,20,28,0.72); border: 1px solid var(--line); backdrop-filter: blur(6px);
+    }
+    .chip b { font-family: var(--font-mono); font-size: 0.85rem; color: var(--danfo); }
+    .chip span { font-size: 0.68rem; color: var(--text-dim); }
+
+    .side-nav {
+      position: absolute; right: 1.2rem; top: 50%; transform: translateY(-50%);
+      display: grid; gap: 0.5rem; z-index: 2;
+    }
+    .side-nav a {
+      font-family: var(--font-mono); font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase;
+      text-decoration: none; text-align: center;
+      background: rgba(22,20,28,0.75); border: 1px solid var(--line); border-radius: 0.6rem;
+      padding: 0.55rem 0.7rem; backdrop-filter: blur(6px);
+    }
+    .side-nav a:hover { border-color: var(--danfo); color: var(--danfo); }
+
+    .rail-wrap { padding: 2.2rem clamp(1rem, 4vw, 3rem) 0.5rem; }
+    .rail { display: grid; grid-template-columns: repeat(6, 1fr); gap: 0.9rem; }
+    .rail-card {
+      position: relative; aspect-ratio: 1; border-radius: 0.8rem; overflow: hidden;
+      border: 1px solid var(--line); text-decoration: none; transition: transform 0.18s ease;
+    }
+    .rail-card img { width: 100%; height: 100%; object-fit: cover; }
+    .rail-card span {
+      position: absolute; inset: auto 0 0 0; padding: 1.6rem 0.7rem 0.6rem; font-size: 0.85rem; font-weight: 600;
+      background: linear-gradient(180deg, transparent, rgba(0,0,0,0.85));
+    }
+    .rail-card:hover { transform: translateY(-4px); border-color: var(--danfo); }
+
+    .map-row {
+      display: grid; grid-template-columns: minmax(0, 1.8fr) minmax(0, 1fr); gap: 1.2rem;
+      padding: 2.5rem clamp(1rem, 4vw, 3rem);
+    }
+    .map-card { position: relative; border-radius: 1rem; overflow: hidden; border: 1px solid var(--line); }
+    .map-card img { width: 100%; height: 100%; object-fit: cover; }
+    .map-title {
+      position: absolute; top: 1.2rem; left: 1.4rem; font-size: clamp(1.8rem, 4vw, 2.6rem);
+      color: var(--danfo); text-shadow: 0 2px 14px rgba(0,0,0,0.8);
+    }
+    .map-label {
+      position: absolute; transform: translate(-50%, -50%);
+      font-family: var(--font-mono); font-weight: 700; font-size: 0.68rem; color: #14121a;
+      padding: 0.28rem 0.6rem; border-radius: 0.4rem; border: 1.5px solid #14121a;
+      box-shadow: 0 0 14px rgba(255,255,255,0.25), 1.5px 1.5px 0 #000;
+      white-space: nowrap;
+    }
+    .map-side { display: grid; gap: 1.2rem; align-content: start; }
+    .know { background: var(--panel); border: 1px solid var(--line); border-radius: 1rem; padding: 1.5rem; }
+    .know h2 { font-family: var(--font-display); font-size: 1.25rem; margin-bottom: 0.6rem; }
+    .know p { font-size: 0.9rem; color: var(--text-dim); }
+    .know a { display: inline-block; margin-top: 0.9rem; font-size: 0.85rem; font-weight: 600; color: var(--danfo); text-decoration: none; }
+    .know a:hover { text-decoration: underline; }
+    .reel { position: relative; border-radius: 1rem; overflow: hidden; border: 1px solid var(--line); aspect-ratio: 16/9; text-decoration: none; }
+    .reel img { width: 100%; height: 100%; object-fit: cover; opacity: 0.85; }
+    .reel .play {
+      position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+      width: 3rem; height: 3rem; border-radius: 50%; display: grid; place-content: center;
+      background: rgba(0,0,0,0.55); border: 2px solid rgba(243,239,230,0.8); font-size: 0.8rem; padding-left: 2px;
+    }
+    .reel:hover .play { border-color: var(--danfo); color: var(--danfo); }
+    .reel-label { position: absolute; bottom: 0.8rem; left: 1rem; font-weight: 600; font-size: 0.9rem; text-shadow: 0 1px 8px rgba(0,0,0,0.9); }
+
+    .exps { padding: 1.5rem clamp(1rem, 4vw, 3rem) 4rem; position: relative; }
+    .exps-head { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; margin-bottom: 1.4rem; }
+    .exps-head h2 { font-size: clamp(1.7rem, 4vw, 2.4rem); font-weight: 400; }
+    .exps-head a { font-size: 0.85rem; color: var(--text-dim); text-decoration: none; }
+    .exps-head a:hover { color: var(--danfo); }
+    .exp-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.9rem; }
+    .exp-card {
+      position: relative; aspect-ratio: 4/5; border-radius: 0.8rem; overflow: hidden;
+      border: 1px solid var(--line); text-decoration: none; transition: transform 0.18s ease;
+    }
+    .exp-card img { width: 100%; height: 100%; object-fit: cover; }
+    .exp-card span {
+      position: absolute; inset: auto 0 0 0; padding: 1.8rem 0.8rem 0.7rem; font-size: 0.82rem; font-weight: 600;
+      background: linear-gradient(180deg, transparent, rgba(0,0,0,0.88));
+    }
+    .exp-card:hover { transform: translateY(-4px); border-color: var(--danfo); }
+    .doodle {
+      position: absolute; right: clamp(1rem, 4vw, 3rem); bottom: -1.2rem;
+      font-size: 1.9rem; line-height: 1.05; text-align: center; transform: rotate(-8deg);
+      color: var(--neon-pink);
+      text-shadow: 0 0 14px rgba(255,61,143,0.8), 0 0 30px rgba(255,61,143,0.4);
+      pointer-events: none;
+    }
+    .doodle::after { content: '♥'; display: block; color: var(--neon-green); font-size: 1.1rem; text-shadow: 0 0 12px rgba(74,222,128,0.8); }
+
+    @media (max-width: 56rem) {
+      .side-nav { display: none; }
+      .rail { grid-template-columns: repeat(3, 1fr); }
+      .map-row { grid-template-columns: 1fr; }
+      .exp-row { grid-template-columns: repeat(2, 1fr); }
+      .exp-card:last-child { grid-column: span 2; aspect-ratio: 16/9; }
+      .doodle { display: none; }
+    }
+  </style>
+</Cinematic>
