@@ -7,6 +7,7 @@ export interface Spot {
   area: string;
   img: string;
   category: Category;
+  moods: string[];
   blurb: string;
   description: string;
   price: string;
@@ -35,6 +36,7 @@ export const safetyLabels: Record<SafetyLevel, { label: string; gloss: string }>
 export const spots: Spot[] = [
   {
     slug: 'nike-art-gallery',
+    moods: ['history', 'relax'],
     img: '/img/cinematic/spot-nike.jpg',
     name: 'Nike Art Gallery',
     area: 'Lekki',
@@ -60,6 +62,7 @@ export const spots: Spot[] = [
   },
   {
     slug: 'lekki-conservation-centre',
+    moods: ['nature', 'adventure'],
     img: '/img/cinematic/spot-lekki.jpg',
     name: 'Lekki Conservation Centre',
     area: 'Lekki',
@@ -85,6 +88,7 @@ export const spots: Spot[] = [
   },
   {
     slug: 'tarkwa-bay',
+    moods: ['relax', 'adventure', 'nature'],
     img: '/img/cinematic/spot-tarkwa.jpg',
     name: 'Tarkwa Bay Beach',
     area: 'Off Victoria Island (by boat)',
@@ -110,6 +114,7 @@ export const spots: Spot[] = [
   },
   {
     slug: 'freedom-park',
+    moods: ['history', 'party', 'food'],
     img: '/img/cinematic/spot-freedom.jpg',
     name: 'Freedom Park',
     area: 'Lagos Island',
@@ -135,6 +140,7 @@ export const spots: Spot[] = [
   },
   {
     slug: 'new-afrika-shrine',
+    moods: ['party', 'history'],
     img: '/img/cinematic/spot-shrine.jpg',
     name: 'New Afrika Shrine',
     area: 'Ikeja',
@@ -160,6 +166,7 @@ export const spots: Spot[] = [
   },
   {
     slug: 'terra-kulture',
+    moods: ['food', 'history', 'relax'],
     img: '/img/cinematic/spot-terra.jpg',
     name: 'Terra Kulture',
     area: 'Victoria Island',
@@ -185,6 +192,7 @@ export const spots: Spot[] = [
   },
   {
     slug: 'elegushi-beach',
+    moods: ['party'],
     img: '/img/cinematic/spot-elegushi.jpg',
     name: 'Elegushi Beach',
     area: 'Lekki',
@@ -210,6 +218,7 @@ export const spots: Spot[] = [
   },
   {
     slug: 'bature-brewery',
+    moods: ['party', 'food', 'relax'],
     img: '/img/cinematic/spot-bature.jpg',
     name: 'Bature Brewery',
     area: 'Victoria Island',

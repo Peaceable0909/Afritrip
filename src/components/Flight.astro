@@ -1,0 +1,429 @@
+---
+// The Flight — search as a camera journey, not a form.
+// Altitude 1: glowing SVG Nigeria. Altitude 2: the state's illustrated map.
+// Search and mood bubbles are instructions to the same camera.
+import { states } from '../data/states';
+import { spots } from '../data/spots';
+
+const moodList = [
+  { id: 'party', label: 'Party', emoji: '🎉' },
+  { id: 'relax', label: 'Relax', emoji: '😌' },
+  { id: 'nature', label: 'Nature', emoji: '🌿' },
+  { id: 'food', label: 'Chop life', emoji: '🍲' },
+  { id: 'history', label: 'History', emoji: '🏛' },
+  { id: 'adventure', label: 'Adventure', emoji: '🦁' },
+];
+
+// search index shipped to the client
+const index = [
+  ...states.map((s) => ({
+    type: 'state',
+    name: s.name,
+    slug: s.slug,
+    state: s.slug,
+    text: `${s.name} ${s.tagline} ${s.mapLabels.map((l) => l.name).join(' ')} ${s.moods.join(' ')}`,
+    moods: s.moods,
+  })),
+  ...spots.map((p) => ({
+    type: 'spot',
+    name: p.name,
+    slug: p.slug,
+    state: 'lagos',
+    text: `${p.name} ${p.area} ${p.category} ${p.blurb} ${p.moods.join(' ')}`,
+    moods: p.moods,
+  })),
+];
+
+const stateCards = Object.fromEntries(
+  states.map((s) => [
+    s.slug,
+    s.slug === 'lagos'
+      ? spots.map((p) => ({ name: p.name, img: p.img, href: `/spots/${p.slug}/`, sub: p.price, moods: p.moods }))
+      : s.highlights.map((h) => ({ name: h.name, img: h.img, href: h.href ?? `/states/${s.slug}/`, sub: 'Full guide coming soon', moods: s.moods })),
+  ])
+);
+---
+
+<section class="flight" id="discover" data-alt="country">
+  <div class="mood-veil" aria-hidden="true"></div>
+
+  <div class="flight-head">
+    <p class="script kicker">Where Nigeria go carry you today?</p>
+    <div class="searchbox">
+      <input
+        id="flight-input"
+        type="search"
+        placeholder="Try “beach”, “suya”, “Kano”, “art”…"
+        autocomplete="off"
+        aria-label="Search places and experiences"
+      />
+      <div class="search-glow" aria-hidden="true"></div>
+    </div>
+    <div class="moods" role="group" aria-label="Search by mood">
+      {moodList.map((m) => (
+        <button class="mood" data-mood={m.id}>
+          <span class="mood-emoji" aria-hidden="true">{m.emoji}</span>
+          {m.label}
+        </button>
+      ))}
+    </div>
+  </div>
+
+  <div class="stage">
+    <!-- Altitude 1: the glowing country -->
+    <div class="alt-country">
+      <svg viewBox="0 0 800 520" class="ng-map" role="img" aria-label="Map of Nigeria">
+        <defs>
+          <filter id="ngGlow" x="-40%" y="-40%" width="180%" height="180%">
+            <feGaussianBlur stdDeviation="6" result="b" />
+            <feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge>
+          </filter>
+        </defs>
+        <path
+          class="ng-outline"
+          d="M250 78 L370 60 L458 80 L540 70 L610 108 L626 190 L600 258 L612 312 L556 348 L500 332 L482 380 L472 430 L430 414 L376 436 L330 404 L296 424 L258 388 L236 402 L200 356 L216 298 L194 250 L218 176 Z"
+          fill="rgba(22,20,28,0.55)"
+          stroke="var(--danfo)"
+          stroke-width="2.5"
+          filter="url(#ngGlow)"
+        />
+        <g class="ng-rivers" stroke="var(--neon-teal)" stroke-width="1.6" fill="none" opacity="0.55">
+          <path d="M240 190 Q330 240 388 300 Q420 340 400 414" />
+          <path d="M600 130 Q520 220 430 300 Q410 330 400 414" />
+        </g>
+      </svg>
+      {states.map((s) => (
+        <button
+          class="pin"
+          data-state={s.slug}
+          data-moods={s.moods.join(',')}
+          style={`left:${s.mapPos.x}%; top:${s.mapPos.y}%`}
+        >
+          <span class="pin-dot" aria-hidden="true"></span>
+          {s.name}
+        </button>
+      ))}
+    </div>
+
+    <!-- Altitude 2: the state's illustrated map -->
+    <div class="alt-state" aria-hidden="true">
+      <img class="state-img" src="" alt="" />
+      <p class="script state-title"></p>
+      <button class="pull-up">↑ Pull up · all Nigeria</button>
+    </div>
+  </div>
+
+  <div class="deck" aria-live="polite"></div>
+
+  <template id="flight-card-tpl">
+    <a class="fcard">
+      <img alt="" loading="lazy" decoding="async" />
+      <span class="fcard-name"></span>
+      <span class="fcard-sub"></span>
+    </a>
+  </template>
+</section>
+
+<script define:vars={{ index, stateCards, stateMeta: states.map((s) => ({ slug: s.slug, name: s.name, mapImg: s.mapImg, mapPos: s.mapPos, moods: s.moods, href: `/states/${s.slug}/` })) }}>
+  window.__FLIGHT__ = { index, stateCards, stateMeta };
+</script>
+
+<script>
+  import { gsap } from 'gsap';
+  import Fuse from 'fuse.js';
+
+  const { index, stateCards, stateMeta } = (window as any).__FLIGHT__;
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  const root = document.getElementById('discover')!;
+  const input = document.getElementById('flight-input') as HTMLInputElement;
+  const stage = root.querySelector('.stage') as HTMLElement;
+  const altCountry = root.querySelector('.alt-country') as HTMLElement;
+  const altState = root.querySelector('.alt-state') as HTMLElement;
+  const stateImg = root.querySelector('.state-img') as HTMLImageElement;
+  const stateTitle = root.querySelector('.state-title') as HTMLElement;
+  const deck = root.querySelector('.deck') as HTMLElement;
+  const tpl = document.getElementById('flight-card-tpl') as HTMLTemplateElement;
+  const pins = [...root.querySelectorAll<HTMLElement>('.pin')];
+
+  const fuse = new Fuse(index, { keys: ['name', 'text'], threshold: 0.38, ignoreLocation: true });
+
+  let currentState: string | null = null;
+  let currentMood: string | null = null;
+
+  const D = (s: number) => (reduced ? 0 : s);
+
+  // ---------- camera ----------
+  function flyToState(slug: string, highlightSlug?: string) {
+    const meta = stateMeta.find((m: any) => m.slug === slug);
+    if (!meta) return;
+    currentState = slug;
+    root.dataset.alt = 'state';
+    stateImg.src = meta.mapImg;
+    stateImg.alt = `Illustrated map of ${meta.name}`;
+    stateTitle.textContent = `Explore ${meta.name}`;
+    altState.setAttribute('aria-hidden', 'false');
+
+    // dive: country zooms toward the pin and fades; state map rises to meet you
+    const ox = meta.mapPos.x;
+    const oy = meta.mapPos.y;
+    gsap.timeline()
+      .set(altCountry, { transformOrigin: `${ox}% ${oy}%` })
+      .to(altCountry, { scale: reduced ? 1 : 3.2, opacity: 0, duration: D(0.9), ease: 'power2.in' })
+      .fromTo(altState, { opacity: 0, scale: reduced ? 1 : 0.72 }, { opacity: 1, scale: 1, duration: D(0.9), ease: 'power2.out' }, D(0.55));
+    // deal immediately — the cards' own entrance animates, but their presence
+    // never depends on the animation clock
+    dealCards(slug, highlightSlug);
+  }
+
+  function pullUp() {
+    currentState = null;
+    root.dataset.alt = 'country';
+    altState.setAttribute('aria-hidden', 'true');
+    clearDeck();
+    gsap.timeline()
+      .to(altState, { opacity: 0, scale: reduced ? 1 : 0.72, duration: D(0.6), ease: 'power2.in' })
+      .to(altCountry, { scale: 1, opacity: 1, duration: D(0.8), ease: 'power2.out' }, D(0.3));
+  }
+
+  // ---------- deck ----------
+  function clearDeck() { deck.innerHTML = ''; }
+
+  function dealCards(slug: string, highlightSlug?: string) {
+    clearDeck();
+    let cards = stateCards[slug] ?? [];
+    if (currentMood) {
+      const filtered = cards.filter((c: any) => c.moods?.includes(currentMood));
+      if (filtered.length) cards = filtered;
+    }
+    cards = cards.slice(0, 3);
+    cards.forEach((c: any, i: number) => {
+      const node = tpl.content.firstElementChild!.cloneNode(true) as HTMLAnchorElement;
+      node.href = c.href;
+      const img = node.querySelector('img')!;
+      img.src = c.img;
+      img.alt = c.name;
+      node.querySelector('.fcard-name')!.textContent = c.name;
+      node.querySelector('.fcard-sub')!.textContent = c.sub;
+      if (highlightSlug && c.href.includes(highlightSlug)) node.classList.add('lit');
+      deck.appendChild(node);
+      gsap.from(node, {
+        y: reduced ? 0 : 60,
+        opacity: 0,
+        rotate: reduced ? 0 : (i - 1) * 4,
+        duration: D(0.55),
+        delay: D(0.12 * i),
+        ease: 'back.out(1.6)',
+      });
+    });
+  }
+
+  // ---------- search ----------
+  function glowPins(slugs: Set<string>) {
+    pins.forEach((p) => p.classList.toggle('lit', slugs.has(p.dataset.state!)));
+  }
+
+  let debounce: ReturnType<typeof setTimeout>;
+  input.addEventListener('input', () => {
+    clearTimeout(debounce);
+    debounce = setTimeout(() => {
+      const q = input.value.trim();
+      if (!q) { glowPins(new Set()); return; }
+      const results = fuse.search(q).slice(0, 8);
+      glowPins(new Set(results.map((r) => (r.item as any).state)));
+    }, 120);
+  });
+
+  input.addEventListener('keydown', (e) => {
+    if (e.key !== 'Enter') return;
+    const q = input.value.trim();
+    if (!q) return;
+    const results = fuse.search(q);
+    if (!results.length) return;
+    const top = results[0].item as any;
+    if (currentState && currentState !== top.state) pullUp();
+    setTimeout(() => flyToState(top.state, top.type === 'spot' ? top.slug : undefined), currentState ? 700 : 0);
+  });
+
+  // focus: the world dims, the lantern brightens
+  input.addEventListener('focus', () => root.classList.add('focused'));
+  input.addEventListener('blur', () => root.classList.remove('focused'));
+
+  // ---------- pins ----------
+  pins.forEach((p) => p.addEventListener('click', () => flyToState(p.dataset.state!)));
+  root.querySelector('.pull-up')!.addEventListener('click', pullUp);
+
+  // ---------- moods: the site re-grades ----------
+  root.querySelectorAll<HTMLButtonElement>('.mood').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const mood = btn.dataset.mood!;
+      const on = currentMood !== mood;
+      currentMood = on ? mood : null;
+      root.querySelectorAll('.mood').forEach((b) => b.classList.toggle('active', b === btn && on));
+      document.body.dataset.mood = on ? mood : '';
+      // light up matching states
+      glowPins(new Set(on ? pins.filter((p) => p.dataset.moods!.includes(mood)).map((p) => p.dataset.state!) : []));
+      if (currentState) dealCards(currentState);
+      else if (on) {
+        // deal a national hand: best matches across the country
+        clearDeck();
+        const hand = index.filter((e: any) => e.type === 'spot' && e.moods.includes(mood)).slice(0, 3);
+        hand.forEach((h: any, i: number) => {
+          const src = stateCards['lagos'].find((c: any) => c.href.includes(h.slug));
+          if (!src) return;
+          const node = tpl.content.firstElementChild!.cloneNode(true) as HTMLAnchorElement;
+          node.href = src.href;
+          const img = node.querySelector('img')!;
+          img.src = src.img; img.alt = src.name;
+          node.querySelector('.fcard-name')!.textContent = src.name;
+          node.querySelector('.fcard-sub')!.textContent = src.sub;
+          deck.appendChild(node);
+          gsap.from(node, { y: reduced ? 0 : 60, opacity: 0, rotate: reduced ? 0 : (i - 1) * 4, duration: D(0.55), delay: D(0.12 * i), ease: 'back.out(1.6)' });
+        });
+      } else clearDeck();
+    });
+  });
+
+  // idle shimmer on rivers
+  if (!reduced) {
+    gsap.to('.ng-rivers', { opacity: 0.9, duration: 2.4, ease: 'sine.inOut', repeat: -1, yoyo: true });
+  }
+</script>
+
+<style>
+  .flight {
+    position: relative;
+    padding: var(--space-2xl) var(--gutter);
+    border-top: 1px solid var(--line);
+    overflow: clip;
+  }
+
+  /* the whole-site mood tint lives here but covers the viewport */
+  .mood-veil {
+    position: fixed; inset: 0; z-index: 40; pointer-events: none;
+    opacity: 0; transition: opacity 0.9s ease, background 0.9s ease;
+    mix-blend-mode: overlay;
+  }
+  :global(body[data-mood='party']) .mood-veil { opacity: 1; background: linear-gradient(180deg, rgba(168, 60, 255, 0.28), rgba(255, 61, 143, 0.18)); }
+  :global(body[data-mood='relax']) .mood-veil { opacity: 1; background: linear-gradient(180deg, rgba(45, 212, 191, 0.2), rgba(30, 80, 120, 0.16)); }
+  :global(body[data-mood='nature']) .mood-veil { opacity: 1; background: linear-gradient(180deg, rgba(74, 222, 128, 0.22), rgba(20, 90, 60, 0.16)); }
+  :global(body[data-mood='food']) .mood-veil { opacity: 1; background: linear-gradient(180deg, rgba(255, 150, 40, 0.24), rgba(200, 80, 30, 0.14)); }
+  :global(body[data-mood='history']) .mood-veil { opacity: 1; background: linear-gradient(180deg, rgba(200, 160, 90, 0.2), rgba(120, 80, 40, 0.16)); }
+  :global(body[data-mood='adventure']) .mood-veil { opacity: 1; background: linear-gradient(180deg, rgba(255, 196, 0, 0.2), rgba(200, 60, 30, 0.16)); }
+
+  .flight-head { max-width: 46rem; margin-inline: auto; text-align: center; position: relative; z-index: 2; }
+  .kicker { font-size: var(--text-3xl); color: var(--danfo); text-shadow: 0 0 24px rgba(255, 196, 0, 0.35); }
+
+  .searchbox { position: relative; margin-top: var(--space-md); }
+  #flight-input {
+    width: 100%; min-height: var(--tap);
+    padding: 0.9rem 1.4rem;
+    font: inherit; font-size: var(--text-lg); color: var(--text);
+    background: rgba(22, 20, 28, 0.8);
+    border: 1.5px solid var(--line); border-radius: 999px;
+    outline: none; backdrop-filter: blur(6px);
+    transition: border-color 0.3s ease;
+  }
+  #flight-input::placeholder { color: var(--text-dim); }
+  #flight-input:focus { border-color: var(--danfo); }
+  .search-glow {
+    position: absolute; inset: -3px; border-radius: 999px; z-index: -1;
+    background: radial-gradient(60% 120% at 50% 50%, rgba(255, 196, 0, 0.35), transparent 70%);
+    filter: blur(10px);
+    animation: breathe 3.2s ease-in-out infinite;
+  }
+  .focused .search-glow { animation-duration: 1.4s; }
+  .focused .stage { filter: brightness(0.7) saturate(0.85); }
+  .stage { transition: filter 0.5s ease; }
+  @keyframes breathe { 0%, 100% { opacity: 0.35; } 50% { opacity: 0.9; } }
+
+  .moods { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--space-sm); margin-top: var(--space-md); }
+  .mood {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    min-height: var(--tap);
+    font: inherit; font-size: var(--text-sm); font-weight: 600; color: var(--text);
+    background: rgba(22, 20, 28, 0.7); border: 1px solid var(--line); border-radius: 999px;
+    padding: 0.45rem 1.05rem; cursor: pointer;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+    animation: bob 4s ease-in-out infinite;
+  }
+  .mood:nth-child(2n) { animation-delay: -1.3s; }
+  .mood:nth-child(3n) { animation-delay: -2.1s; }
+  .mood:hover { transform: translateY(-3px); border-color: var(--danfo); }
+  .mood.active { background: var(--danfo); color: #191410; border-color: #191410; box-shadow: 2px 2px 0 #000; }
+  .mood-emoji { font-size: 1.1em; }
+  @keyframes bob { 0%, 100% { translate: 0 0; } 50% { translate: 0 -4px; } }
+
+  .stage {
+    position: relative; max-width: 56rem; margin: var(--space-lg) auto 0;
+    aspect-ratio: 800 / 520;
+  }
+  .alt-country, .alt-state { position: absolute; inset: 0; }
+  .ng-map { width: 100%; height: 100%; }
+
+  .pin {
+    position: absolute; transform: translate(-50%, -50%);
+    display: inline-flex; align-items: center; gap: 0.45rem;
+    min-height: var(--tap);
+    font-family: var(--font-mono); font-size: var(--text-xs); font-weight: 700;
+    letter-spacing: 0.08em; text-transform: uppercase; color: var(--text);
+    background: rgba(11, 10, 14, 0.7); border: 1px solid var(--line); border-radius: 999px;
+    padding: 0.35rem 0.8rem; cursor: pointer; backdrop-filter: blur(4px);
+    transition: border-color 0.25s ease, box-shadow 0.25s ease;
+  }
+  .pin-dot {
+    width: 0.55rem; height: 0.55rem; border-radius: 50%;
+    background: var(--danfo); box-shadow: 0 0 10px var(--danfo);
+    animation: pulse 2.6s ease-in-out infinite;
+  }
+  .pin:hover, .pin.lit { border-color: var(--danfo); box-shadow: 0 0 22px rgba(255, 196, 0, 0.45); }
+  .pin.lit .pin-dot { animation-duration: 0.9s; }
+  @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.5); } }
+
+  .alt-state { opacity: 0; pointer-events: none; }
+  [data-alt='state'] .alt-state { pointer-events: auto; }
+  [data-alt='state'] .alt-country .pin { pointer-events: none; }
+  .state-img { width: 100%; height: 100%; object-fit: cover; border-radius: 1rem; border: 1px solid var(--line); }
+  .state-title {
+    position: absolute; bottom: 0.7rem; left: 1.2rem;
+    font-size: var(--text-2xl); color: var(--danfo); text-shadow: 0 2px 14px rgba(0, 0, 0, 0.8);
+  }
+  .pull-up {
+    position: absolute; top: 1rem; right: 1rem;
+    font-family: var(--font-mono); font-size: var(--text-xs); font-weight: 700;
+    letter-spacing: 0.08em; text-transform: uppercase; color: var(--text);
+    background: rgba(11, 10, 14, 0.75); border: 1px solid var(--line); border-radius: 999px;
+    padding: 0.5rem 1rem; min-height: var(--tap); cursor: pointer;
+  }
+  .pull-up:hover { border-color: var(--danfo); color: var(--danfo); }
+
+  .deck {
+    display: flex; flex-wrap: wrap; justify-content: center; gap: var(--space-md);
+    max-width: 56rem; margin: var(--space-lg) auto 0; min-height: 1rem;
+  }
+  .fcard {
+    position: relative; width: min(16rem, 44vw); aspect-ratio: 4 / 3;
+    border-radius: 0.8rem; overflow: hidden; border: 1px solid var(--line);
+    text-decoration: none; background: var(--panel);
+    transition: transform 0.18s ease, border-color 0.18s ease;
+  }
+  .fcard img { width: 100%; height: 100%; object-fit: cover; }
+  .fcard-name, .fcard-sub { position: absolute; left: 0.8rem; right: 0.8rem; text-shadow: 0 1px 8px rgba(0, 0, 0, 0.9); }
+  .fcard-name { bottom: 1.6rem; font-weight: 700; font-size: var(--text-sm); }
+  .fcard-sub { bottom: 0.45rem; font-family: var(--font-mono); font-size: var(--text-xs); color: var(--danfo); }
+  .fcard::after {
+    content: ''; position: absolute; inset: 40% 0 0 0;
+    background: linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.85));
+  }
+  .fcard-name, .fcard-sub { z-index: 1; }
+  .fcard:hover { transform: translateY(-4px); border-color: var(--danfo); }
+  .fcard.lit { border-color: var(--danfo); box-shadow: 0 0 24px rgba(255, 196, 0, 0.4); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .search-glow, .mood, .pin-dot { animation: none; }
+  }
+  @media (max-width: 46rem) {
+    .pin { font-size: 0.58rem; padding: 0.25rem 0.55rem; }
+    .fcard { width: min(14rem, 46vw); }
+  }
+</style>
