@@ -5,6 +5,7 @@ export interface Spot {
   slug: string;
   name: string;
   area: string;
+  img: string;
   category: Category;
   blurb: string;
   description: string;
@@ -34,6 +35,7 @@ export const safetyLabels: Record<SafetyLevel, { label: string; gloss: string }>
 export const spots: Spot[] = [
   {
     slug: 'nike-art-gallery',
+    img: '/img/cinematic/spot-nike.jpg',
     name: 'Nike Art Gallery',
     area: 'Lekki',
     category: 'culture',
@@ -58,6 +60,7 @@ export const spots: Spot[] = [
   },
   {
     slug: 'lekki-conservation-centre',
+    img: '/img/cinematic/spot-lekki.jpg',
     name: 'Lekki Conservation Centre',
     area: 'Lekki',
     category: 'nature',
@@ -82,6 +85,7 @@ export const spots: Spot[] = [
   },
   {
     slug: 'tarkwa-bay',
+    img: '/img/cinematic/spot-tarkwa.jpg',
     name: 'Tarkwa Bay Beach',
     area: 'Off Victoria Island (by boat)',
     category: 'beach',
@@ -106,6 +110,7 @@ export const spots: Spot[] = [
   },
   {
     slug: 'freedom-park',
+    img: '/img/cinematic/spot-freedom.jpg',
     name: 'Freedom Park',
     area: 'Lagos Island',
     category: 'culture',
@@ -130,6 +135,7 @@ export const spots: Spot[] = [
   },
   {
     slug: 'new-afrika-shrine',
+    img: '/img/cinematic/spot-shrine.jpg',
     name: 'New Afrika Shrine',
     area: 'Ikeja',
     category: 'nightlife',
@@ -154,6 +160,7 @@ export const spots: Spot[] = [
   },
   {
     slug: 'terra-kulture',
+    img: '/img/cinematic/spot-terra.jpg',
     name: 'Terra Kulture',
     area: 'Victoria Island',
     category: 'culture',
@@ -178,6 +185,7 @@ export const spots: Spot[] = [
   },
   {
     slug: 'elegushi-beach',
+    img: '/img/cinematic/spot-elegushi.jpg',
     name: 'Elegushi Beach',
     area: 'Lekki',
     category: 'beach',
@@ -202,6 +210,7 @@ export const spots: Spot[] = [
   },
   {
     slug: 'bature-brewery',
+    img: '/img/cinematic/spot-bature.jpg',
     name: 'Bature Brewery',
     area: 'Victoria Island',
     category: 'nightlife',

@@ -1,5 +1,5 @@
 ---
-import Base from '../../layouts/Base.astro';
+import Cinematic from '../../layouts/Cinematic.astro';
 import { spots, categoryLabels, safetyLabels } from '../../data/spots';
 
 export function getStaticPaths() {
@@ -9,13 +9,18 @@ export function getStaticPaths() {
 const { spot } = Astro.props;
 ---
 
-<Base title={`${spot.name} — Waka Lagos`} description={spot.blurb}>
-  <section class="detail-head">
-    <div class="wrap">
-      <a class="back-link" href="/spots/">← All spots</a>
-      <p class="eyebrow" style="margin-top: 1.2rem;">
-        {categoryLabels[spot.category]} · {spot.area}
-      </p>
+<Cinematic title={`${spot.name} — Waka`} description={spot.blurb}>
+  <section class="hero">
+    <img class="hero-bg" src={spot.img} alt="" fetchpriority="high" />
+    <div class="hero-shade" aria-hidden="true"></div>
+
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <a href="/">Home</a> <span>›</span> <a href="/states/lagos/">Lagos</a> <span>›</span>
+      <a href="/spots/">Spots</a> <span>›</span> <b>{spot.name}</b>
+    </nav>
+
+    <div class="hero-content">
+      <p class="eyebrow">{categoryLabels[spot.category]} · {spot.area}</p>
       <h1>{spot.name}</h1>
       <span class="plate">{spot.price}</span>
       <div class="safety-row">
@@ -29,17 +34,17 @@ const { spot } = Astro.props;
     </div>
   </section>
 
-  <div class="wrap detail-body">
+  <div class="detail-body">
     <article>
       <p class="lede">{spot.description}</p>
 
-      <h2>Sabi tips</h2>
+      <h2 class="script">Sabi tips</h2>
       <ul class="tips">
         {spot.tips.map((tip) => <li>{tip}</li>)}
       </ul>
 
-      <h2>Getting there</h2>
-      <p>{spot.gettingThere}</p>
+      <h2 class="script">Getting there</h2>
+      <p class="getting">{spot.gettingThere}</p>
     </article>
 
     <aside class="fact-box" aria-label="Quick facts">
@@ -64,4 +69,85 @@ const { spot } = Astro.props;
       <p class="price-note"><strong>Price talk:</strong> {spot.priceNote}</p>
     </aside>
   </div>
-</Base>
+</Cinematic>
+
+<style>
+  .hero { position: relative; min-height: 72vh; display: grid; align-content: end; overflow: hidden; }
+  .hero-bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .hero-shade {
+    position: absolute; inset: 0;
+    background:
+      linear-gradient(90deg, rgba(11,10,14,0.7) 0%, rgba(11,10,14,0.25) 55%, rgba(11,10,14,0.1) 80%),
+      linear-gradient(180deg, rgba(11,10,14,0.55) 0%, rgba(11,10,14,0.05) 30%, rgba(11,10,14,0.95) 100%);
+  }
+  .crumbs {
+    position: absolute; top: 4.6rem; left: clamp(1.25rem, 5vw, 4rem); right: 1rem;
+    font-size: 0.82rem; color: var(--text-dim); display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center;
+    text-shadow: 0 1px 6px rgba(0,0,0,0.8); z-index: 2;
+  }
+  .crumbs a { text-decoration: none; }
+  .crumbs a:hover { color: var(--text); }
+  .crumbs b { color: var(--danfo); font-weight: 600; }
+
+  .hero-content { position: relative; padding: 7rem clamp(1.25rem, 5vw, 4rem) 2.6rem; max-width: 52rem; }
+  .eyebrow {
+    font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.18em;
+    text-transform: uppercase; color: var(--danfo); text-shadow: 0 1px 8px rgba(0,0,0,0.8);
+  }
+  h1 {
+    font-family: var(--font-display); font-weight: 800;
+    font-size: clamp(2.2rem, 6.5vw, 4.2rem); line-height: 1.02; margin-top: 0.5rem;
+    text-shadow: 0 4px 24px rgba(0,0,0,0.6);
+  }
+  .hero-content .plate { margin-top: 1.2rem; font-size: 0.85rem; }
+  .safety-row {
+    display: flex; flex-wrap: wrap; gap: 0.4rem 1.4rem; margin-top: 1rem;
+    font-family: var(--font-mono); font-size: 0.72rem; color: var(--text);
+    text-shadow: 0 1px 6px rgba(0,0,0,0.9);
+  }
+  .safety-dot { display: inline-flex; align-items: center; gap: 0.45rem; }
+  .safety-dot::before { content: ''; width: 0.6rem; height: 0.6rem; border-radius: 50%; flex-shrink: 0; }
+  .safety-dot.good::before { background: var(--safe); box-shadow: 0 0 10px var(--safe); }
+  .safety-dot.caution::before { background: var(--watch); box-shadow: 0 0 10px var(--watch); }
+  .safety-dot.avoid::before { background: var(--avoid); box-shadow: 0 0 10px var(--avoid); }
+
+  .detail-body {
+    display: grid; grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr); gap: 3rem;
+    padding: 3rem clamp(1.25rem, 5vw, 4rem) 4.5rem;
+  }
+  .lede { font-size: 1.08rem; }
+  article h2 { font-size: 1.7rem; font-weight: 400; color: var(--danfo); margin: 2.2rem 0 0.8rem; }
+  .getting { color: var(--text-dim); }
+
+  .tips { padding: 0; list-style: none; display: grid; gap: 0.7rem; }
+  .tips li {
+    padding: 0.9rem 1.1rem; background: var(--panel);
+    border: 1px solid var(--line); border-left: 4px solid var(--danfo);
+    border-radius: 0.6rem; font-size: 0.93rem;
+  }
+
+  .fact-box {
+    border: 1px solid var(--line); border-radius: 1rem; background: var(--panel);
+    padding: 1.6rem; align-self: start; position: sticky; top: 5.5rem;
+  }
+  .fact-box dl { display: grid; gap: 1.1rem; margin: 0; }
+  .fact-box dt {
+    font-family: var(--font-mono); font-size: 0.62rem; letter-spacing: 0.16em;
+    text-transform: uppercase; color: var(--text-dim);
+  }
+  .fact-box dd { margin: 0.2rem 0 0; font-size: 0.93rem; }
+  .price-note {
+    margin-top: 1.4rem; padding: 0.95rem 1.05rem;
+    background: rgba(255, 196, 0, 0.08);
+    border: 1px solid rgba(255, 196, 0, 0.45);
+    border-radius: 0.6rem; font-size: 0.86rem; color: var(--text);
+  }
+  .price-note strong { color: var(--danfo); }
+
+  @media (max-width: 50rem) {
+    .hero { min-height: 62vh; }
+    .detail-body { grid-template-columns: 1fr; gap: 1.6rem; }
+    .fact-box { position: static; }
+    .safety-dot { white-space: normal; }
+  }
+</style>

@@ -9,12 +9,62 @@ const { spot } = Astro.props;
 ---
 
 <a class="spot-card" href={`/spots/${spot.slug}/`} data-category={spot.category}>
-  <span class="eyebrow">{categoryLabels[spot.category]} · {spot.area}</span>
-  <h3>{spot.name}</h3>
-  <p class="blurb">{spot.blurb}</p>
-  <span class="plate">{spot.price}</span>
-  <div class="safety-row">
-    <span class={`safety-dot ${spot.safetyDay}`}>Day: {safetyLabels[spot.safetyDay].label}</span>
-    <span class={`safety-dot ${spot.safetyNight}`}>Night: {safetyLabels[spot.safetyNight].label}</span>
+  <div class="pic">
+    <img src={spot.img} alt={spot.name} loading="lazy" />
+    <span class="cat">{categoryLabels[spot.category]}</span>
+  </div>
+  <div class="body">
+    <span class="eyebrow">{spot.area}</span>
+    <h3>{spot.name}</h3>
+    <p class="blurb">{spot.blurb}</p>
+    <span class="plate">{spot.price}</span>
+    <div class="safety-row">
+      <span class={`safety-dot ${spot.safetyDay}`}>Day: {safetyLabels[spot.safetyDay].label}</span>
+      <span class={`safety-dot ${spot.safetyNight}`}>Night: {safetyLabels[spot.safetyNight].label}</span>
+    </div>
   </div>
 </a>
+
+<style>
+  .spot-card {
+    display: flex; flex-direction: column;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 0.9rem;
+    overflow: hidden;
+    text-decoration: none;
+    transition: transform 0.18s ease, border-color 0.18s ease;
+  }
+  .spot-card:hover { transform: translateY(-4px); border-color: var(--danfo); }
+
+  .pic { position: relative; aspect-ratio: 16 / 10; }
+  .pic img { width: 100%; height: 100%; object-fit: cover; }
+  .cat {
+    position: absolute; top: 0.7rem; left: 0.7rem;
+    font-family: var(--font-mono); font-size: 0.6rem; font-weight: 700;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    background: rgba(11,10,14,0.75); border: 1px solid var(--line);
+    border-radius: 999px; padding: 0.25rem 0.6rem; backdrop-filter: blur(4px);
+  }
+
+  .body { display: flex; flex-direction: column; flex-grow: 1; padding: 1.1rem 1.2rem 1.2rem; }
+  .eyebrow {
+    font-family: var(--font-mono); font-size: 0.62rem; letter-spacing: 0.16em;
+    text-transform: uppercase; color: var(--text-dim);
+  }
+  h3 { font-family: var(--font-display); font-size: 1.2rem; font-weight: 600; margin-top: 0.3rem; }
+  .blurb { margin-top: 0.45rem; font-size: 0.88rem; color: var(--text-dim); flex-grow: 1; }
+  .plate { margin-top: 1rem; align-self: flex-start; font-size: 0.72rem; }
+
+  .safety-row {
+    display: flex; flex-wrap: wrap; gap: 0.3rem 1rem; margin-top: 0.8rem;
+    font-family: var(--font-mono); font-size: 0.68rem; color: var(--text-dim);
+  }
+  .safety-dot { display: inline-flex; align-items: center; gap: 0.4rem; }
+  .safety-dot::before {
+    content: ''; width: 0.55rem; height: 0.55rem; border-radius: 50%;
+  }
+  .safety-dot.good::before { background: var(--safe); box-shadow: 0 0 8px var(--safe); }
+  .safety-dot.caution::before { background: var(--watch); box-shadow: 0 0 8px var(--watch); }
+  .safety-dot.avoid::before { background: var(--avoid); box-shadow: 0 0 8px var(--avoid); }
+</style>
