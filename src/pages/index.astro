@@ -3,10 +3,10 @@ import Cinematic from '../layouts/Cinematic.astro';
 
 const cities = [
   { slug: 'lagos', name: 'Lagos', tag: 'The city that never sleeps', img: '/img/cinematic/city-lagos.jpg', href: '/states/lagos/' },
-  { slug: 'abuja', name: 'Abuja', tag: 'The heart of Nigeria', img: '/img/cinematic/city-abuja.jpg' },
-  { slug: 'calabar', name: 'Calabar', tag: "Nature's paradise", img: '/img/cinematic/city-calabar.jpg' },
-  { slug: 'kano', name: 'Kano', tag: 'Ancient & timeless', img: '/img/cinematic/city-kano.jpg' },
-  { slug: 'osun', name: 'Osun', tag: 'Cultural heritage', img: '/img/cinematic/city-osun.jpg' },
+  { slug: 'abuja', name: 'Abuja', tag: 'The heart of Nigeria', img: '/img/cinematic/city-abuja.jpg', href: '/states/abuja/' },
+  { slug: 'calabar', name: 'Calabar', tag: "Nature's paradise", img: '/img/cinematic/city-calabar.jpg', href: '/states/calabar/' },
+  { slug: 'kano', name: 'Kano', tag: 'Ancient & timeless', img: '/img/cinematic/city-kano.jpg', href: '/states/kano/' },
+  { slug: 'osun', name: 'Osun', tag: 'Cultural heritage', img: '/img/cinematic/city-osun.jpg', href: '/states/osun/' },
 ];
 
 const categories = [
@@ -40,11 +40,11 @@ const categories = [
   </section>
 
   <section class="stats" id="states">
-    <div class="stat"><b>36</b><span>States &amp; FCT</span></div>
-    <div class="stat"><b>1000+</b><span>Destinations</span></div>
-    <div class="stat"><b>Live</b><span>Events</span></div>
-    <div class="stat"><b>Plan</b><span>Your Trip</span></div>
-    <div class="stat"><b>Inspire</b><span>Travel Guide</span></div>
+    <div class="stat" data-reveal><b>36</b><span>States &amp; FCT</span></div>
+    <div class="stat" data-reveal><b>1000+</b><span>Destinations</span></div>
+    <div class="stat" data-reveal><b>Live</b><span>Events</span></div>
+    <div class="stat" data-reveal><b>Plan</b><span>Your Trip</span></div>
+    <div class="stat" data-reveal><b>Inspire</b><span>Travel Guide</span></div>
   </section>
 
   <section class="explore" id="explore">
@@ -53,37 +53,82 @@ const categories = [
       <p>From bustling cities to serene landscapes, every corner of Nigeria has a story to tell.</p>
     </div>
     <div class="city-row">
-      {cities.map((c) =>
-        c.href ? (
-          <a class="city-card" href={c.href}>
-            <img src={c.img} alt={`${c.name} — ${c.tag}`} loading="lazy" />
-            <div class="city-meta">
-              <strong>{c.name}</strong>
-              <span>{c.tag}</span>
-            </div>
-          </a>
-        ) : (
-          <div class="city-card soon">
-            <img src={c.img} alt={`${c.name} — ${c.tag}`} loading="lazy" />
-            <span class="soon-badge">Coming soon</span>
-            <div class="city-meta">
-              <strong>{c.name}</strong>
-              <span>{c.tag}</span>
-            </div>
+      {cities.map((c) => (
+        <a class="city-card" href={c.href} data-reveal>
+          <img src={c.img} alt={`${c.name} — ${c.tag}`} loading="lazy" />
+          <div class="city-meta">
+            <strong>{c.name}</strong>
+            <span>{c.tag}</span>
           </div>
-        )
-      )}
+        </a>
+      ))}
     </div>
   </section>
 
   <section class="cats" id="categories">
     {categories.map((cat) => (
-      <div class="cat">
+      <div class="cat" data-reveal>
         <span class="script cat-name" style={`color:${cat.color}`}>{cat.name}</span>
         <span class="cat-sub">{cat.sub}</span>
       </div>
     ))}
   </section>
+
+  <script>
+    import { gsap } from 'gsap';
+    import { ScrollTrigger } from 'gsap/ScrollTrigger';
+    import Lenis from 'lenis';
+
+    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      gsap.registerPlugin(ScrollTrigger);
+
+      const lenis = new Lenis();
+      lenis.on('scroll', ScrollTrigger.update);
+      gsap.ticker.add((time) => lenis.raf(time * 1000));
+      gsap.ticker.lagSmoothing(0);
+
+      // entrance: the hero paints itself in
+      gsap.timeline()
+        .from('.welcome', { opacity: 0, y: 20, duration: 0.7, ease: 'power2.out' })
+        .from('.hero h1', { opacity: 0, y: 34, duration: 0.8, ease: 'power2.out' }, 0.15)
+        .from('.lede, .hero-ctas', { opacity: 0, y: 24, stagger: 0.12, duration: 0.7, ease: 'power2.out' }, 0.4);
+
+      // hero parallax: image drifts slower than the page, content lifts away
+      gsap.to('.hero-bg', {
+        yPercent: 18,
+        scale: 1.08,
+        ease: 'none',
+        scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true },
+      });
+      gsap.to('.hero-content', {
+        yPercent: -14,
+        opacity: 0.15,
+        ease: 'none',
+        scrollTrigger: { trigger: '.hero', start: 'top top', end: '75% top', scrub: true },
+      });
+
+      // shared reveal for stats, city cards, categories
+      document.querySelectorAll<HTMLElement>('[data-reveal]').forEach((el, i) => {
+        gsap.from(el, {
+          opacity: 0,
+          y: 36,
+          duration: 0.7,
+          ease: 'power2.out',
+          delay: (i % 5) * 0.08,
+          scrollTrigger: { trigger: el, start: 'top 88%' },
+        });
+      });
+
+      // section headings slide in from the left
+      gsap.from('.explore-head', {
+        opacity: 0,
+        x: -40,
+        duration: 0.8,
+        ease: 'power2.out',
+        scrollTrigger: { trigger: '.explore-head', start: 'top 85%' },
+      });
+    }
+  </script>
 
   <style>
     .hero { position: relative; min-height: 100vh; min-height: 100dvh; display: grid; align-items: center; overflow: hidden; }
@@ -162,13 +207,6 @@ const categories = [
     }
     .city-meta strong { font-family: var(--font-display); font-size: 1.15rem; }
     .city-meta span { font-size: 0.75rem; color: var(--text-dim); }
-    .soon { opacity: 0.85; }
-    .soon-badge {
-      position: absolute; top: 0.7rem; right: 0.7rem;
-      font-family: var(--font-mono); font-size: 0.6rem; letter-spacing: 0.12em; text-transform: uppercase;
-      background: rgba(0,0,0,0.65); border: 1px solid var(--line); border-radius: 999px; padding: 0.25rem 0.6rem;
-    }
-
     .cats {
       display: grid; grid-template-columns: repeat(5, 1fr);
       border-top: 1px solid var(--line);

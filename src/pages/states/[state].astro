@@ -1,6 +1,13 @@
 ---
 import Cinematic from '../../layouts/Cinematic.astro';
-import { spots } from '../../data/spots';
+import { states } from '../../data/states';
+
+export function getStaticPaths() {
+  return states.map((s) => ({ params: { state: s.slug }, props: { s } }));
+}
+
+const { s } = Astro.props;
+const isLagos = s.slug === 'lagos';
 
 const rail = [
   { name: 'Beaches', img: '/img/cinematic/cat-beaches.jpg', href: '/spots/?cat=beach' },
@@ -10,111 +17,98 @@ const rail = [
   { name: 'Events', img: '/img/cinematic/cat-events.jpg', href: '/spots/' },
   { name: 'Adventures', img: '/img/cinematic/cat-adventures.jpg', href: '/spots/?cat=nature' },
 ];
-
-const experiences = [
-  { name: 'Lekki Conservation Centre', img: '/img/cinematic/spot-lekki.jpg', href: '/spots/lekki-conservation-centre/' },
-  { name: 'Nike Art Gallery', img: '/img/cinematic/spot-nike.jpg', href: '/spots/nike-art-gallery/' },
-  { name: 'Tarkwa Bay Beach', img: '/img/cinematic/spot-tarkwa.jpg', href: '/spots/tarkwa-bay/' },
-  { name: 'Freedom Park', img: '/img/cinematic/spot-freedom.jpg', href: '/spots/freedom-park/' },
-  { name: 'Boat Cruise · Lekki', img: '/img/cinematic/spot-boat.jpg', href: '/spots/tarkwa-bay/' },
-];
-
-const mapLabels = [
-  { name: 'Lekki', x: 78, y: 28, color: 'var(--danfo)' },
-  { name: 'Ikoyi', x: 40, y: 46, color: 'var(--neon-green)' },
-  { name: 'Victoria Island', x: 22, y: 62, color: 'var(--neon-green)' },
-  { name: 'Ajah', x: 74, y: 58, color: 'var(--neon-pink)' },
-  { name: 'Badagry', x: 12, y: 80, color: 'var(--neon-teal)' },
-  { name: 'Ikeja', x: 30, y: 16, color: 'var(--neon-pink)' },
-];
-
-const lagosSpotCount = spots.length;
 ---
 
-<Cinematic title="Lagos — Waka" description="Where energy meets endless possibilities. Experience Africa's most dynamic city.">
+<Cinematic title={`${s.name} — Waka`} description={s.tagline}>
   <section class="hero">
-    <img class="hero-bg" src="/img/cinematic/hero-lagos.jpg" alt="" fetchpriority="high" />
+    <img class="hero-bg" src={s.heroImg} alt="" fetchpriority="high" />
     <div class="hero-shade" aria-hidden="true"></div>
 
     <nav class="crumbs" aria-label="Breadcrumb">
-      <a href="/">Home</a> <span>›</span> <a href="/#states">States</a> <span>›</span> <b>Lagos</b>
+      <a href="/">Home</a> <span>›</span> <a href="/#explore">States</a> <span>›</span> <b>{s.name}</b>
     </nav>
 
     <div class="hero-content">
       <p class="script welcome">Welcome to</p>
-      <h1 class="script">Lagos</h1>
+      <h1 class="script">{s.scriptName}</h1>
       <div class="brush" aria-hidden="true"></div>
-      <p class="lede">
-        Where energy meets endless possibilities. Experience Africa's most dynamic city.
-      </p>
+      <p class="lede">{s.tagline}</p>
       <div class="chips">
-        <div class="chip"><b>20M+</b><span>Population</span></div>
-        <div class="chip"><b>Yoruba + English</b><span>Languages</span></div>
-        <div class="chip"><b>Nov – Feb</b><span>Best time</span></div>
-        <div class="chip"><b>25 – 32°C</b><span>Weather</span></div>
+        {s.chips.map((c) => (
+          <div class="chip"><b>{c.value}</b><span>{c.label}</span></div>
+        ))}
       </div>
     </div>
 
     <aside class="side-nav" aria-label="Sections">
       <a href="#map">Map</a>
       <a href="#experiences">Spots</a>
-      <a href="/spots/?cat=nightlife">Nightlife</a>
-      <a href="/spots/?cat=beach">Beaches</a>
-      <a href="/spots/">All</a>
+      {isLagos && <a href="/spots/?cat=nightlife">Nightlife</a>}
+      {isLagos && <a href="/spots/?cat=beach">Beaches</a>}
+      {isLagos && <a href="/spots/">All</a>}
     </aside>
   </section>
 
-  <section class="rail-wrap">
-    <div class="rail">
-      {rail.map((r) => (
-        <a class="rail-card" href={r.href}>
-          <img src={r.img} alt={r.name} loading="lazy" />
-          <span>{r.name}</span>
-        </a>
-      ))}
-    </div>
-  </section>
+  {isLagos && (
+    <section class="rail-wrap">
+      <div class="rail">
+        {rail.map((r) => (
+          <a class="rail-card" href={r.href}>
+            <img src={r.img} alt={r.name} loading="lazy" />
+            <span>{r.name}</span>
+          </a>
+        ))}
+      </div>
+    </section>
+  )}
 
   <section class="map-row" id="map">
     <div class="map-card">
-      <img src="/img/cinematic/lagos-map.jpg" alt="Illustrated map of Lagos areas" loading="lazy" />
-      <p class="script map-title">Explore Lagos</p>
-      {mapLabels.map((l) => (
+      <img src={s.mapImg} alt={`Illustrated map of ${s.name} areas`} loading="lazy" />
+      <p class="script map-title">Explore {s.name}</p>
+      {s.mapLabels.map((l) => (
         <span class="map-label" style={`left:${l.x}%; top:${l.y}%; background:${l.color}`}>{l.name}</span>
       ))}
     </div>
     <div class="map-side">
       <div class="know">
         <h2>Did you know?</h2>
-        <p>
-          Lagos is one of the fastest growing cities in the world and the entertainment
-          capital of Africa — {lagosSpotCount} spots curated so far, every one with real
-          prices and safety notes.
-        </p>
-        <a href="/spots/">See the spots →</a>
+        <p>{s.fact}</p>
+        {isLagos ? (
+          <a href="/spots/">See the spots →</a>
+        ) : (
+          <a href="/states/lagos/">Start with Lagos →</a>
+        )}
       </div>
-      <a class="reel" href="/prototype">
-        <img src="/img/cinematic/hero-lagos.jpg" alt="" loading="lazy" />
+      <a class="reel" href={isLagos ? '/prototype' : '/states/lagos/'}>
+        <img src={s.heroImg} alt="" loading="lazy" />
         <span class="play" aria-hidden="true">▶</span>
-        <span class="reel-label">Experience Lagos</span>
+        <span class="reel-label">Experience {s.name}</span>
       </a>
     </div>
   </section>
 
   <section class="exps" id="experiences">
     <div class="exps-head">
-      <h2 class="script">Top Experiences in Lagos</h2>
-      <a href="/spots/">View all →</a>
+      <h2 class="script">Top Experiences in {s.name}</h2>
+      {isLagos ? <a href="/spots/">View all →</a> : <span class="soon-note">Full guide coming soon</span>}
     </div>
-    <div class="exp-row">
-      {experiences.map((e) => (
-        <a class="exp-card" href={e.href}>
-          <img src={e.img} alt={e.name} loading="lazy" />
-          <span>{e.name}</span>
-        </a>
-      ))}
+    <div class={`exp-row ${s.highlights.length <= 3 ? 'wide' : ''}`}>
+      {s.highlights.map((e) =>
+        e.href ? (
+          <a class="exp-card" href={e.href}>
+            <img src={e.img} alt={e.name} loading="lazy" />
+            <span>{e.name}</span>
+          </a>
+        ) : (
+          <div class="exp-card">
+            <img src={e.img} alt={e.name} loading="lazy" />
+            <span>{e.name}</span>
+          </div>
+        )
+      )}
     </div>
-    <p class="doodle script" aria-hidden="true">Live<br />Love<br />Lagos</p>
+    <p class="doodle script" aria-hidden="true">{s.doodle[0]}<br />{s.doodle[1]}<br />{s.doodle[2]}</p>
   </section>
 
   <style>
@@ -138,11 +132,11 @@ const lagosSpotCount = spots.length;
     .hero-content { position: relative; padding: 7rem clamp(1.25rem, 5vw, 4rem) 4rem; max-width: 46rem; }
     .welcome { font-size: clamp(1.4rem, 3.5vw, 2rem); color: var(--danfo); text-shadow: 0 2px 14px rgba(0,0,0,0.7); }
     .hero h1 {
-      font-size: clamp(4.5rem, 14vw, 9rem); font-weight: 400; color: #fff; line-height: 1;
-      text-shadow: 0 6px 30px rgba(0,0,0,0.6); transform: rotate(-3deg); width: max-content;
+      font-size: clamp(4rem, 13vw, 8.5rem); font-weight: 400; color: #fff; line-height: 1;
+      text-shadow: 0 6px 30px rgba(0,0,0,0.6); transform: rotate(-3deg); width: max-content; max-width: 100%;
     }
     .brush { width: clamp(10rem, 24vw, 16rem); height: 0.55rem; background: var(--neon-pink); border-radius: 999px; transform: rotate(-3deg) translateY(-0.4rem); box-shadow: 0 0 18px rgba(255,61,143,0.6); }
-    .lede { margin-top: 1.4rem; max-width: 34ch; text-shadow: 0 1px 10px rgba(0,0,0,0.8); }
+    .lede { margin-top: 1.4rem; max-width: 38ch; text-shadow: 0 1px 10px rgba(0,0,0,0.8); }
     .chips { display: flex; flex-wrap: wrap; gap: 0.7rem; margin-top: 1.8rem; }
     .chip {
       display: grid; gap: 0; padding: 0.55rem 1rem; border-radius: 0.7rem;
@@ -214,17 +208,20 @@ const lagosSpotCount = spots.length;
     .exps-head h2 { font-size: clamp(1.7rem, 4vw, 2.4rem); font-weight: 400; }
     .exps-head a { font-size: 0.85rem; color: var(--text-dim); text-decoration: none; }
     .exps-head a:hover { color: var(--danfo); }
+    .soon-note { font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-dim); }
     .exp-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.9rem; }
+    .exp-row.wide { grid-template-columns: repeat(3, 1fr); }
     .exp-card {
       position: relative; aspect-ratio: 4/5; border-radius: 0.8rem; overflow: hidden;
       border: 1px solid var(--line); text-decoration: none; transition: transform 0.18s ease;
     }
+    .exp-row.wide .exp-card { aspect-ratio: 4/3; }
     .exp-card img { width: 100%; height: 100%; object-fit: cover; }
     .exp-card span {
       position: absolute; inset: auto 0 0 0; padding: 1.8rem 0.8rem 0.7rem; font-size: 0.82rem; font-weight: 600;
       background: linear-gradient(180deg, transparent, rgba(0,0,0,0.88));
     }
-    .exp-card:hover { transform: translateY(-4px); border-color: var(--danfo); }
+    a.exp-card:hover { transform: translateY(-4px); border-color: var(--danfo); }
     .doodle {
       position: absolute; right: clamp(1rem, 4vw, 3rem); bottom: -1.2rem;
       font-size: 1.9rem; line-height: 1.05; text-align: center; transform: rotate(-8deg);
@@ -238,8 +235,8 @@ const lagosSpotCount = spots.length;
       .side-nav { display: none; }
       .rail { grid-template-columns: repeat(3, 1fr); }
       .map-row { grid-template-columns: 1fr; }
-      .exp-row { grid-template-columns: repeat(2, 1fr); }
-      .exp-card:last-child { grid-column: span 2; aspect-ratio: 16/9; }
+      .exp-row, .exp-row.wide { grid-template-columns: repeat(2, 1fr); }
+      .exp-row .exp-card:last-child { grid-column: span 2; aspect-ratio: 16/9; }
       .doodle { display: none; }
     }
   </style>
