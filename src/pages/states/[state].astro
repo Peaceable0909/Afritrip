@@ -30,7 +30,7 @@ const rail = [
 
     <div class="hero-content">
       <p class="script welcome">Welcome to</p>
-      <h1 class="script">{s.scriptName}</h1>
+      <h1 class="script" id="state-name" data-name={s.scriptName} data-alt={s.altName}>{s.scriptName}</h1>
       <div class="brush" aria-hidden="true"></div>
       <p class="lede">{s.tagline}</p>
       <div class="chips">
@@ -241,3 +241,46 @@ const rail = [
     }
   </style>
 </Cinematic>
+
+<script>
+  import { gsap } from 'gsap';
+
+  // Text Morph: the state's name breathes between English and its local name
+  const el = document.getElementById('state-name');
+  const alt = el?.dataset.alt;
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (el && alt && !reduced) {
+    const names = [el.dataset.name!, alt];
+    let which = 0;
+
+    const renderChars = (text: string) => {
+      el.innerHTML = '';
+      [...text].forEach((ch) => {
+        const span = document.createElement('span');
+        span.textContent = ch === ' ' ? ' ' : ch;
+        span.style.display = 'inline-block';
+        el.appendChild(span);
+      });
+      return el.children;
+    };
+
+    renderChars(names[0]);
+
+    setInterval(() => {
+      const out = [...el.children];
+      gsap.to(out, {
+        y: -22,
+        opacity: 0,
+        stagger: 0.035,
+        duration: 0.38,
+        ease: 'power2.in',
+        onComplete: () => {
+          which = 1 - which;
+          const chars = renderChars(names[which]);
+          gsap.fromTo(chars, { y: 22, opacity: 0 }, { y: 0, opacity: 1, stagger: 0.045, duration: 0.45, ease: 'back.out(1.7)' });
+        },
+      });
+    }, 5000);
+  }
+</script>

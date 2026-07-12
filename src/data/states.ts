@@ -20,6 +20,7 @@ export interface StateInfo {
   slug: string;
   name: string;
   scriptName: string;
+  altName?: string;
   tagline: string;
   heroImg: string;
   moods: string[];
@@ -35,6 +36,7 @@ export interface StateInfo {
 export const states: StateInfo[] = [
   {
     slug: 'lagos',
+    altName: 'Èkó',
     moods: ['party', 'food', 'relax', 'adventure'],
     mapPos: { x: 18, y: 76 },
     name: 'Lagos',
@@ -101,6 +103,7 @@ export const states: StateInfo[] = [
   },
   {
     slug: 'calabar',
+    altName: 'Canaan City',
     moods: ['nature', 'party', 'food', 'adventure'],
     mapPos: { x: 66, y: 82 },
     name: 'Calabar',
@@ -132,6 +135,7 @@ export const states: StateInfo[] = [
   },
   {
     slug: 'kano',
+    altName: 'Tumbin Giwa',
     moods: ['history', 'adventure', 'food'],
     mapPos: { x: 55, y: 16 },
     name: 'Kano',
@@ -163,6 +167,7 @@ export const states: StateInfo[] = [
   },
   {
     slug: 'osun',
+    altName: 'Ọ̀ṣun',
     moods: ['history', 'nature', 'relax'],
     mapPos: { x: 27, y: 64 },
     name: 'Osun',

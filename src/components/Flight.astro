@@ -259,6 +259,7 @@ const stateCards = Object.fromEntries(
       const mood = btn.dataset.mood!;
       const on = currentMood !== mood;
       currentMood = on ? mood : null;
+      if (on) burst(btn, btn.querySelector('.mood-emoji')!.textContent!.trim());
       root.querySelectorAll('.mood').forEach((b) => b.classList.toggle('active', b === btn && on));
       document.body.dataset.mood = on ? mood : '';
       // light up matching states
@@ -287,6 +288,46 @@ const stateCards = Object.fromEntries(
   // idle shimmer on rivers
   if (!reduced) {
     gsap.to('.ng-rivers', { opacity: 0.9, duration: 2.4, ease: 'sine.inOut', repeat: -1, yoyo: true });
+  }
+
+  // ---------- typewriter placeholder (ported from the OriginKit idea, zero deps) ----------
+  const suggestions = ['“beach”', '“suya”', '“Kano”', '“art”', '“party”', '“waterfall”', '“Èkó”'];
+  if (!reduced) {
+    let si = 0, ci = 0, deleting = false;
+    setInterval(() => {
+      // never fight the user for the box
+      if (document.activeElement === input || input.value) return;
+      const word = suggestions[si];
+      if (!deleting) {
+        ci++;
+        if (ci === word.length + 6) deleting = true; // linger before deleting
+      } else {
+        ci--;
+        if (ci === 0) { deleting = false; si = (si + 1) % suggestions.length; }
+      }
+      input.placeholder = 'Try ' + word.slice(0, Math.min(ci, word.length)) + (ci <= word.length ? '▍' : '…');
+    }, 110);
+  }
+
+  // ---------- emoji burst on mood taps ----------
+  function burst(btn: HTMLElement, emoji: string) {
+    if (reduced) return;
+    const rect = btn.getBoundingClientRect();
+    for (let i = 0; i < 9; i++) {
+      const s = document.createElement('span');
+      s.textContent = emoji;
+      s.style.cssText = `position:fixed; left:${rect.left + rect.width / 2}px; top:${rect.top + rect.height / 2}px; font-size:${14 + Math.random() * 12}px; pointer-events:none; z-index:60;`;
+      document.body.appendChild(s);
+      gsap.to(s, {
+        x: (Math.random() - 0.5) * 180,
+        y: -60 - Math.random() * 120,
+        rotate: (Math.random() - 0.5) * 240,
+        opacity: 0,
+        duration: 0.9 + Math.random() * 0.5,
+        ease: 'power2.out',
+        onComplete: () => s.remove(),
+      });
+    }
   }
 </script>
 
