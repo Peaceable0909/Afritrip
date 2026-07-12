@@ -22,6 +22,8 @@ export interface StateInfo {
   scriptName: string;
   tagline: string;
   heroImg: string;
+  moods: string[];
+  mapPos: { x: number; y: number };
   chips: StateChip[];
   fact: string;
   mapImg: string;
@@ -33,6 +35,8 @@ export interface StateInfo {
 export const states: StateInfo[] = [
   {
     slug: 'lagos',
+    moods: ['party', 'food', 'relax', 'adventure'],
+    mapPos: { x: 18, y: 76 },
     name: 'Lagos',
     scriptName: 'Lagos',
     tagline: "Where energy meets endless possibilities. Experience Africa's most dynamic city.",
@@ -65,6 +69,8 @@ export const states: StateInfo[] = [
   },
   {
     slug: 'abuja',
+    moods: ['relax', 'nature', 'history'],
+    mapPos: { x: 47, y: 46 },
     name: 'Abuja',
     scriptName: 'Abuja',
     tagline: 'The heart of Nigeria. Planned, green and calm — where the whole country meets.',
@@ -95,6 +101,8 @@ export const states: StateInfo[] = [
   },
   {
     slug: 'calabar',
+    moods: ['nature', 'party', 'food', 'adventure'],
+    mapPos: { x: 66, y: 82 },
     name: 'Calabar',
     scriptName: 'Calabar',
     tagline: "Nigeria's coolest, greenest corner — carnival city with rainforest at its back.",
@@ -124,6 +132,8 @@ export const states: StateInfo[] = [
   },
   {
     slug: 'kano',
+    moods: ['history', 'adventure', 'food'],
+    mapPos: { x: 55, y: 16 },
     name: 'Kano',
     scriptName: 'Kano',
     tagline: 'A thousand years of trade, walls and dye pits — the ancient north at full volume.',
@@ -153,6 +163,8 @@ export const states: StateInfo[] = [
   },
   {
     slug: 'osun',
+    moods: ['history', 'nature', 'relax'],
+    mapPos: { x: 27, y: 64 },
     name: 'Osun',
     scriptName: 'Osun',
     tagline: 'Sacred groves, living shrines and the cradle of Yoruba civilisation.',

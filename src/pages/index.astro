@@ -1,5 +1,6 @@
 ---
 import Cinematic from '../layouts/Cinematic.astro';
+import Flight from '../components/Flight.astro';
 
 const cities = [
   { slug: 'lagos', name: 'Lagos', tag: 'The city that never sleeps', img: '/img/cinematic/city-lagos.jpg', href: '/states/lagos/' },
@@ -98,6 +99,8 @@ const categories = [
       ))}
     </div>
   </section>
+
+  <Flight />
 
   <section class="cats" id="categories">
     {categories.map((cat) => (
