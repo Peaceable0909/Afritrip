@@ -198,7 +198,9 @@ const categories = [
       text-align: center;
       font-family: var(--font-display); font-weight: 800;
       font-size: clamp(4.2rem, 16.5vw, 15rem); line-height: 0.9; letter-spacing: 0.01em;
-      background-image: url('/img/cinematic/hero-grunge.jpg'), url('/img/cinematic/hero-land.jpg');
+      /* Letter fill is its own swappable folder: public/img/wordmark/
+         fill.jpg = image inside the letters · texture.jpg = grunge overlay */
+      background-image: url('/img/wordmark/texture.jpg'), url('/img/wordmark/fill.jpg');
       background-size: cover, 145% auto;
       background-position: center, center 12%;
       background-blend-mode: soft-light;
