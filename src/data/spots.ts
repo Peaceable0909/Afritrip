@@ -10,9 +10,21 @@ export const stateLabels: Record<StateSlug, string> = {
   osun: 'Osun',
 };
 
+export interface SpotMap {
+  /** Pin verified on Google Maps; falls back to a name search when absent. */
+  coords?: [number, number];
+  query: string;
+}
+
+export function mapsUrl(map: SpotMap): string {
+  const q = map.coords ? `${map.coords[0]},${map.coords[1]}` : encodeURIComponent(map.query);
+  return `https://www.google.com/maps/search/?api=1&query=${q}`;
+}
+
 export interface Spot {
   slug: string;
   state: StateSlug;
+  map: SpotMap;
   name: string;
   area: string;
   img: string;
@@ -48,6 +60,7 @@ export const spots: Spot[] = [
   {
     slug: 'nike-art-gallery',
     state: 'lagos',
+    map: { coords: [6.4315071, 3.4818389], query: 'Nike Art Gallery Lekki' },
     moods: ['history', 'relax'],
     img: '/img/cinematic/spot-nike.jpg',
     name: 'Nike Art Gallery',
@@ -65,16 +78,17 @@ export const spots: Spot[] = [
     hours: 'Daily, roughly 10am – 6pm',
     bestTime: 'Weekday mornings — quiet enough to actually see the art.',
     gettingThere:
-      'On the Lekki–Epe corridor, 2nd Roundabout area. Any ride-hailing app finds it; ask for “Nike Art Gallery, Lekki”.',
+      'Off Elegushi Beach Road in the Ikate area of Lekki — close to Elegushi Beach and the Lekki Arts & Crafts Market. Any ride-hailing app finds it; ask for “Nike Art Gallery, Lekki”.',
     tips: [
       'Ask the staff for a guided walk — it is free and transforms the visit.',
       'Photography is allowed; just ask before photographing people.',
-      'Pair it with Lekki Conservation Centre — they are 15 minutes apart without traffic.',
+      'Pair it with the Lekki Arts & Crafts Market nearby. Lekki Conservation Centre is about 6 km further out — allow 15 to 40 minutes depending on traffic.',
     ],
   },
   {
     slug: 'lekki-conservation-centre',
     state: 'lagos',
+    map: { coords: [6.4415182, 3.535771], query: 'Lekki Conservation Centre' },
     moods: ['nature', 'adventure'],
     img: '/img/cinematic/spot-lekki.jpg',
     name: 'Lekki Conservation Centre',
@@ -102,6 +116,7 @@ export const spots: Spot[] = [
   {
     slug: 'tarkwa-bay',
     state: 'lagos',
+    map: { coords: [6.400566, 3.3955927], query: 'Tarkwa Bay Beach Lagos' },
     moods: ['relax', 'adventure', 'nature'],
     img: '/img/cinematic/spot-tarkwa.jpg',
     name: 'Tarkwa Bay Beach',
@@ -129,6 +144,7 @@ export const spots: Spot[] = [
   {
     slug: 'freedom-park',
     state: 'lagos',
+    map: { coords: [6.4488993, 3.3965146], query: 'Freedom Park Lagos' },
     moods: ['history', 'party', 'food'],
     img: '/img/cinematic/spot-freedom.jpg',
     name: 'Freedom Park',
@@ -156,6 +172,7 @@ export const spots: Spot[] = [
   {
     slug: 'new-afrika-shrine',
     state: 'lagos',
+    map: { coords: [6.6229285, 3.3569425], query: 'New Afrika Shrine Ikeja' },
     moods: ['party', 'history'],
     img: '/img/cinematic/spot-shrine.jpg',
     name: 'New Afrika Shrine',
@@ -183,6 +200,7 @@ export const spots: Spot[] = [
   {
     slug: 'terra-kulture',
     state: 'lagos',
+    map: { coords: [6.4251323, 3.4268301], query: 'Terra Kulture Victoria Island' },
     moods: ['food', 'history', 'relax'],
     img: '/img/cinematic/spot-terra.jpg',
     name: 'Terra Kulture',
@@ -210,6 +228,7 @@ export const spots: Spot[] = [
   {
     slug: 'elegushi-beach',
     state: 'lagos',
+    map: { query: 'Elegushi Royal Beach Lekki Lagos' },
     moods: ['party'],
     img: '/img/cinematic/spot-elegushi.jpg',
     name: 'Elegushi Beach',
@@ -227,7 +246,7 @@ export const spots: Spot[] = [
     hours: 'Daily, day into late night on weekends',
     bestTime: 'Saturday late afternoon into the evening.',
     gettingThere:
-      'Off Remi Olowude Way, Lekki Phase 1 axis. Ride-hailing to the gate; expect traffic on Friday and Saturday evenings.',
+      'Google Maps lists “Elegushi Royal Beach” (the public beach, off Road 3, Lekki Phase 1) and a separate “Elegushi Private Beach” on the Lekki–Epe Expressway — pick the one you mean before you set off. Expect traffic on Friday and Saturday evenings.',
     tips: [
       'Swimming is genuinely dangerous here — strong currents, no reliable lifeguards. Stay shallow.',
       'Keep your phone zipped away when the crowd thickens.',
@@ -237,6 +256,7 @@ export const spots: Spot[] = [
   {
     slug: 'bature-brewery',
     state: 'lagos',
+    map: { coords: [6.4332814, 3.4339323], query: 'Bature Brewery Lagos' },
     moods: ['party', 'food', 'relax'],
     img: '/img/cinematic/spot-bature.jpg',
     name: 'Bature Brewery',
@@ -264,10 +284,11 @@ export const spots: Spot[] = [
   {
     slug: 'national-museum-lagos',
     state: 'lagos',
+    map: { coords: [6.4442681, 3.4036542], query: 'National Museum Lagos' },
     moods: ['history', 'relax'],
     img: '/img/cinematic/city-lagos.jpg',
     name: 'National Museum Lagos',
-    area: 'Onikan, Lagos Island',
+    area: 'Onikan Road, Ikoyi',
     category: 'culture',
     blurb:
       'Nok terracotta, Benin and Ife bronzes and a crash course in 2,000 years of Nigerian art.',
@@ -278,10 +299,10 @@ export const spots: Spot[] = [
       'Entry is a small fee for visitors; photo or camera permits can cost extra. Confirm at the desk and keep your ticket.',
     safetyDay: 'good',
     safetyNight: 'avoid',
-    hours: 'Daily, roughly 9am – 5pm — check before you go',
+    hours: 'Opens 9am — check Google Maps for today’s hours before you go',
     bestTime: 'Weekday mornings, before the school trips arrive.',
     gettingThere:
-      'Onikan, Lagos Island, not far from Freedom Park and the Tafawa Balewa Square area. Ride-hailing to “National Museum Onikan”.',
+      'On Onikan Road, about 1 km from Freedom Park. Ride-hailing to “National Museum Lagos”.',
     tips: [
       'Ask whether a guide is available — a short guided loop makes the objects make sense.',
       'Pair it with Freedom Park the same afternoon; they are a short ride apart.',
@@ -291,10 +312,11 @@ export const spots: Spot[] = [
   {
     slug: 'lekki-arts-crafts-market',
     state: 'lagos',
+    map: { query: 'Lekki Arts & Crafts Market Oba Elegushi St Lagos' },
     moods: ['history', 'food', 'relax'],
     img: '/img/cinematic/cat-events.jpg',
     name: 'Lekki Arts & Crafts Market',
-    area: 'Lekki',
+    area: 'Oba Elegushi St, Lekki',
     category: 'culture',
     blurb:
       'Wood carvings, beads, adire, masks and bronzes — the best place in Lagos to buy souvenirs and haggle.',
@@ -305,10 +327,10 @@ export const spots: Spot[] = [
       'The first price quoted to visitors is often two to three times what locals pay. Counter at about half, walk away politely, and expect them to meet you in the middle.',
     safetyDay: 'good',
     safetyNight: 'avoid',
-    hours: 'Daily, roughly 10am – 6pm',
+    hours: 'Roughly 10am – 6pm (Google Maps shows it closing at 6pm)',
     bestTime: 'Weekday afternoons — fewer people, more patient traders.',
     gettingThere:
-      'In the Lekki Phase 1 area. Search “Lekki Arts and Crafts Market” on your ride app and agree the return trip before you leave.',
+      'On Oba Elegushi Street in Lekki, near Elegushi Beach and Nike Art Gallery. Search “Lekki Arts & Crafts Market” on your ride app and agree the return trip before you leave.',
     tips: [
       'Bring small notes — giving ₦20,000 for a ₦3,000 item makes change and trust awkward.',
       'Check wooden pieces and bronzes for cracks before paying.',
@@ -318,6 +340,7 @@ export const spots: Spot[] = [
   {
     slug: 'obalende-suya',
     state: 'lagos',
+    map: { query: 'Obalende Suya Spot Ojo St Lagos' },
     moods: ['food', 'party'],
     img: '/img/cinematic/cat-food.jpg',
     name: 'Obalende Suya',
@@ -335,7 +358,7 @@ export const spots: Spot[] = [
     hours: 'Evenings into the night, busiest after 7pm',
     bestTime: 'Around 8pm, when the grills are at full heat.',
     gettingThere:
-      'Obalende, Lagos Island. Take a ride-hailing car there and arrange the ride home before you start eating — do not wander the area late.',
+      'Obalende, Lagos Island. Google Maps shows only a few small venues (for example “Obalende Suya Spot” on Ojo Street), so treat this as an area to explore. Take a ride-hailing car there and arrange the ride home before you start eating — do not wander the area late.',
     tips: [
       'Choose a stall with a queue and a hot grill, not one with meat sitting out.',
       'Say your pepper level honestly — “small pepper” is a good first answer.',
@@ -345,6 +368,7 @@ export const spots: Spot[] = [
   {
     slug: 'badagry-point-of-no-return',
     state: 'lagos',
+    map: { query: 'Point of No Return Badagry' },
     moods: ['history', 'nature'],
     img: '/img/cinematic/spot-boat.jpg',
     name: 'Badagry Heritage Trail',
@@ -359,7 +383,7 @@ export const spots: Spot[] = [
       'Entry fees at each stop are small; the bigger cost is transport and a guide. Agree a total price for the day before you set out.',
     safetyDay: 'good',
     safetyNight: 'avoid',
-    hours: 'Daytime — plan to leave Lagos early',
+    hours: 'Roughly 9am – 5pm (Google Maps shows the museum and Point of No Return closing at 5pm)',
     bestTime: 'Weekday mornings, to beat both the road and the heat.',
     gettingThere:
       'About 60 km from Lagos Island on the Lagos–Badagry Expressway. Traffic decides the trip — allow 1.5 to 3 hours each way and go early.',
@@ -372,6 +396,7 @@ export const spots: Spot[] = [
   {
     slug: 'zuma-rock',
     state: 'abuja',
+    map: { coords: [9.125556, 7.228889], query: 'Zuma Rock Nigeria' },
     moods: ['nature', 'adventure', 'history'],
     img: '/img/cinematic/hl-abuja-zuma.jpg',
     name: 'Zuma Rock',
@@ -389,7 +414,7 @@ export const spots: Spot[] = [
     hours: 'Daylight only',
     bestTime: 'Early morning or late afternoon for the best light and cooler air.',
     gettingThere:
-      'On the Abuja–Kaduna road, about 30 – 45 minutes from central Abuja depending on traffic. Hire a car for the afternoon or use ride-hailing with a return arranged.',
+      'On the Abuja–Kaduna road, roughly 45 – 60 minutes from central Abuja depending on traffic. Hire a car for the afternoon or use ride-hailing with a return arranged.',
     tips: [
       'Do not attempt to climb without a local guide — the rock is steep and unforgiving.',
       'Go in the dry season for clear skies and good photos.',
@@ -399,6 +424,7 @@ export const spots: Spot[] = [
   {
     slug: 'jabi-lake-park',
     state: 'abuja',
+    map: { coords: [9.0709435, 7.4147471], query: 'Jabi Lake Park Abuja' },
     moods: ['relax', 'nature', 'food'],
     img: '/img/cinematic/hl-abuja-jabi.jpg',
     name: 'Jabi Lake Park',
@@ -426,6 +452,7 @@ export const spots: Spot[] = [
   {
     slug: 'kwa-falls',
     state: 'calabar',
+    map: { coords: [5.1425974, 8.5101399], query: 'Kwa Falls Calabar' },
     moods: ['nature', 'adventure', 'relax'],
     img: '/img/cinematic/hl-calabar-kwa.jpg',
     name: 'Kwa Falls',
@@ -453,6 +480,7 @@ export const spots: Spot[] = [
   {
     slug: 'kofar-mata-dye-pits',
     state: 'kano',
+    map: { coords: [12.0007108, 8.5259754], query: 'Kofar Mata Dye Pits Kano' },
     moods: ['history', 'adventure'],
     img: '/img/cinematic/hl-kano-dyepits.jpg',
     name: 'Kofar Mata Dye Pits',
@@ -480,6 +508,7 @@ export const spots: Spot[] = [
   {
     slug: 'osun-osogbo-sacred-grove',
     state: 'osun',
+    map: { coords: [7.7556674, 4.5522822], query: 'Osun-Osogbo Sacred Grove' },
     moods: ['history', 'nature', 'relax'],
     img: '/img/cinematic/hl-osun-grove.jpg',
     name: 'Osun-Osogbo Sacred Grove',
@@ -497,7 +526,7 @@ export const spots: Spot[] = [
     hours: 'Daily daytime hours — check before you go',
     bestTime: 'Weekday mornings, or August for the festival if you like crowds.',
     gettingThere:
-      'Osogbo, roughly 3 – 4 hours by road from Lagos. Stay overnight in Osogbo or Ibadan rather than doing it as a day trip.',
+      'Osogbo, around 4 hours or more by road from Lagos. Stay overnight in Osogbo or Ibadan rather than doing it as a day trip.',
     tips: [
       'Dress modestly and ask your guide how to behave at the shrines.',
       'Take the guide — the symbolism is lost without one.',
@@ -507,6 +536,7 @@ export const spots: Spot[] = [
   {
     slug: 'erin-ijesha-waterfalls',
     state: 'osun',
+    map: { coords: [7.5651908, 4.9021896], query: 'Erin Ijesha Waterfall Osun' },
     moods: ['nature', 'adventure', 'relax'],
     img: '/img/cinematic/hl-osun-erin.jpg',
     name: 'Erin-Ijesha Waterfalls',
@@ -524,7 +554,7 @@ export const spots: Spot[] = [
     hours: 'Daytime only',
     bestTime: 'Rainy season (Jun – Oct) for the biggest flow; dry season for safer, drier steps.',
     gettingThere:
-      'In Erin-Ijesha, Osun State, around 3 – 4 hours from Lagos. Combine with the Osogbo grove on a two-day trip.',
+      'In Erin-Ijesha, Osun State, around 4 – 5 hours from Lagos. Combine with the Osogbo grove on a two-day trip.',
     tips: [
       'Wear shoes with grip — the steps are slippery.',
       'Bring a change of clothes and a waterproof bag for your phone.',

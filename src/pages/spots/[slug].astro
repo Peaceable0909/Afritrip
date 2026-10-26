@@ -1,6 +1,6 @@
 ---
 import Cinematic from '../../layouts/Cinematic.astro';
-import { spots, categoryLabels, safetyLabels, stateLabels } from '../../data/spots';
+import { spots, categoryLabels, safetyLabels, stateLabels, mapsUrl } from '../../data/spots';
 
 export function getStaticPaths() {
   return spots.map((spot) => ({ params: { slug: spot.slug }, props: { spot } }));
@@ -67,6 +67,9 @@ const { spot } = Astro.props;
         </div>
       </dl>
       <p class="price-note"><strong>Price talk:</strong> {spot.priceNote}</p>
+      <a class="map-link" href={mapsUrl(spot.map)} target="_blank" rel="noopener noreferrer">
+        Open in Google Maps ↗
+      </a>
     </aside>
   </div>
 </Cinematic>
@@ -143,6 +146,13 @@ const { spot } = Astro.props;
     border-radius: 0.6rem; font-size: 0.86rem; color: var(--text);
   }
   .price-note strong { color: var(--danfo); }
+  .map-link {
+    display: flex; align-items: center; justify-content: center; min-height: var(--tap);
+    margin-top: 1.2rem; padding: 0.55rem 1.2rem; border-radius: 999px;
+    background: var(--danfo); color: #191410; font-weight: 700; font-size: var(--text-sm);
+    text-decoration: none; border: 2px solid #191410; box-shadow: 2px 2px 0 #000;
+  }
+  .map-link:hover { transform: translate(-1px,-1px); box-shadow: 3px 3px 0 #000; }
 
   @media (max-width: 50rem) {
     .hero { min-height: 62vh; min-height: 62dvh; }
