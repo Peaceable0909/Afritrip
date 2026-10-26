@@ -8,10 +8,11 @@ export function getStaticPaths() {
 
 const { s } = Astro.props;
 const isLagos = s.slug === 'lagos';
+const hasNightlife = s.slug === 'lagos' || s.slug === 'abuja';
 
 const rail = [
   { name: 'Beaches', img: '/img/cinematic/cat-beaches.jpg', href: '/spots/?cat=beach' },
-  { name: 'Nightlife', img: '/img/cinematic/cat-nightlife.jpg', href: '/spots/?cat=nightlife' },
+  { name: 'Nightlife', img: '/img/cinematic/cat-nightlife.jpg', href: hasNightlife ? `/nightlife/?city=${s.slug}` : '/spots/?cat=nightlife' },
   { name: 'Restaurants', img: '/img/cinematic/cat-food.jpg', href: '/spots/?cat=food' },
   { name: 'Hotels', img: '/img/cinematic/cat-hotels.jpg', href: '/spots/' },
   { name: 'Events', img: '/img/cinematic/cat-events.jpg', href: '/spots/' },
@@ -43,7 +44,7 @@ const rail = [
     <aside class="side-nav" aria-label="Sections">
       <a href="#map">Map</a>
       <a href="#experiences">Spots</a>
-      {isLagos && <a href="/spots/?cat=nightlife">Nightlife</a>}
+      {hasNightlife && <a href={`/nightlife/?city=${s.slug}`}>Nightlife</a>}
       {isLagos && <a href="/spots/?cat=beach">Beaches</a>}
       {isLagos && <a href="/spots/">All</a>}
     </aside>

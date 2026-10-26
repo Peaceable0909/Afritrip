@@ -1,0 +1,204 @@
+---
+import Cinematic from '../layouts/Cinematic.astro';
+import { venues, cityLabels, embedUrl, type CitySlug } from '../data/venues';
+import { mapsUrl } from '../data/spots';
+
+const cities = Object.keys(cityLabels) as CitySlug[];
+const count = (c: CitySlug) => venues.filter((v) => v.city === c).length;
+---
+
+<Cinematic title="Nightlife in Lagos and Abuja — Waka" description="Clubs, lounges, rooftops and beach bars in Lagos and Abuja, each matched to a real place on Google Maps.">
+  <section class="listing">
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <a href="/">Home</a> <span>›</span> <b>Nightlife</b>
+    </nav>
+
+    <div class="head">
+      <p class="script kicker">Night don come</p>
+      <h1>Nightlife in Lagos &amp; Abuja</h1>
+      <p class="sub">
+        {venues.length} venues, each matched to a real place on Google Maps. Open the map to see the
+        spot and the photos people have shared. Many places only open Thursday to Sunday, so
+        confirm the day and the cover charge before you go.
+      </p>
+    </div>
+
+    <div class="controls">
+      <div class="chip-row" role="group" aria-label="Filter by city">
+        <button class="chip" data-city="all" aria-pressed="true">All · {venues.length}</button>
+        {cities.map((c) => (
+          <button class="chip" data-city={c} aria-pressed="false">{cityLabels[c]} · {count(c)}</button>
+        ))}
+      </div>
+      <label class="search">
+        <span class="sr">Search venues or areas</span>
+        <input id="q" type="search" placeholder="Search a venue or area…" autocomplete="off" />
+      </label>
+    </div>
+
+    <p class="empty" id="empty" hidden>No venue matches that. Try another name or area.</p>
+
+    <ul class="venue-grid" id="venue-grid">
+      {venues.map((v) => (
+        <li
+          class="venue"
+          data-city={v.city}
+          data-text={`${v.name} ${v.area} ${cityLabels[v.city]}`.toLowerCase()}
+        >
+          <div class="venue-top">
+            <p class="eyebrow">{cityLabels[v.city]} · {v.area}</p>
+            <h2>{v.name}</h2>
+          </div>
+          <div class="actions">
+            <button class="btn map-toggle" type="button" aria-expanded="false" data-embed={embedUrl(v)} data-title={`Map of ${v.name}`}>
+              Show map
+            </button>
+            <a class="btn ghost" href={mapsUrl(v.map)} target="_blank" rel="noopener noreferrer">
+              Google Maps ↗
+            </a>
+            {v.spot && <a class="btn ghost" href={`/spots/${v.spot}/`}>Full guide →</a>}
+          </div>
+          <div class="map-wrap" hidden></div>
+        </li>
+      ))}
+    </ul>
+
+    <p class="fine">
+      Matched on Google Maps on 26 October 2026. Names are the listings Google shows; places open,
+      close and move, so check before you travel. Maps and photos load from Google only when you
+      tap “Show map”.
+    </p>
+  </section>
+</Cinematic>
+
+<script>
+  const chips = document.querySelectorAll<HTMLButtonElement>('.chip');
+  const items = document.querySelectorAll<HTMLElement>('.venue');
+  const input = document.getElementById('q') as HTMLInputElement;
+  const empty = document.getElementById('empty') as HTMLElement;
+  let city = 'all';
+
+  function apply() {
+    const term = input.value.trim().toLowerCase();
+    let shown = 0;
+    chips.forEach((c) => c.setAttribute('aria-pressed', String(c.dataset.city === city)));
+    items.forEach((el) => {
+      const ok = (city === 'all' || el.dataset.city === city) && (!term || (el.dataset.text ?? '').includes(term));
+      el.hidden = !ok;
+      if (ok) shown++;
+    });
+    empty.hidden = shown > 0;
+  }
+
+  chips.forEach((chip) =>
+    chip.addEventListener('click', () => {
+      city = chip.dataset.city ?? 'all';
+      apply();
+      const url = new URL(window.location.href);
+      if (city === 'all') url.searchParams.delete('city');
+      else url.searchParams.set('city', city);
+      history.replaceState(null, '', url);
+    })
+  );
+  input.addEventListener('input', apply);
+
+  // Map embeds load only on request, so the page stays light and Google sees nothing until asked.
+  document.querySelectorAll<HTMLButtonElement>('.map-toggle').forEach((btn) =>
+    btn.addEventListener('click', () => {
+      const wrap = btn.closest('.venue')?.querySelector<HTMLElement>('.map-wrap');
+      if (!wrap) return;
+      const open = btn.getAttribute('aria-expanded') === 'true';
+      if (!open && !wrap.firstChild) {
+        const frame = document.createElement('iframe');
+        frame.src = btn.dataset.embed ?? '';
+        frame.title = btn.dataset.title ?? 'Map';
+        frame.loading = 'lazy';
+        frame.referrerPolicy = 'no-referrer-when-downgrade';
+        frame.allowFullscreen = true;
+        wrap.appendChild(frame);
+      }
+      wrap.hidden = open;
+      btn.setAttribute('aria-expanded', String(!open));
+      btn.textContent = open ? 'Show map' : 'Hide map';
+    })
+  );
+
+  const initial = new URLSearchParams(window.location.search).get('city');
+  if (initial && [...chips].some((c) => c.dataset.city === initial)) city = initial;
+  apply();
+</script>
+
+<style>
+  .listing { padding: 6.5rem clamp(1rem, 4vw, 3rem) 4.5rem; }
+  .crumbs {
+    font-size: 0.82rem; color: var(--text-dim);
+    display: flex; gap: 0.5rem; align-items: center; margin-bottom: 2rem;
+  }
+  .crumbs a { text-decoration: none; }
+  .crumbs a:hover { color: var(--text); }
+  .crumbs b { color: var(--danfo); font-weight: 600; }
+
+  .head { margin-bottom: 2rem; }
+  .kicker { font-size: clamp(1.4rem, 3.5vw, 2rem); color: var(--neon-pink); }
+  h1 { font-family: var(--font-display); font-size: clamp(1.9rem, 5vw, 3rem); font-weight: 800; margin-top: 0.3rem; }
+  .sub { margin-top: 0.8rem; color: var(--text-dim); max-width: 60ch; }
+
+  .controls { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem; margin-bottom: 1.6rem; }
+  .chip-row { display: flex; flex-wrap: wrap; gap: 0.6rem; }
+  .chip {
+    font-family: var(--font-mono); font-size: 0.72rem; font-weight: 700;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    padding: 0.5rem 1.1rem; border-radius: 999px;
+    border: 1px solid var(--line); background: var(--panel); color: var(--text);
+    cursor: pointer; min-height: var(--tap); min-width: var(--tap);
+  }
+  .chip:hover { border-color: var(--danfo); }
+  .chip[aria-pressed='true'] {
+    background: var(--danfo); color: #191410; border-color: #191410; box-shadow: 2px 2px 0 #000;
+  }
+  .search { flex: 1 1 16rem; max-width: 26rem; }
+  .search input {
+    width: 100%; min-height: var(--tap); padding: 0.5rem 1rem; border-radius: 999px;
+    border: 1px solid var(--line); background: var(--panel); color: var(--text);
+    font: inherit; font-size: var(--text-sm);
+  }
+  .search input::placeholder { color: var(--text-dim); }
+  .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+
+  .empty { color: var(--text-dim); margin: 1rem 0 2rem; }
+
+  .venue-grid {
+    list-style: none; padding: 0;
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(min(19rem, 100%), 1fr)); gap: 1rem;
+  }
+  .venue {
+    display: grid; align-content: start; gap: 0.9rem;
+    background: var(--panel); border: 1px solid var(--line); border-radius: 0.9rem;
+    padding: var(--space-md);
+  }
+  .venue[hidden] { display: none; }
+  .eyebrow {
+    font-family: var(--font-mono); font-size: var(--text-xs); letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--text-dim);
+  }
+  h2 { font-family: var(--font-display); font-size: var(--text-xl); font-weight: 600; margin-top: 0.25rem; }
+
+  .actions { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; min-height: var(--tap);
+    padding: 0.45rem 1rem; border-radius: 999px; cursor: pointer;
+    font: inherit; font-size: var(--text-sm); font-weight: 700; text-decoration: none;
+    background: var(--danfo); color: #191410; border: 2px solid #191410; box-shadow: 2px 2px 0 #000;
+  }
+  .btn:hover { transform: translate(-1px, -1px); box-shadow: 3px 3px 0 #000; }
+  .btn.ghost { background: transparent; color: var(--text); border: 1px solid var(--line); box-shadow: none; font-weight: 600; }
+  .btn.ghost:hover { border-color: var(--danfo); transform: none; box-shadow: none; }
+
+  .map-wrap[hidden] { display: none; }
+  /* the iframe is created by script, so scoped styles need :global to reach it */
+  .map-wrap :global(iframe) {
+    width: 100%; height: 18rem; border: 0; border-radius: 0.6rem; background: var(--ink);
+  }
+
+  .fine { margin-top: 2.5rem; font-size: 0.8rem; color: var(--text-dim); max-width: 70ch; }
+</style>
