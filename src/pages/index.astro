@@ -36,6 +36,15 @@ const categories = [
 
     <h1 class="word">NIGERIA</h1>
 
+    <img
+      class="portrait"
+      src="/img/hero-portrait.png"
+      alt="Illustration of a Nigerian woman in a colourful gele headwrap"
+      width="1536"
+      height="1024"
+      fetchpriority="high"
+    />
+
     <div class="mist" aria-hidden="true"></div>
 
     <div class="dust" aria-hidden="true">
@@ -117,6 +126,7 @@ const categories = [
       // entrance: the scene assembles like a film title
       gsap.timeline()
         .from('.word', { opacity: 0, y: 50, duration: 1, ease: 'power3.out' })
+        .from('.portrait', { opacity: 0, y: 90, duration: 1, ease: 'power3.out' }, 0.45)
         .from('.welcome', { opacity: 0, y: 20, duration: 0.6, ease: 'power2.out' }, 0.6)
         .from('.lede, .hero-ctas', { opacity: 0, y: 22, stagger: 0.12, duration: 0.6, ease: 'power2.out' }, 0.75);
 
@@ -124,6 +134,7 @@ const categories = [
       const heroScrub = { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true };
       gsap.to('.bg-wrap', { yPercent: 14, ease: 'none', scrollTrigger: heroScrub });
       gsap.to('.word', { yPercent: -60, ease: 'none', scrollTrigger: heroScrub });
+      gsap.to('.portrait', { yPercent: 10, ease: 'none', scrollTrigger: heroScrub });
       gsap.to('.copy', {
         yPercent: -30,
         opacity: 0,
@@ -184,6 +195,16 @@ const categories = [
       background-position: center 38%;
       -webkit-background-clip: text; background-clip: text; color: transparent;
       filter: saturate(1.35) contrast(1.1) brightness(1.32) drop-shadow(0 8px 34px rgba(0,0,0,0.65));
+    }
+
+    /* L6 — the portrait breaks the wordmark */
+    .portrait {
+      position: absolute; right: clamp(0rem, 7vw, 9rem); bottom: 0; z-index: 5;
+      height: min(80vh, 92%); width: auto;
+      /* never squash the subject: keep true aspect ratio and let it bleed off-frame */
+      max-width: none;
+      background: none; /* the cutout is transparent; the site-wide img backdrop must not fill it */
+      filter: saturate(1.1) contrast(1.05) drop-shadow(-18px 24px 60px rgba(0,0,0,0.6));
     }
 
     /* L7 — mist grounding the bottom */
@@ -297,9 +318,10 @@ const categories = [
     .cat-sub { font-size: 0.75rem; color: var(--text-dim); }
 
     @media (max-width: 56rem) {
+      .portrait { height: 46vh; right: -30%; }
       .word { inset: 16% 0 auto 0; }
-      /* the copy sits low on the photograph, with a scrim behind it for contrast */
-      .copy { bottom: 12%; max-width: 86vw; }
+      /* keep the copy on the left, clear of the portrait, with a scrim behind it for contrast */
+      .copy { bottom: 12%; max-width: 64vw; }
       .copy::before {
         content: ''; position: absolute; inset: -2.5rem -1.5rem -1.5rem -1.5rem; z-index: -1;
         background: radial-gradient(120% 100% at 20% 55%, rgba(11,10,14,0.62), rgba(11,10,14,0) 75%);

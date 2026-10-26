@@ -18,7 +18,7 @@ city cards) and recompressed. Each photo's alt text, author, licence and source 
 | Where | Replacement |
 |---|---|
 | 18 spot pages (hero + gallery of 2 to 3 photos) | Photos of the real place (Zuma Rock, Kwa Falls, Kofar Mata dye pits, Osun-Osogbo grove, Erin-Ijesha, Lekki Conservation Centre, Nike Art Gallery, Tarkwa Bay, Freedom Park, New Afrika Shrine, Terra Kulture, Elegushi, National Museum, Lekki craft market, Badagry Point of No Return, Jabi Lake, suya) |
-| Home hero | Sunset over the River Benue (replaces the AI portrait, splash and clouds composite) |
+| Home hero | Sunset over the River Benue (replaces the AI landscape, splash and clouds). The AI portrait of a woman in a gele was removed, then restored at the owner's request |
 | 5 home city cards, 5 state heroes | Photos of Lagos, Abuja, Calabar, Kano and Osun |
 | 7 state highlights | Gurara Falls, Obudu cable car, Calabar Carnival, Kano Durbar, Kurmi Market, Ile-Ife museum, Lagos Lagoon |
 | 6 category tiles | Lekki Beach, Olumo Rock, Eyo festival, jollof rice, Transcorp Hilton Abuja, Third Mainland Bridge at night |
@@ -36,6 +36,9 @@ city cards) and recompressed. Each photo's alt text, author, licence and source 
 - A Garki "market" photo that actually showed a fire station, and a gloomy tilted Kubwa sunset.
 
 ## Not verified or not replaced
+
+- **Home hero portrait**: still an AI-generated illustration (`public/img/hero-portrait.png`), kept because the
+  owner prefers it. The site footer says so. A real, licensed gele photo could replace it later.
 
 - **Bature Brewery**: no photograph of the taproom exists on Commons. Its page shows Victoria Island and
   says so on the page.
