@@ -16,6 +16,13 @@ const { title, description = 'Waka — discover Nigeria. Real prices, honest saf
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
     <title>{title}</title>
+    <script is:inline>
+      (function () {
+        var t = 'dark';
+        try { t = localStorage.getItem('waka-theme') === 'light' ? 'light' : 'dark'; } catch (e) {}
+        document.documentElement.setAttribute('data-theme', t);
+      })();
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -37,6 +44,10 @@ const { title, description = 'Waka — discover Nigeria. Real prices, honest saf
         <a href="/#categories">Events</a>
       </nav>
       <a class="cta-pill" href="/spots/">Plan a Trip</a>
+      <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Switch to the light theme" title="Switch to light theme">
+        <svg class="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z" /></svg>
+        <svg class="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4" /><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" /></svg>
+      </button>
     </header>
 
     <main>
@@ -59,30 +70,80 @@ const { title, description = 'Waka — discover Nigeria. Real prices, honest saf
         function update() { nav.classList.toggle('scrolled', window.scrollY > 24); }
         update();
         window.addEventListener('scroll', update, { passive: true });
+
+        var btn = document.getElementById('theme-toggle');
+        if (!btn) return;
+        function label() {
+          var light = document.documentElement.getAttribute('data-theme') === 'light';
+          btn.setAttribute('aria-label', light ? 'Switch to the dark theme' : 'Switch to the light theme');
+          btn.setAttribute('title', light ? 'Switch to dark theme' : 'Switch to light theme');
+        }
+        label();
+        btn.addEventListener('click', function () {
+          var next = document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+          document.documentElement.setAttribute('data-theme', next);
+          try { localStorage.setItem('waka-theme', next); } catch (e) {}
+          label();
+        });
       })();
     </script>
 
     <style is:global>
+      /* two themes share one set of names. Dark (black and yellow) is the default;
+         light (white and green) is switched on with the header toggle. */
       :root {
-        /* white page, green as the working colour, a little sun-yellow as spice */
-        --green: #16803c;
-        --green-deep: #0f5c2b;
-        --green-soft: #e6f4ea;
+        color-scheme: dark;
+        --accent: #ffc400;
+        --accent-deep: #e6b000;
+        --accent-soft: rgba(255, 196, 0, 0.12);
+        --accent-rgb: 255, 196, 0;
+        --sun: #ffc400;
+        --on-accent: #191410;
+        --edge: #000000;
+        --on-photo: #f3efe6;
+        --scrim-rgb: 11, 10, 14;
+        --ink: #0b0a0e;
+        --panel: #16141c;
+        --line: #2a2733;
+        --text: #f3efe6;
+        --text-dim: #a79f92;
+        --glass: rgba(22, 20, 28, 0.8);
+        --bar: rgba(11, 10, 14, 0.88);
+        --map-fill: rgba(22, 20, 28, 0.55);
+        --neon-pink: #ff3d8f;
+        --neon-green: #4ade80;
+        --neon-teal: #2dd4bf;
+        --safe: #34d399;
+        --watch: #fbbf24;
+        --avoid: #f87171;
+      }
+      :root[data-theme='light'] {
+        color-scheme: light;
+        --accent: #16803c;
+        --accent-deep: #0f5c2b;
+        --accent-soft: #e6f4ea;
+        --accent-rgb: 22, 128, 60;
         --sun: #f6c326;
         --on-accent: #ffffff;
         --edge: #0e3b22;
         --on-photo: #ffffff;
+        --scrim-rgb: 8, 20, 13;
         --ink: #ffffff;
         --panel: #f3f9f4;
         --line: #d9e6dd;
         --text: #0f2419;
         --text-dim: #4d6556;
+        --glass: rgba(255, 255, 255, 0.92);
+        --bar: rgba(255, 255, 255, 0.92);
+        --map-fill: rgba(230, 244, 234, 0.9);
         --neon-pink: #e11d74;
         --neon-green: #15a34a;
         --neon-teal: #0d9488;
         --safe: #16a34a;
         --watch: #d97706;
         --avoid: #dc2626;
+      }
+      :root {
         --font-display: 'Bricolage Grotesque', system-ui, sans-serif;
         --font-script: 'Kaushan Script', cursive;
         --font-body: 'Instrument Sans', system-ui, sans-serif;
@@ -123,9 +184,9 @@ const { title, description = 'Waka — discover Nigeria. Real prices, honest saf
       }
       img { max-width: 100%; display: block; }
       a { color: inherit; }
-      :focus-visible { outline: 3px solid var(--green); outline-offset: 2px; border-radius: 2px; }
+      :focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; border-radius: 2px; }
 
-      /* the danfo number-plate: the one place yellow stays */
+      /* the danfo number-plate: yellow in both themes */
       .plate {
         display: inline-flex; align-items: center; gap: 0.5rem;
         background: var(--sun); color: #1b1606;
@@ -144,21 +205,21 @@ const { title, description = 'Waka — discover Nigeria. Real prices, honest saf
         position: fixed; inset: 0 0 auto 0; z-index: 50;
         display: flex; align-items: center; gap: 1.5rem;
         padding: 0.9rem clamp(1rem, 4vw, 3rem);
-        /* default: a white bar, readable on every page */
-        background: rgba(255,255,255,0.92);
+        /* default: a solid blurred bar, readable on every page */
+        background: var(--bar);
         -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
         border-bottom: 1px solid var(--line);
         transition: background-color 0.25s ease, border-color 0.25s ease;
       }
       /* pages that open on a full-bleed photo: clear bar with white text until the page scrolls */
       .nav.over-photo:not(.scrolled) {
-        background: linear-gradient(180deg, rgba(8,20,13,0.7), rgba(8,20,13,0));
+        background: linear-gradient(180deg, rgba(var(--scrim-rgb), 0.7), rgba(var(--scrim-rgb), 0));
         -webkit-backdrop-filter: none; backdrop-filter: none;
         border-bottom-color: transparent;
       }
       .logo { display: flex; align-items: center; gap: 0.6rem; text-decoration: none; min-height: var(--tap); }
       .logo-sub {
-        font-family: var(--font-script); font-size: 0.95rem; color: var(--green-deep);
+        font-family: var(--font-script); font-size: 0.95rem; color: var(--text);
       }
       .links { display: flex; gap: var(--space-sm); margin-left: auto; font-size: var(--text-sm); font-weight: 500; }
       .links a {
@@ -169,12 +230,26 @@ const { title, description = 'Waka — discover Nigeria. Real prices, honest saf
       .nav.over-photo:not(.scrolled) .logo-sub,
       .nav.over-photo:not(.scrolled) .links a { color: var(--on-photo); text-shadow: 0 1px 8px rgba(0,0,0,0.6); }
       .cta-pill {
-        background: var(--green); color: var(--on-accent); font-weight: 700; font-size: var(--text-sm);
+        background: var(--accent); color: var(--on-accent); font-weight: 700; font-size: var(--text-sm);
         text-decoration: none; padding: 0.55rem 1.2rem; border-radius: 999px;
         border: 2px solid var(--edge); box-shadow: 2px 2px 0 var(--edge); white-space: nowrap;
         display: inline-flex; align-items: center; min-height: var(--tap);
       }
-      .cta-pill:hover { transform: translate(-1px,-1px); box-shadow: 3px 3px 0 var(--edge); background: var(--green-deep); }
+      .cta-pill:hover { transform: translate(-1px,-1px); box-shadow: 3px 3px 0 var(--edge); background: var(--accent-deep); }
+
+      .theme-toggle {
+        display: inline-grid; place-items: center; flex-shrink: 0;
+        width: var(--tap); height: var(--tap); padding: 0; cursor: pointer;
+        border-radius: 999px; border: 1.5px solid var(--line);
+        background: var(--glass); color: var(--text);
+        transition: border-color 0.2s ease, transform 0.2s ease;
+      }
+      .theme-toggle:hover { border-color: var(--accent); transform: rotate(-12deg); }
+      .theme-toggle svg { width: 1.2rem; height: 1.2rem; }
+      .theme-toggle .i-sun { display: none; }
+      :root[data-theme='light'] .theme-toggle .i-sun { display: block; }
+      :root[data-theme='light'] .theme-toggle .i-moon { display: none; }
+      .nav.over-photo:not(.scrolled) .theme-toggle { color: var(--on-photo); border-color: rgba(255,255,255,0.5); background: rgba(var(--scrim-rgb), 0.35); }
 
       .foot {
         border-top: 1px solid var(--line);
@@ -182,7 +257,7 @@ const { title, description = 'Waka — discover Nigeria. Real prices, honest saf
         display: grid; gap: 0.8rem; color: var(--text-dim); font-size: 0.9rem;
       }
       .foot-logo { font-family: var(--font-display); font-weight: 800; font-size: 1.4rem; color: var(--text); }
-      .foot-logo span { color: var(--green); }
+      .foot-logo span { color: var(--accent); }
       .fine { font-size: 0.78rem; max-width: 72ch; opacity: 0.8; }
 
       .script { font-family: var(--font-script); }

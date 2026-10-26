@@ -100,10 +100,10 @@ const usedStates = (Object.keys(stateLabels) as StateSlug[]).filter((st) => spot
   }
   .crumbs a { text-decoration: none; }
   .crumbs a:hover { color: var(--text); }
-  .crumbs b { color: var(--green); font-weight: 600; }
+  .crumbs b { color: var(--accent); font-weight: 600; }
 
   .head { margin-bottom: 2rem; }
-  .kicker { font-size: clamp(1.4rem, 3.5vw, 2rem); color: var(--green); }
+  .kicker { font-size: clamp(1.4rem, 3.5vw, 2rem); color: var(--accent); }
   h1 { font-family: var(--font-display); font-size: clamp(1.9rem, 5vw, 3rem); font-weight: 800; margin-top: 0.3rem; }
   .sub { margin-top: 0.8rem; color: var(--text-dim); max-width: 52ch; }
 
@@ -116,9 +116,9 @@ const usedStates = (Object.keys(stateLabels) as StateSlug[]).filter((st) => spot
     cursor: pointer;
     min-height: 44px; min-width: 44px;
   }
-  .chip:hover { border-color: var(--green); }
+  .chip:hover { border-color: var(--accent); }
   .chip[aria-pressed='true'] {
-    background: var(--green); color: var(--on-accent); border-color: var(--edge);
+    background: var(--accent); color: var(--on-accent); border-color: var(--edge);
     box-shadow: 2px 2px 0 var(--edge);
   }
 
