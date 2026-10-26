@@ -1,24 +1,32 @@
 ---
 import Cinematic from '../../layouts/Cinematic.astro';
 import SpotCard from '../../components/SpotCard.astro';
-import { spots, categoryLabels, type Category } from '../../data/spots';
+import { spots, categoryLabels, stateLabels, type Category, type StateSlug } from '../../data/spots';
 
 const categories = Object.keys(categoryLabels) as Category[];
+const usedStates = (Object.keys(stateLabels) as StateSlug[]).filter((st) => spots.some((s) => s.state === st));
 ---
 
 <Cinematic title="All spots — Waka" description="Every Waka spot: real prices, honest safety notes, curated by people wey sabi road.">
   <section class="listing">
     <nav class="crumbs" aria-label="Breadcrumb">
-      <a href="/">Home</a> <span>›</span> <a href="/states/lagos/">Lagos</a> <span>›</span> <b>Spots</b>
+      <a href="/">Home</a> <span>›</span> <b>Spots</b>
     </nav>
 
     <div class="head">
       <p class="script kicker">Spots wey sure</p>
       <h1>Every spot, one honest list</h1>
       <p class="sub">
-        {spots.length} places in Lagos — each with the price locals pay and a
+        {spots.length} places across {usedStates.length} states — each with the price locals pay and a
         straight-talk safety note for day and night.
       </p>
+    </div>
+
+    <div class="chip-row" role="group" aria-label="Filter by state">
+      <button class="chip" data-state="all" aria-pressed="true">All states</button>
+      {usedStates.map((st) => (
+        <button class="chip" data-state={st} aria-pressed="false">{stateLabels[st]}</button>
+      ))}
     </div>
 
     <div class="chip-row" role="group" aria-label="Filter by category">
@@ -37,34 +45,51 @@ const categories = Object.keys(categoryLabels) as Category[];
 </Cinematic>
 
 <script>
-  const chips = document.querySelectorAll<HTMLButtonElement>('.chip');
+  const catChips = document.querySelectorAll<HTMLButtonElement>('.chip[data-cat]');
+  const stateChips = document.querySelectorAll<HTMLButtonElement>('.chip[data-state]');
   const cards = document.querySelectorAll<HTMLElement>('.spot-card');
+  let cat = 'all';
+  let state = 'all';
 
-  function applyFilter(cat: string) {
-    chips.forEach((chip) =>
-      chip.setAttribute('aria-pressed', String(chip.dataset.cat === cat))
-    );
+  function apply() {
+    catChips.forEach((c) => c.setAttribute('aria-pressed', String(c.dataset.cat === cat)));
+    stateChips.forEach((c) => c.setAttribute('aria-pressed', String(c.dataset.state === state)));
     cards.forEach((card) => {
-      card.style.display =
-        cat === 'all' || card.dataset.category === cat ? '' : 'none';
+      const ok =
+        (cat === 'all' || card.dataset.category === cat) &&
+        (state === 'all' || card.dataset.state === state);
+      card.style.display = ok ? '' : 'none';
     });
   }
 
-  chips.forEach((chip) =>
+  function sync(key: string, value: string) {
+    const url = new URL(window.location.href);
+    if (value === 'all') url.searchParams.delete(key);
+    else url.searchParams.set(key, value);
+    history.replaceState(null, '', url);
+  }
+
+  catChips.forEach((chip) =>
     chip.addEventListener('click', () => {
-      const cat = chip.dataset.cat ?? 'all';
-      applyFilter(cat);
-      const url = new URL(window.location.href);
-      if (cat === 'all') url.searchParams.delete('cat');
-      else url.searchParams.set('cat', cat);
-      history.replaceState(null, '', url);
+      cat = chip.dataset.cat ?? 'all';
+      apply();
+      sync('cat', cat);
+    })
+  );
+  stateChips.forEach((chip) =>
+    chip.addEventListener('click', () => {
+      state = chip.dataset.state ?? 'all';
+      apply();
+      sync('state', state);
     })
   );
 
-  const initial = new URLSearchParams(window.location.search).get('cat');
-  if (initial && [...chips].some((c) => c.dataset.cat === initial)) {
-    applyFilter(initial);
-  }
+  const params = new URLSearchParams(window.location.search);
+  const initialCat = params.get('cat');
+  const initialState = params.get('state');
+  if (initialCat && [...catChips].some((c) => c.dataset.cat === initialCat)) cat = initialCat;
+  if (initialState && [...stateChips].some((c) => c.dataset.state === initialState)) state = initialState;
+  apply();
 </script>
 
 <style>

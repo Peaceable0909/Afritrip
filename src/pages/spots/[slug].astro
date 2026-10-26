@@ -1,6 +1,6 @@
 ---
 import Cinematic from '../../layouts/Cinematic.astro';
-import { spots, categoryLabels, safetyLabels } from '../../data/spots';
+import { spots, categoryLabels, safetyLabels, stateLabels } from '../../data/spots';
 
 export function getStaticPaths() {
   return spots.map((spot) => ({ params: { slug: spot.slug }, props: { spot } }));
@@ -15,8 +15,8 @@ const { spot } = Astro.props;
     <div class="hero-shade" aria-hidden="true"></div>
 
     <nav class="crumbs" aria-label="Breadcrumb">
-      <a href="/">Home</a> <span>›</span> <a href="/states/lagos/">Lagos</a> <span>›</span>
-      <a href="/spots/">Spots</a> <span>›</span> <b>{spot.name}</b>
+      <a href="/">Home</a> <span>›</span> <a href={`/states/${spot.state}/`}>{stateLabels[spot.state]}</a> <span>›</span>
+      <a href={`/spots/?state=${spot.state}`}>Spots</a> <span>›</span> <b>{spot.name}</b>
     </nav>
 
     <div class="hero-content">

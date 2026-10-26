@@ -49,6 +49,16 @@ const { title, description = 'Waka — discover Nigeria. Real prices, honest saf
       </p>
     </footer>
 
+    <script is:inline>
+      (function () {
+        var nav = document.querySelector('.nav');
+        if (!nav) return;
+        function update() { nav.classList.toggle('scrolled', window.scrollY > 24); }
+        update();
+        window.addEventListener('scroll', update, { passive: true });
+      })();
+    </script>
+
     <style is:global>
       :root {
         --danfo: #ffc400;
@@ -124,8 +134,17 @@ const { title, description = 'Waka — discover Nigeria. Real prices, honest saf
         display: flex; align-items: center; gap: 1.5rem;
         padding: 0.9rem clamp(1rem, 4vw, 3rem);
         background: linear-gradient(180deg, rgba(11,10,14,0.85), rgba(11,10,14,0));
+        transition: background-color 0.25s ease, backdrop-filter 0.25s ease, border-color 0.25s ease;
+        border-bottom: 1px solid transparent;
       }
-      .logo { display: flex; align-items: baseline; gap: 0.6rem; text-decoration: none; }
+      /* once the page scrolls, give the bar a solid blurred backing so it never
+         fights with the content passing underneath it */
+      .nav.scrolled {
+        background: rgba(11,10,14,0.88);
+        -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
+        border-bottom-color: var(--line);
+      }
+      .logo { display: flex; align-items: center; gap: 0.6rem; text-decoration: none; min-height: var(--tap); }
       .logo-sub {
         font-family: var(--font-script); font-size: 0.95rem; color: var(--text);
         text-shadow: 0 1px 8px rgba(0,0,0,0.8);

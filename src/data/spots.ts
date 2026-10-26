@@ -1,8 +1,18 @@
-export type Category = 'beach' | 'culture' | 'nightlife' | 'nature';
+export type Category = 'beach' | 'culture' | 'nightlife' | 'nature' | 'food';
 export type SafetyLevel = 'good' | 'caution' | 'avoid';
+export type StateSlug = 'lagos' | 'abuja' | 'calabar' | 'kano' | 'osun';
+
+export const stateLabels: Record<StateSlug, string> = {
+  lagos: 'Lagos',
+  abuja: 'Abuja',
+  calabar: 'Calabar',
+  kano: 'Kano',
+  osun: 'Osun',
+};
 
 export interface Spot {
   slug: string;
+  state: StateSlug;
   name: string;
   area: string;
   img: string;
@@ -25,6 +35,7 @@ export const categoryLabels: Record<Category, string> = {
   culture: 'Culture',
   nightlife: 'Nightlife',
   nature: 'Nature',
+  food: 'Food',
 };
 
 export const safetyLabels: Record<SafetyLevel, { label: string; gloss: string }> = {
@@ -36,6 +47,7 @@ export const safetyLabels: Record<SafetyLevel, { label: string; gloss: string }>
 export const spots: Spot[] = [
   {
     slug: 'nike-art-gallery',
+    state: 'lagos',
     moods: ['history', 'relax'],
     img: '/img/cinematic/spot-nike.jpg',
     name: 'Nike Art Gallery',
@@ -62,6 +74,7 @@ export const spots: Spot[] = [
   },
   {
     slug: 'lekki-conservation-centre',
+    state: 'lagos',
     moods: ['nature', 'adventure'],
     img: '/img/cinematic/spot-lekki.jpg',
     name: 'Lekki Conservation Centre',
@@ -88,6 +101,7 @@ export const spots: Spot[] = [
   },
   {
     slug: 'tarkwa-bay',
+    state: 'lagos',
     moods: ['relax', 'adventure', 'nature'],
     img: '/img/cinematic/spot-tarkwa.jpg',
     name: 'Tarkwa Bay Beach',
@@ -114,6 +128,7 @@ export const spots: Spot[] = [
   },
   {
     slug: 'freedom-park',
+    state: 'lagos',
     moods: ['history', 'party', 'food'],
     img: '/img/cinematic/spot-freedom.jpg',
     name: 'Freedom Park',
@@ -140,6 +155,7 @@ export const spots: Spot[] = [
   },
   {
     slug: 'new-afrika-shrine',
+    state: 'lagos',
     moods: ['party', 'history'],
     img: '/img/cinematic/spot-shrine.jpg',
     name: 'New Afrika Shrine',
@@ -166,6 +182,7 @@ export const spots: Spot[] = [
   },
   {
     slug: 'terra-kulture',
+    state: 'lagos',
     moods: ['food', 'history', 'relax'],
     img: '/img/cinematic/spot-terra.jpg',
     name: 'Terra Kulture',
@@ -192,6 +209,7 @@ export const spots: Spot[] = [
   },
   {
     slug: 'elegushi-beach',
+    state: 'lagos',
     moods: ['party'],
     img: '/img/cinematic/spot-elegushi.jpg',
     name: 'Elegushi Beach',
@@ -218,6 +236,7 @@ export const spots: Spot[] = [
   },
   {
     slug: 'bature-brewery',
+    state: 'lagos',
     moods: ['party', 'food', 'relax'],
     img: '/img/cinematic/spot-bature.jpg',
     name: 'Bature Brewery',
@@ -240,6 +259,276 @@ export const spots: Spot[] = [
       'Try the flight (tasting board) before committing to a pint.',
       'It is one of the easiest places in Lagos to go alone and leave with friends.',
       'Card and transfer accepted — one of the few places you barely need cash.',
+    ],
+  },
+  {
+    slug: 'national-museum-lagos',
+    state: 'lagos',
+    moods: ['history', 'relax'],
+    img: '/img/cinematic/city-lagos.jpg',
+    name: 'National Museum Lagos',
+    area: 'Onikan, Lagos Island',
+    category: 'culture',
+    blurb:
+      'Nok terracotta, Benin and Ife bronzes and a crash course in 2,000 years of Nigerian art.',
+    description:
+      'The National Museum in Onikan is the quickest way to understand how old Nigerian civilisation really is. Galleries hold Nok terracotta figures, Ife and Benin-style bronzes, royal regalia, masks and colonial-era history. It is not a glossy modern museum — some rooms are dusty and labels vary — but the objects are the real thing, and the building is quiet enough to think in. It sits a short ride from Freedom Park, so the two pair well in one day.',
+    price: 'Under ₦2,000 entry',
+    priceNote:
+      'Entry is a small fee for visitors; photo or camera permits can cost extra. Confirm at the desk and keep your ticket.',
+    safetyDay: 'good',
+    safetyNight: 'avoid',
+    hours: 'Daily, roughly 9am – 5pm — check before you go',
+    bestTime: 'Weekday mornings, before the school trips arrive.',
+    gettingThere:
+      'Onikan, Lagos Island, not far from Freedom Park and the Tafawa Balewa Square area. Ride-hailing to “National Museum Onikan”.',
+    tips: [
+      'Ask whether a guide is available — a short guided loop makes the objects make sense.',
+      'Pair it with Freedom Park the same afternoon; they are a short ride apart.',
+      'Carry small cash for the entry and camera permit — card readers are unreliable.',
+    ],
+  },
+  {
+    slug: 'lekki-arts-crafts-market',
+    state: 'lagos',
+    moods: ['history', 'food', 'relax'],
+    img: '/img/cinematic/cat-events.jpg',
+    name: 'Lekki Arts & Crafts Market',
+    area: 'Lekki',
+    category: 'culture',
+    blurb:
+      'Wood carvings, beads, adire, masks and bronzes — the best place in Lagos to buy souvenirs and haggle.',
+    description:
+      'A long run of stalls selling carved masks, drums, beadwork, leather goods, paintings and adire cloth. The traders are friendly but persistent, and every price is an opening offer. It is the easiest place in Lagos to take something genuinely Nigerian home — and to practise your bargaining face.',
+    price: 'Free to enter · haggle everything',
+    priceNote:
+      'The first price quoted to visitors is often two to three times what locals pay. Counter at about half, walk away politely, and expect them to meet you in the middle.',
+    safetyDay: 'good',
+    safetyNight: 'avoid',
+    hours: 'Daily, roughly 10am – 6pm',
+    bestTime: 'Weekday afternoons — fewer people, more patient traders.',
+    gettingThere:
+      'In the Lekki Phase 1 area. Search “Lekki Arts and Crafts Market” on your ride app and agree the return trip before you leave.',
+    tips: [
+      'Bring small notes — giving ₦20,000 for a ₦3,000 item makes change and trust awkward.',
+      'Check wooden pieces and bronzes for cracks before paying.',
+      'Ask the trader to wrap larger pieces; many will do it free for a good sale.',
+    ],
+  },
+  {
+    slug: 'obalende-suya',
+    state: 'lagos',
+    moods: ['food', 'party'],
+    img: '/img/cinematic/cat-food.jpg',
+    name: 'Obalende Suya',
+    area: 'Obalende, Lagos Island',
+    category: 'food',
+    blurb:
+      'Lagos’s suya capital — spiced grilled beef, ram and chicken, sold from smoky roadside stalls.',
+    description:
+      'Obalende is where Lagos goes for suya: skewers dusted in yaji (spiced peanut powder), grilled over open flame, wrapped in newspaper and handed over with raw onion and tomato. It is a night-food ritual — go with people, eat standing, and watch how fast a good stall turns over. It is loud, smoky and cheap, and it is the real thing.',
+    price: '₦2,000 – ₦6,000 per person',
+    priceNote:
+      'Suya is sold by the portion, so say the naira amount you want (“five hundred naira beef”). Prices vary by meat and stall; busy stalls move stock faster and taste better.',
+    safetyDay: 'good',
+    safetyNight: 'caution',
+    hours: 'Evenings into the night, busiest after 7pm',
+    bestTime: 'Around 8pm, when the grills are at full heat.',
+    gettingThere:
+      'Obalende, Lagos Island. Take a ride-hailing car there and arrange the ride home before you start eating — do not wander the area late.',
+    tips: [
+      'Choose a stall with a queue and a hot grill, not one with meat sitting out.',
+      'Say your pepper level honestly — “small pepper” is a good first answer.',
+      'Keep your phone zipped and your bag in front of you when the crowd builds.',
+    ],
+  },
+  {
+    slug: 'badagry-point-of-no-return',
+    state: 'lagos',
+    moods: ['history', 'nature'],
+    img: '/img/cinematic/spot-boat.jpg',
+    name: 'Badagry Heritage Trail',
+    area: 'Badagry',
+    category: 'culture',
+    blurb:
+      'The slave-trade memorial route: the Point of No Return, the Mobee museum and the first storey building in Nigeria.',
+    description:
+      'Badagry, west of Lagos near the Benin border, was a major port in the transatlantic slave trade. The heritage trail takes in the Point of No Return — the coastline where captives were shipped away — a slavery museum with chains and trade goods, and the First Storey Building in Nigeria, built in 1845. It is sombre and absorbing, and it works best as a full day trip with a local guide.',
+    price: '₦5,000 – ₦25,000 by tour',
+    priceNote:
+      'Entry fees at each stop are small; the bigger cost is transport and a guide. Agree a total price for the day before you set out.',
+    safetyDay: 'good',
+    safetyNight: 'avoid',
+    hours: 'Daytime — plan to leave Lagos early',
+    bestTime: 'Weekday mornings, to beat both the road and the heat.',
+    gettingThere:
+      'About 60 km from Lagos Island on the Lagos–Badagry Expressway. Traffic decides the trip — allow 1.5 to 3 hours each way and go early.',
+    tips: [
+      'Hire a guide at the first stop; the stories behind the objects are the point.',
+      'Take the boat to the Point of No Return only on a calm day and wear the life jacket.',
+      'Pack water and a hat — much of the trail is open and sunny.',
+    ],
+  },
+  {
+    slug: 'zuma-rock',
+    state: 'abuja',
+    moods: ['nature', 'adventure', 'history'],
+    img: '/img/cinematic/hl-abuja-zuma.jpg',
+    name: 'Zuma Rock',
+    area: 'Suleja axis, outside Abuja',
+    category: 'nature',
+    blurb:
+      'The 725-metre monolith on the Abuja–Kaduna road — the “Gateway to Abuja” and a face on the ₦100 note.',
+    description:
+      'Zuma Rock rises abruptly from flat farmland on the road between Abuja and Suleja, a giant granite-and-gabbro monolith that is hard to look away from. Local tradition surrounds it with stories — including a face said to be seen in the rock — and it appears on the ₦100 note. Most visitors photograph it from the road or nearby village paths; climbing is risky and not formally managed.',
+    price: 'Free to view · small local fees possible',
+    priceNote:
+      'Viewing from the road costs nothing. If a local asks for a small fee to approach or guide you, agree it up front.',
+    safetyDay: 'good',
+    safetyNight: 'avoid',
+    hours: 'Daylight only',
+    bestTime: 'Early morning or late afternoon for the best light and cooler air.',
+    gettingThere:
+      'On the Abuja–Kaduna road, about 30 – 45 minutes from central Abuja depending on traffic. Hire a car for the afternoon or use ride-hailing with a return arranged.',
+    tips: [
+      'Do not attempt to climb without a local guide — the rock is steep and unforgiving.',
+      'Go in the dry season for clear skies and good photos.',
+      'Stay on the main roads and head back before dark.',
+    ],
+  },
+  {
+    slug: 'jabi-lake-park',
+    state: 'abuja',
+    moods: ['relax', 'nature', 'food'],
+    img: '/img/cinematic/hl-abuja-jabi.jpg',
+    name: 'Jabi Lake Park',
+    area: 'Jabi, Abuja',
+    category: 'nature',
+    blurb:
+      'Lakeside park in the middle of Abuja — boat rides, jogging paths and sundowners beside the water.',
+    description:
+      'Jabi Lake is Abuja’s easy outdoor spot: a waterfront park next to the Jabi Lake Mall, with walking and jogging paths, picnic spots, boat rides and a few lakeside eateries. It is calm, green and very Abuja — an easy afternoon in a city that moves slower than Lagos.',
+    price: 'Park entry small · boats extra',
+    priceNote:
+      'Entry fees are modest and boat or activity rides are priced separately — ask the price per person and the length of the ride before you board.',
+    safetyDay: 'good',
+    safetyNight: 'caution',
+    hours: 'Daytime into the evening',
+    bestTime: 'Late afternoon for sunset over the water.',
+    gettingThere:
+      'In Jabi, close to the Jabi Lake Mall — easy by ride-hailing from Wuse, Maitama or Garki.',
+    tips: [
+      'Wear a life jacket on any boat and ask about the route first.',
+      'Pair it with a meal at the mall next door.',
+      'Weekend evenings are busy; weekday afternoons are peaceful.',
+    ],
+  },
+  {
+    slug: 'kwa-falls',
+    state: 'calabar',
+    moods: ['nature', 'adventure', 'relax'],
+    img: '/img/cinematic/hl-calabar-kwa.jpg',
+    name: 'Kwa Falls',
+    area: 'Akamkpa, near Calabar',
+    category: 'nature',
+    blurb:
+      'A forest waterfall outside Calabar — cool water, green canopy and a proper escape from the city.',
+    description:
+      'Kwa Falls pours over rocks into a pool inside Cross River’s rainforest belt, a short drive from Calabar. The setting is the draw: dense forest, birdsong and a cool, shaded spot to swim or sit. The access road is rough in parts and the trail can be slippery, so go with someone who knows the way.',
+    price: 'Small entry fee · guide extra',
+    priceNote:
+      'Expect a modest entry or maintenance fee and a small tip for a guide. Agree both before the trail starts.',
+    safetyDay: 'good',
+    safetyNight: 'avoid',
+    hours: 'Daytime only',
+    bestTime: 'Dry season (Nov – Feb) when the access roads are easier.',
+    gettingThere:
+      'Akamkpa side of Cross River State, about an hour from Calabar. Hire a car and driver for the half day rather than relying on ride-hailing.',
+    tips: [
+      'Wear shoes with grip — the rocks and trail are slick.',
+      'Do not swim if the river is running fast after rain.',
+      'Bring insect repellent and water.',
+    ],
+  },
+  {
+    slug: 'kofar-mata-dye-pits',
+    state: 'kano',
+    moods: ['history', 'adventure'],
+    img: '/img/cinematic/hl-kano-dyepits.jpg',
+    name: 'Kofar Mata Dye Pits',
+    area: 'Kofar Mata, Kano',
+    category: 'culture',
+    blurb:
+      'Indigo dye pits in use since 1498 — one of Africa’s oldest working craft sites.',
+    description:
+      'In the old city of Kano, dyers still lower cloth into deep indigo pits, beat it with mallets and hang it to dry in the sun. The pits have been in continuous use since 1498. The smell is strong and the setting is working-craft raw, not polished — but watching the cloth emerge in deep blue is why people come.',
+    price: 'Small entry fee · tip the dyers',
+    priceNote:
+      'There is usually a small entry or viewing fee, and the dyers expect a tip if you take photos. Agree the fee first.',
+    safetyDay: 'good',
+    safetyNight: 'avoid',
+    hours: 'Daytime — dyers work morning to mid-afternoon',
+    bestTime: 'Morning, when the pits are busiest.',
+    gettingThere:
+      'In Kano’s old city, near Kofar Mata. Go with a local guide or driver rather than navigating the old-city lanes alone.',
+    tips: [
+      'Wear clothes you do not mind marking — indigo transfers.',
+      'Ask before photographing the dyers.',
+      'Buy a piece of cloth directly from the dyers if you can — it is the best souvenir in town.',
+    ],
+  },
+  {
+    slug: 'osun-osogbo-sacred-grove',
+    state: 'osun',
+    moods: ['history', 'nature', 'relax'],
+    img: '/img/cinematic/hl-osun-grove.jpg',
+    name: 'Osun-Osogbo Sacred Grove',
+    area: 'Osogbo, Osun State',
+    category: 'culture',
+    blurb:
+      'UNESCO-listed forest shrine to the river goddess Osun — sculptures, shrines and an August festival.',
+    description:
+      'A forest of shrines, sculptures and winding paths along the Osun River, still a living place of worship and a UNESCO World Heritage Site. The art here — figures by Susanne Wenger and the New Sacred Art movement — grows out of the trees. Every August the annual Osun-Osogbo Festival brings pilgrims and visitors in huge numbers.',
+    price: '₦1,500 – ₦5,000 entry',
+    priceNote:
+      'Entry covers the grove; a local guide usually costs a small extra fee and is well worth it. Confirm both at the gate.',
+    safetyDay: 'good',
+    safetyNight: 'avoid',
+    hours: 'Daily daytime hours — check before you go',
+    bestTime: 'Weekday mornings, or August for the festival if you like crowds.',
+    gettingThere:
+      'Osogbo, roughly 3 – 4 hours by road from Lagos. Stay overnight in Osogbo or Ibadan rather than doing it as a day trip.',
+    tips: [
+      'Dress modestly and ask your guide how to behave at the shrines.',
+      'Take the guide — the symbolism is lost without one.',
+      'Ask before photographing worshippers or shrine objects.',
+    ],
+  },
+  {
+    slug: 'erin-ijesha-waterfalls',
+    state: 'osun',
+    moods: ['nature', 'adventure', 'relax'],
+    img: '/img/cinematic/hl-osun-erin.jpg',
+    name: 'Erin-Ijesha Waterfalls',
+    area: 'Erin-Ijesha, Osun State',
+    category: 'nature',
+    blurb:
+      'Olumirin Waterfalls — seven stepped cascades you can climb through, deep in Osun’s hills.',
+    description:
+      'Erin-Ijesha (also called Olumirin) is a waterfall in tiers: you climb stone steps beside the water and can reach several of its seven levels. The upper levels are quieter and more beautiful, and the cold water is a welcome break from the heat. The steps can be slippery and the climb is steep, so go with good shoes and an easy pace.',
+    price: '₦1,500 – ₦3,000 entry',
+    priceNote:
+      'Entry is a small fee. A guide or helper on the steps may ask for a tip — keep small notes.',
+    safetyDay: 'good',
+    safetyNight: 'avoid',
+    hours: 'Daytime only',
+    bestTime: 'Rainy season (Jun – Oct) for the biggest flow; dry season for safer, drier steps.',
+    gettingThere:
+      'In Erin-Ijesha, Osun State, around 3 – 4 hours from Lagos. Combine with the Osogbo grove on a two-day trip.',
+    tips: [
+      'Wear shoes with grip — the steps are slippery.',
+      'Bring a change of clothes and a waterproof bag for your phone.',
+      'Do not climb after heavy rain.',
     ],
   },
 ];

@@ -12,7 +12,7 @@ const isLagos = s.slug === 'lagos';
 const rail = [
   { name: 'Beaches', img: '/img/cinematic/cat-beaches.jpg', href: '/spots/?cat=beach' },
   { name: 'Nightlife', img: '/img/cinematic/cat-nightlife.jpg', href: '/spots/?cat=nightlife' },
-  { name: 'Restaurants', img: '/img/cinematic/cat-food.jpg', href: '/spots/?cat=culture' },
+  { name: 'Restaurants', img: '/img/cinematic/cat-food.jpg', href: '/spots/?cat=food' },
   { name: 'Hotels', img: '/img/cinematic/cat-hotels.jpg', href: '/spots/' },
   { name: 'Events', img: '/img/cinematic/cat-events.jpg', href: '/spots/' },
   { name: 'Adventures', img: '/img/cinematic/cat-adventures.jpg', href: '/spots/?cat=nature' },
@@ -91,7 +91,7 @@ const rail = [
   <section class="exps" id="experiences">
     <div class="exps-head">
       <h2 class="script">Top Experiences in {s.name}</h2>
-      {isLagos ? <a href="/spots/">View all →</a> : <span class="soon-note">Full guide coming soon</span>}
+      <a href={`/spots/?state=${s.slug}`}>View all →</a>
     </div>
     <div class={`exp-row ${s.highlights.length <= 3 ? 'wide' : ''}`}>
       {s.highlights.map((e) =>
@@ -208,7 +208,6 @@ const rail = [
     .exps-head h2 { font-size: clamp(1.7rem, 4vw, 2.4rem); font-weight: 400; }
     .exps-head a { font-size: 0.85rem; color: var(--text-dim); text-decoration: none; }
     .exps-head a:hover { color: var(--danfo); }
-    .soon-note { font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-dim); }
     .exp-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.9rem; }
     .exp-row.wide { grid-template-columns: repeat(3, 1fr); }
     .exp-card {

@@ -95,8 +95,8 @@ export const states: StateInfo[] = [
       { name: 'Zuma Rock', x: 14, y: 78, color: 'var(--danfo)' },
     ],
     highlights: [
-      { name: 'Zuma Rock', img: '/img/cinematic/hl-abuja-zuma.jpg' },
-      { name: 'Jabi Lake', img: '/img/cinematic/hl-abuja-jabi.jpg' },
+      { name: 'Zuma Rock', img: '/img/cinematic/hl-abuja-zuma.jpg', href: '/spots/zuma-rock/' },
+      { name: 'Jabi Lake', img: '/img/cinematic/hl-abuja-jabi.jpg', href: '/spots/jabi-lake-park/' },
       { name: 'Gurara Falls', img: '/img/cinematic/hl-abuja-gurara.jpg' },
     ],
     doodle: ['Calm', 'Green', 'Abuja'],
@@ -128,7 +128,7 @@ export const states: StateInfo[] = [
     ],
     highlights: [
       { name: 'Obudu Mountain Resort', img: '/img/cinematic/hl-calabar-obudu.jpg' },
-      { name: 'Kwa Falls', img: '/img/cinematic/hl-calabar-kwa.jpg' },
+      { name: 'Kwa Falls', img: '/img/cinematic/hl-calabar-kwa.jpg', href: '/spots/kwa-falls/' },
       { name: 'Calabar Carnival', img: '/img/cinematic/hl-calabar-carnival.jpg' },
     ],
     doodle: ['Come', 'Chill', 'Calabar'],
@@ -159,7 +159,7 @@ export const states: StateInfo[] = [
       { name: 'Sabon Gari', x: 72, y: 68, color: 'var(--neon-green)' },
     ],
     highlights: [
-      { name: 'Ancient Dye Pits', img: '/img/cinematic/hl-kano-dyepits.jpg' },
+      { name: 'Ancient Dye Pits', img: '/img/cinematic/hl-kano-dyepits.jpg', href: '/spots/kofar-mata-dye-pits/' },
       { name: 'Kurmi Market', img: '/img/cinematic/hl-kano-kurmi.jpg' },
       { name: 'Durbar Festival', img: '/img/cinematic/hl-kano-durbar.jpg' },
     ],
@@ -191,9 +191,9 @@ export const states: StateInfo[] = [
       { name: 'Ede', x: 70, y: 72, color: 'var(--neon-pink)' },
     ],
     highlights: [
-      { name: 'Osun Sacred Grove', img: '/img/cinematic/hl-osun-grove.jpg' },
+      { name: 'Osun Sacred Grove', img: '/img/cinematic/hl-osun-grove.jpg', href: '/spots/osun-osogbo-sacred-grove/' },
       { name: 'Ile-Ife Palace & Museum', img: '/img/cinematic/hl-osun-ife.jpg' },
-      { name: 'Erin-Ijesha Waterfall', img: '/img/cinematic/hl-osun-erin.jpg' },
+      { name: 'Erin-Ijesha Waterfall', img: '/img/cinematic/hl-osun-erin.jpg', href: '/spots/erin-ijesha-waterfalls/' },
     ],
     doodle: ['Spirit', 'Of', 'Osun'],
   },

@@ -8,7 +8,7 @@ interface Props {
 const { spot } = Astro.props;
 ---
 
-<a class="spot-card" href={`/spots/${spot.slug}/`} data-category={spot.category}>
+<a class="spot-card" href={`/spots/${spot.slug}/`} data-category={spot.category} data-state={spot.state}>
   <article class="inner">
     <div class="pic">
       <img src={spot.img} alt={spot.name} loading="lazy" decoding="async" />
