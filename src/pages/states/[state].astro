@@ -1,6 +1,7 @@
 ---
 import Cinematic from '../../layouts/Cinematic.astro';
 import { states } from '../../data/states';
+import { photoAlt } from '../../data/photos';
 
 export function getStaticPaths() {
   return states.map((s) => ({ params: { state: s.slug }, props: { s } }));
@@ -10,19 +11,21 @@ const { s } = Astro.props;
 const isLagos = s.slug === 'lagos';
 const hasNightlife = s.slug === 'lagos' || s.slug === 'abuja';
 
+const reelPhotos = [s.heroImg, ...s.highlights.slice(0, 3).map((h) => h.img)];
+
 const rail = [
-  { name: 'Beaches', img: '/img/cinematic/cat-beaches.jpg', href: '/spots/?cat=beach' },
-  { name: 'Nightlife', img: '/img/cinematic/cat-nightlife.jpg', href: hasNightlife ? `/nightlife/?city=${s.slug}` : '/spots/?cat=nightlife' },
-  { name: 'Restaurants', img: '/img/cinematic/cat-food.jpg', href: '/spots/?cat=food' },
-  { name: 'Hotels', img: '/img/cinematic/cat-hotels.jpg', href: '/spots/' },
-  { name: 'Events', img: '/img/cinematic/cat-events.jpg', href: '/spots/' },
-  { name: 'Adventures', img: '/img/cinematic/cat-adventures.jpg', href: '/spots/?cat=nature' },
+  { name: 'Beaches', img: '/img/photos/cat-beaches.jpg', href: '/spots/?cat=beach' },
+  { name: 'Nightlife', img: '/img/photos/cat-nightlife.jpg', href: hasNightlife ? `/nightlife/?city=${s.slug}` : '/spots/?cat=nightlife' },
+  { name: 'Restaurants', img: '/img/photos/cat-food.jpg', href: '/spots/?cat=food' },
+  { name: 'Hotels', img: '/img/photos/cat-hotels.jpg', href: '/spots/' },
+  { name: 'Events', img: '/img/photos/cat-events.jpg', href: '/spots/' },
+  { name: 'Adventures', img: '/img/photos/cat-adventures.jpg', href: '/spots/?cat=nature' },
 ];
 ---
 
 <Cinematic title={`${s.name} — Waka`} description={s.tagline} hero>
   <section class="hero">
-    <img class="hero-bg" src={s.heroImg} alt="" fetchpriority="high" />
+    <img class="hero-bg" src={s.heroImg} alt={photoAlt(s.heroImg, s.name)} width="1920" height="1080" fetchpriority="high" />
     <div class="hero-shade" aria-hidden="true"></div>
 
     <nav class="crumbs" aria-label="Breadcrumb">
@@ -55,7 +58,7 @@ const rail = [
       <div class="rail">
         {rail.map((r) => (
           <a class="rail-card" href={r.href}>
-            <img src={r.img} alt={r.name} loading="lazy" />
+            <img src={r.img} alt={photoAlt(r.img, r.name)} width="640" height="640" loading="lazy" decoding="async" />
             <span>{r.name}</span>
           </a>
         ))}
@@ -65,11 +68,21 @@ const rail = [
 
   <section class="map-row" id="map">
     <div class="map-card">
-      <img src={s.mapImg} alt={`Illustrated map of ${s.name} areas`} loading="lazy" />
       <p class="script map-title">Explore {s.name}</p>
-      {s.mapLabels.map((l) => (
-        <span class="map-label" style={`left:${l.x}%; top:${l.y}%; background:${l.color}`}>{l.name}</span>
-      ))}
+      <iframe
+        class="map-frame"
+        title={`Map of ${s.name}`}
+        src={`https://www.google.com/maps?q=${encodeURIComponent(s.map.query)}&ll=${s.map.ll}&z=${s.map.zoom}&output=embed`}
+        loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade"
+      ></iframe>
+      <ul class="areas" aria-label={`Areas of ${s.name}`}>
+        {s.mapLabels.map((l) => (
+          <li>
+            <a href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${l.name} ${s.name}`)}`} target="_blank" rel="noopener noreferrer">{l.name} ↗</a>
+          </li>
+        ))}
+      </ul>
     </div>
     <div class="map-side">
       <div class="know">
@@ -81,10 +94,11 @@ const rail = [
           <a href="/states/lagos/">Start with Lagos →</a>
         )}
       </div>
-      <a class="reel" href={isLagos ? '/prototype' : '/states/lagos/'}>
-        <img src={s.heroImg} alt="" loading="lazy" />
-        <span class="play" aria-hidden="true">▶</span>
-        <span class="reel-label">Experience {s.name}</span>
+      <a class="reel" href={`/spots/?state=${s.slug}`} aria-label={`See the spots in ${s.name}`}>
+        {reelPhotos.map((src, i) => (
+          <img src={src} alt={i === 0 ? photoAlt(src, s.name) : ''} style={`animation-delay:${i * 5}s`} width="1280" height="720" loading="lazy" decoding="async" />
+        ))}
+        <span class="reel-label">See the spots in {s.name} →</span>
       </a>
     </div>
   </section>
@@ -98,12 +112,12 @@ const rail = [
       {s.highlights.map((e) =>
         e.href ? (
           <a class="exp-card" href={e.href}>
-            <img src={e.img} alt={e.name} loading="lazy" />
+            <img src={e.img} alt={photoAlt(e.img, e.name)} width="800" height="600" loading="lazy" decoding="async" />
             <span>{e.name}</span>
           </a>
         ) : (
           <div class="exp-card">
-            <img src={e.img} alt={e.name} loading="lazy" />
+            <img src={e.img} alt={photoAlt(e.img, e.name)} width="800" height="600" loading="lazy" decoding="async" />
             <span>{e.name}</span>
           </div>
         )
@@ -114,7 +128,8 @@ const rail = [
 
   <style>
     .hero { position: relative; min-height: 92vh; min-height: 92dvh; display: grid; align-content: center; overflow: hidden; color: var(--on-photo); }
-    .hero-bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+    .hero-bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; animation: drift 26s ease-in-out infinite alternate; }
+    @keyframes drift { from { transform: scale(1); } to { transform: scale(1.08) translateX(-1.5%); } }
     .hero-shade {
       position: absolute; inset: 0;
       background:
@@ -175,34 +190,35 @@ const rail = [
       display: grid; grid-template-columns: minmax(0, 1.8fr) minmax(0, 1fr); gap: 1.2rem;
       padding: 2.5rem clamp(1rem, 4vw, 3rem);
     }
-    .map-card { position: relative; border-radius: 1rem; overflow: hidden; border: 1px solid var(--line); }
-    .map-card img { width: 100%; height: 100%; object-fit: cover; }
-    .map-title {
-      position: absolute; top: 1.2rem; left: 1.4rem; font-size: clamp(1.8rem, 4vw, 2.6rem);
-      color: var(--on-photo); text-shadow: 0 2px 14px rgba(0,0,0,0.8);
+    .map-card { display: grid; gap: 0.8rem; align-content: start; }
+    .map-title { font-size: clamp(1.8rem, 4vw, 2.6rem); color: var(--text); line-height: 1.1; }
+    .map-frame { width: 100%; height: clamp(16rem, 38vw, 26rem); border: 1px solid var(--line); border-radius: 1rem; background: var(--panel); }
+    .areas { display: flex; flex-wrap: wrap; gap: 0.5rem; list-style: none; padding: 0; }
+    .areas a {
+      display: inline-flex; align-items: center; min-height: var(--tap); padding: 0.3rem 0.9rem; border-radius: 999px;
+      border: 1px solid var(--line); background: var(--panel); color: var(--text); text-decoration: none;
+      font-family: var(--font-mono); font-size: 0.72rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
     }
-    .map-label {
-      position: absolute; transform: translate(-50%, -50%);
-      font-family: var(--font-mono); font-weight: 700; font-size: 0.68rem; color: #14121a;
-      padding: 0.28rem 0.6rem; border-radius: 0.4rem; border: 1.5px solid #14121a;
-      box-shadow: 0 0 14px rgba(255,255,255,0.25), 1.5px 1.5px 0 var(--edge);
-      white-space: nowrap;
-    }
+    .areas a:hover { border-color: var(--accent); color: var(--accent); }
     .map-side { display: grid; gap: 1.2rem; align-content: start; }
     .know { background: var(--panel); border: 1px solid var(--line); border-radius: 1rem; padding: 1.5rem; }
     .know h2 { font-family: var(--font-display); font-size: 1.25rem; margin-bottom: 0.6rem; }
     .know p { font-size: 0.9rem; color: var(--text-dim); }
     .know a { display: inline-block; margin-top: 0.9rem; font-size: 0.85rem; font-weight: 600; color: var(--accent); text-decoration: none; }
     .know a:hover { text-decoration: underline; }
-    .reel { position: relative; border-radius: 1rem; overflow: hidden; border: 1px solid var(--line); aspect-ratio: 16/9; text-decoration: none; color: var(--on-photo); }
-    .reel img { width: 100%; height: 100%; object-fit: cover; opacity: 0.85; }
-    .reel .play {
-      position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-      width: 3rem; height: 3rem; border-radius: 50%; display: grid; place-content: center;
-      background: rgba(0,0,0,0.55); border: 2px solid rgba(243,239,230,0.8); font-size: 0.8rem; padding-left: 2px;
+    .reel { position: relative; border-radius: 1rem; overflow: hidden; border: 1px solid var(--line); aspect-ratio: 16/9; text-decoration: none; color: var(--on-photo); background: var(--panel); }
+    /* four photographs cross-fade in turn, each with a slow push-in */
+    .reel img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; animation: reel 20s ease-in-out infinite; }
+    @keyframes reel {
+      0% { opacity: 0; transform: scale(1); }
+      6% { opacity: 1; }
+      25% { opacity: 1; }
+      31% { opacity: 0; transform: scale(1.08); }
+      100% { opacity: 0; transform: scale(1.08); }
     }
-    .reel:hover .play { border-color: var(--accent); color: var(--accent); }
-    .reel-label { position: absolute; bottom: 0.8rem; left: 1rem; font-weight: 600; font-size: 0.9rem; text-shadow: 0 1px 8px rgba(0,0,0,0.9); }
+    .reel::after { content: ''; position: absolute; inset: 45% 0 0 0; background: linear-gradient(180deg, transparent, rgba(0,0,0,0.75)); }
+    .reel-label { position: absolute; z-index: 1; bottom: 0.8rem; left: 1rem; font-weight: 600; font-size: 0.9rem; text-shadow: 0 1px 8px rgba(0,0,0,0.9); }
+    .reel:hover .reel-label { text-decoration: underline; text-underline-offset: 4px; }
 
     .exps { padding: 1.5rem clamp(1rem, 4vw, 3rem) 4rem; position: relative; }
     .exps-head { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; margin-bottom: 1.4rem; }
@@ -216,7 +232,10 @@ const rail = [
       border: 1px solid var(--line); text-decoration: none; transition: transform 0.18s ease;
     }
     .exp-row.wide .exp-card { aspect-ratio: 4/3; }
-    .exp-card img { width: 100%; height: 100%; object-fit: cover; }
+    .exp-card img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.9s cubic-bezier(0.2, 0.7, 0.2, 1); }
+    a.exp-card:hover img, a.exp-card:focus-visible img { transform: scale(1.07); }
+    .rail-card img { transition: transform 0.9s cubic-bezier(0.2, 0.7, 0.2, 1); }
+    .rail-card:hover img { transform: scale(1.07); }
     .exp-card span {
       position: absolute; inset: auto 0 0 0; padding: 1.8rem 0.8rem 0.7rem; font-size: 0.82rem; font-weight: 600; color: var(--on-photo);
       background: linear-gradient(180deg, transparent, rgba(0,0,0,0.88));
@@ -230,6 +249,13 @@ const rail = [
     }
     .doodle::after { content: '♥'; display: block; color: var(--neon-green); font-size: 1.1rem; }
 
+    @media (prefers-reduced-motion: reduce) {
+      .hero-bg { animation: none; }
+      .reel img { animation: none; }
+      .reel img:first-child { opacity: 1; }
+      .exp-card img, .rail-card img { transition: none; }
+      a.exp-card:hover img, .rail-card:hover img { transform: none; }
+    }
     @media (max-width: 56rem) {
       .side-nav { display: none; }
       .rail { grid-template-columns: repeat(3, 1fr); }

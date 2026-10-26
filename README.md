@@ -38,7 +38,8 @@ npx wrangler pages deploy dist --project-name waka
 
 ## Roadmap (kept deliberately small)
 
-- [ ] Real photos per spot (store in `public/`, or Cloudflare R2 later)
+- [x] Real photos per spot — Wikimedia Commons photos in `public/img/photos/`, credited at `/credits/` (see `docs/IMAGE_AUDIT.md`)
+- [ ] Own photos for Bature Brewery, Terra Kulture and the nightlife venues
 - [ ] WhatsApp contact buttons for vendors
 - [ ] More Lagos spots → 50 before any new feature
 - [ ] Reviews (Cloudflare D1) — only after real visitors exist

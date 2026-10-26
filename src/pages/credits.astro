@@ -1,0 +1,59 @@
+---
+import Cinematic from '../layouts/Cinematic.astro';
+import { photos } from '../data/photos';
+
+const entries = Object.entries(photos).sort(([a], [b]) => a.localeCompare(b));
+const licenses = [...new Set(entries.map(([, p]) => p.license))].sort();
+---
+
+<Cinematic title="Photo credits — Waka" description="Where every photograph on Waka comes from, who took it and under which licence.">
+  <section class="credits">
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <a href="/">Home</a> <span>›</span> <b>Photo credits</b>
+    </nav>
+
+    <div class="head">
+      <p class="script kicker">Thank you, photographers</p>
+      <h1>Photo credits</h1>
+      <p class="sub">
+        Every photograph on Waka comes from Wikimedia Commons and is used under the licence shown
+        below. Each credit links to the original file page, where the photographer and the full
+        licence text are listed. Licences used here: {licenses.join(', ')}.
+      </p>
+    </div>
+
+    <ul class="grid">
+      {entries.map(([src, p]) => (
+        <li class="item">
+          <img src={src} alt={p.alt} width="160" height="110" loading="lazy" decoding="async" />
+          <div>
+            <p class="alt">{p.alt}</p>
+            <p class="meta">
+              Photo: {p.author || 'Unknown author'} ·
+              {p.licenseUrl ? <a href={p.licenseUrl} target="_blank" rel="noopener noreferrer">{p.license}</a> : p.license}
+              · <a href={p.source} target="_blank" rel="noopener noreferrer">Original on Wikimedia Commons ↗</a>
+            </p>
+          </div>
+        </li>
+      ))}
+    </ul>
+  </section>
+</Cinematic>
+
+<style>
+  .credits { padding: 6.5rem clamp(1rem, 4vw, 3rem) 4.5rem; }
+  .crumbs { font-size: 0.82rem; color: var(--text-dim); display: flex; gap: 0.5rem; margin-bottom: 2rem; }
+  .crumbs a { text-decoration: none; }
+  .crumbs b { color: var(--accent); font-weight: 600; }
+  .head { margin-bottom: 2rem; }
+  .kicker { font-size: clamp(1.4rem, 3.5vw, 2rem); color: var(--accent); }
+  h1 { font-family: var(--font-display); font-size: clamp(1.9rem, 5vw, 3rem); font-weight: 800; margin-top: 0.3rem; }
+  .sub { margin-top: 0.8rem; color: var(--text-dim); max-width: 64ch; }
+  .grid { list-style: none; padding: 0; display: grid; gap: 0.9rem; grid-template-columns: repeat(auto-fill, minmax(min(26rem, 100%), 1fr)); }
+  .item { display: grid; grid-template-columns: 8rem 1fr; gap: 0.9rem; align-items: start; padding: 0.8rem; background: var(--panel); border: 1px solid var(--line); border-radius: 0.8rem; }
+  .item img { width: 100%; aspect-ratio: 3 / 2; object-fit: cover; border-radius: 0.5rem; background: var(--ink); }
+  .alt { font-size: var(--text-sm); font-weight: 600; }
+  .meta { margin-top: 0.3rem; font-size: var(--text-xs); color: var(--text-dim); line-height: 1.5; }
+  .meta a { color: var(--accent); }
+  @media (max-width: 30rem) { .item { grid-template-columns: 5.5rem 1fr; } }
+</style>

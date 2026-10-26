@@ -63,8 +63,9 @@ const showThemeToggle = false;
     <footer class="foot">
       <p class="foot-logo">WAKA<span>.</span></p>
       <p>Real prices. Honest safety notes. Curated by people wey sabi road.</p>
+      <p class="credits-link"><a href="/credits/">Photo credits</a></p>
       <p class="fine">
-        Hero and mood visuals are artistic impressions. Prices and conditions change fast in Nigeria —
+        Photographs are credited on the photo credits page. Prices and conditions change fast in Nigeria —
         treat every figure as a recent typical range and agree prices before you commit.
       </p>
     </footer>
@@ -76,6 +77,12 @@ const showThemeToggle = false;
         function update() { nav.classList.toggle('scrolled', window.scrollY > 24); }
         update();
         window.addEventListener('scroll', update, { passive: true });
+
+        // a photo that fails to load is hidden rather than showing a broken-image icon
+        document.addEventListener('error', function (e) {
+          var t = e.target;
+          if (t && t.tagName === 'IMG') t.setAttribute('data-failed', '');
+        }, true);
 
         var btn = document.getElementById('theme-toggle');
         if (!btn) return;
@@ -188,7 +195,8 @@ const showThemeToggle = false;
         -webkit-font-smoothing: antialiased;
         overflow-x: clip;
       }
-      img { max-width: 100%; display: block; }
+      img { max-width: 100%; display: block; background: var(--panel); }
+      img[data-failed] { visibility: hidden; }
       a { color: inherit; }
       :focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; border-radius: 2px; }
 
@@ -265,6 +273,8 @@ const showThemeToggle = false;
       .foot-logo { font-family: var(--font-display); font-weight: 800; font-size: 1.4rem; color: var(--text); }
       .foot-logo span { color: var(--accent); }
       .fine { font-size: 0.78rem; max-width: 72ch; opacity: 0.8; }
+      .credits-link { font-size: 0.82rem; }
+      .credits-link a { color: var(--accent); }
 
       .script { font-family: var(--font-script); }
 

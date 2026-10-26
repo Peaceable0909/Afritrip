@@ -31,19 +31,39 @@ export function embedUrl(v: Venue): string {
 }
 
 /**
- * Picture shown on the card before the map is opened. These are the site's own
- * illustrations (or the spot photo when the venue has a full guide), not photos
- * of the venue itself.
+ * Photograph shown on the card before the map is opened. Venues rarely have a
+ * photo we can reuse, so the picture shows the neighbourhood the venue is in
+ * (and the card says so); venues with a full Waka guide use the guide's photo.
  */
+const areaPhotos: Record<string, string[]> = {
+  'Victoria Island': ['area-victoria-island', 'hero-lagos'],
+  Oniru: ['landmark-beach'],
+  Ikoyi: ['area-ikoyi', 'area-lekki'],
+  Lekki: ['area-lekki'],
+  Ikeja: ['area-ikeja'],
+  'Alausa, Ikeja': ['area-ikeja'],
+  'Lagos Island': ['area-lagos-island', 'city-lagos'],
+  Surulere: ['area-surulere'],
+  Ikorodu: ['area-ikorodu'],
+  Lagos: ['city-lagos', 'area-lagos-island'],
+  'Wuse II': ['area-wuse', 'area-abuja-central'],
+  Maitama: ['cat-hotels'],
+  Garki: ['area-garki'],
+  Asokoro: ['area-asokoro'],
+  Kubwa: ['area-abuja-central'],
+  Apo: ['area-apo'],
+  Abuja: ['area-abuja-central', 'city-abuja', 'hero-abuja'],
+};
+
 export function venueImage(v: Venue): string {
   const guide = v.spot ? spots.find((s) => s.slug === v.spot) : undefined;
   if (guide) return guide.img;
-  if (/beach/i.test(v.name)) return '/img/cinematic/cat-beaches.jpg';
-  if (/restaurant|grill|hub|skope|cellar|avenue|village chief|evro/i.test(v.name)) return '/img/cinematic/cat-food.jpg';
-  // spread the remaining venues across a few site images so a long list isn't one picture repeated
-  const pool = ['/img/cinematic/cat-nightlife.jpg', '/img/cinematic/cat-events.jpg', `/img/cinematic/city-${v.city}.jpg`];
+  if (v.slug === 'landmark-beach') return '/img/photos/landmark-beach.jpg';
+  if (/beach/i.test(v.name) && v.area === 'Lekki') return '/img/photos/cat-beaches.jpg';
+  const pool = areaPhotos[v.area] ?? areaPhotos[v.city === 'abuja' ? 'Abuja' : 'Lagos'];
+  // spread venues of the same area across its photos
   const n = [...v.slug].reduce((sum, ch) => sum + ch.charCodeAt(0), 0);
-  return pool[n % pool.length];
+  return `/img/photos/${pool[n % pool.length]}.jpg`;
 }
 
 export const venues: Venue[] = [

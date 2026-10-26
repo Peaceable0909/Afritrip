@@ -2,6 +2,7 @@
 import Cinematic from '../layouts/Cinematic.astro';
 import { venues, cityLabels, embedUrl, venueImage, type CitySlug } from '../data/venues';
 import { mapsUrl } from '../data/spots';
+import { photoAlt } from '../data/photos';
 
 const cities = Object.keys(cityLabels) as CitySlug[];
 const count = (c: CitySlug) => venues.filter((v) => v.city === c).length;
@@ -46,8 +47,9 @@ const count = (c: CitySlug) => venues.filter((v) => v.city === c).length;
           data-text={`${v.name} ${v.area} ${cityLabels[v.city]}`.toLowerCase()}
         >
           <div class="pic">
-            <img src={venueImage(v)} alt="" loading="lazy" decoding="async" />
+            <img src={venueImage(v)} alt={photoAlt(venueImage(v))} width="1400" height="933" loading="lazy" decoding="async" />
             <span class="city-tag">{cityLabels[v.city]}</span>
+            {!v.spot && <span class="pic-note">Area photo</span>}
           </div>
           <div class="venue-top">
             <p class="eyebrow">{v.area}</p>
@@ -69,8 +71,8 @@ const count = (c: CitySlug) => venues.filter((v) => v.city === c).length;
 
     <p class="fine">
       Matched on Google Maps on 26 October 2026. Names are the listings Google shows; places open,
-      close and move, so check before you travel. Card pictures are Waka illustrations, not photos
-      of the venue — tap “Google Maps” for the venue’s own photos. The map loads from Google only
+      close and move, so check before you travel. Card pictures are real photographs of the neighbourhood (or of the
+      venue, where it has a Waka guide), not of every venue — tap “Google Maps” for the venue’s own photos. The map loads from Google only
       when you tap “Show map”.
     </p>
   </section>
@@ -184,7 +186,13 @@ const count = (c: CitySlug) => venues.filter((v) => v.city === c).length;
   }
   .venue[hidden] { display: none; }
   .pic { position: relative; aspect-ratio: 16 / 9; border-radius: 0.6rem; overflow: hidden; background: var(--accent-soft); }
-  .pic img { width: 100%; height: 100%; object-fit: cover; }
+  .pic img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.9s cubic-bezier(0.2, 0.7, 0.2, 1); }
+  .venue:hover .pic img { transform: scale(1.07); }
+  .pic-note {
+    position: absolute; right: 0.6rem; bottom: 0.6rem; font-size: 0.68rem; color: #fff;
+    background: rgba(0, 0, 0, 0.55); border-radius: 999px; padding: 0.15rem 0.55rem;
+  }
+  @media (prefers-reduced-motion: reduce) { .pic img { transition: none; } .venue:hover .pic img { transform: none; } }
   .city-tag {
     position: absolute; top: 0.6rem; left: 0.6rem;
     font-family: var(--font-mono); font-size: var(--text-xs); font-weight: 700;

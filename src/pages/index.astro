@@ -1,13 +1,14 @@
 ---
 import Cinematic from '../layouts/Cinematic.astro';
 import Flight from '../components/Flight.astro';
+import { photoAlt } from '../data/photos';
 
 const cities = [
-  { slug: 'lagos', name: 'Lagos', tag: 'The city that never sleeps', img: '/img/cinematic/city-lagos.jpg', href: '/states/lagos/' },
-  { slug: 'abuja', name: 'Abuja', tag: 'The heart of Nigeria', img: '/img/cinematic/city-abuja.jpg', href: '/states/abuja/' },
-  { slug: 'calabar', name: 'Calabar', tag: "Nature's paradise", img: '/img/cinematic/city-calabar.jpg', href: '/states/calabar/' },
-  { slug: 'kano', name: 'Kano', tag: 'Ancient & timeless', img: '/img/cinematic/city-kano.jpg', href: '/states/kano/' },
-  { slug: 'osun', name: 'Osun', tag: 'Cultural heritage', img: '/img/cinematic/city-osun.jpg', href: '/states/osun/' },
+  { slug: 'lagos', name: 'Lagos', tag: 'The city that never sleeps', img: '/img/photos/city-lagos.jpg', href: '/states/lagos/' },
+  { slug: 'abuja', name: 'Abuja', tag: 'The heart of Nigeria', img: '/img/photos/city-abuja.jpg', href: '/states/abuja/' },
+  { slug: 'calabar', name: 'Calabar', tag: "Nature's paradise", img: '/img/photos/city-calabar.jpg', href: '/states/calabar/' },
+  { slug: 'kano', name: 'Kano', tag: 'Ancient & timeless', img: '/img/photos/city-kano.jpg', href: '/states/kano/' },
+  { slug: 'osun', name: 'Osun', tag: 'Cultural heritage', img: '/img/photos/city-osun.jpg', href: '/states/osun/' },
 ];
 
 const categories = [
@@ -21,11 +22,9 @@ const categories = [
 
 <Cinematic title="Waka — Welcome to Nigeria" hero>
   <section class="hero">
-    <div class="bg-wrap" aria-hidden="true">
-      <img class="bg-img" src="/img/cinematic/hero-land.jpg" alt="" fetchpriority="high" />
+    <div class="bg-wrap">
+      <img class="bg-img" src="/img/photos/hero-benue.jpg" alt={photoAlt('/img/photos/hero-benue.jpg')} width="1920" height="1080" fetchpriority="high" />
     </div>
-
-    <img class="clouds" src="/img/cinematic/hero-clouds.jpg" alt="" aria-hidden="true" />
 
     <svg class="birds" viewBox="0 0 120 40" aria-hidden="true">
       <g fill="none" stroke="#1a140f" stroke-width="2" stroke-linecap="round">
@@ -36,15 +35,6 @@ const categories = [
     </svg>
 
     <h1 class="word">NIGERIA</h1>
-
-    <img class="splash" src="/img/cinematic/hero-splash.jpg" alt="" aria-hidden="true" />
-
-    <img
-      class="portrait"
-      src="/img/cinematic/hero-portrait.png"
-      alt="Nigerian woman in a colorful gele headwrap"
-      fetchpriority="high"
-    />
 
     <div class="mist" aria-hidden="true"></div>
 
@@ -65,7 +55,7 @@ const categories = [
       <div class="hero-ctas">
         <a class="btn-solid" href="#explore">Start Exploring</a>
         <a class="btn-play" href="/states/lagos/">
-          <span class="play" aria-hidden="true">▶</span> Watch Nigeria Reel
+          <span class="play" aria-hidden="true">→</span> Discover Lagos
         </a>
       </div>
     </div>
@@ -90,7 +80,7 @@ const categories = [
     <div class="city-row">
       {cities.map((c) => (
         <a class="city-card" href={c.href} data-reveal>
-          <img src={c.img} alt={`${c.name} — ${c.tag}`} loading="lazy" />
+          <img src={c.img} alt={photoAlt(c.img, c.name)} width="686" height="858" loading="lazy" decoding="async" />
           <div class="city-meta">
             <strong>{c.name}</strong>
             <span>{c.tag}</span>
@@ -127,17 +117,13 @@ const categories = [
       // entrance: the scene assembles like a film title
       gsap.timeline()
         .from('.word', { opacity: 0, y: 50, duration: 1, ease: 'power3.out' })
-        .from('.splash', { opacity: 0, scale: 0.6, duration: 0.9, ease: 'power2.out' }, 0.35)
-        .from('.portrait', { opacity: 0, y: 90, duration: 1, ease: 'power3.out' }, 0.45)
-        .from('.welcome', { opacity: 0, y: 20, duration: 0.6, ease: 'power2.out' }, 0.9)
-        .from('.lede, .hero-ctas', { opacity: 0, y: 22, stagger: 0.12, duration: 0.6, ease: 'power2.out' }, 1.05);
+        .from('.welcome', { opacity: 0, y: 20, duration: 0.6, ease: 'power2.out' }, 0.6)
+        .from('.lede, .hero-ctas', { opacity: 0, y: 22, stagger: 0.12, duration: 0.6, ease: 'power2.out' }, 0.75);
 
       // scroll parallax: every layer moves at its own depth
       const heroScrub = { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true };
       gsap.to('.bg-wrap', { yPercent: 14, ease: 'none', scrollTrigger: heroScrub });
       gsap.to('.word', { yPercent: -60, ease: 'none', scrollTrigger: heroScrub });
-      gsap.to('.portrait', { yPercent: 10, ease: 'none', scrollTrigger: heroScrub });
-      gsap.to('.splash', { yPercent: 22, ease: 'none', scrollTrigger: heroScrub });
       gsap.to('.copy', {
         yPercent: -30,
         opacity: 0,
@@ -176,14 +162,6 @@ const categories = [
     .bg-img { width: 100%; height: 100%; object-fit: cover; object-position: center 40%; animation: kenburns 28s ease-in-out infinite alternate; }
     @keyframes kenburns { from { transform: scale(1); } to { transform: scale(1.07); } }
 
-    /* L2 — drifting clouds (screen blend kills the black) */
-    .clouds {
-      position: absolute; top: -3%; left: -10%; width: 130%; z-index: 2;
-      mix-blend-mode: screen; opacity: 0.5;
-      animation: drift 70s ease-in-out infinite alternate;
-    }
-    @keyframes drift { from { transform: translateX(0); } to { transform: translateX(-8%); } }
-
     /* L3 — birds crossing the sky */
     .birds {
       position: absolute; top: 16%; left: 0; width: clamp(5rem, 9vw, 8rem); z-index: 2;
@@ -201,30 +179,11 @@ const categories = [
       text-align: center;
       font-family: var(--font-display); font-weight: 800;
       font-size: clamp(4.2rem, 16.5vw, 15rem); line-height: 0.9; letter-spacing: 0.01em;
-      background-image: url('/img/cinematic/hero-grunge.jpg'), url('/img/cinematic/hero-land.jpg');
-      background-size: cover, 145% auto;
-      background-position: center, center 12%;
-      background-blend-mode: soft-light;
+      background-image: url('/img/photos/hero-benue.jpg');
+      background-size: 150% auto;
+      background-position: center 38%;
       -webkit-background-clip: text; background-clip: text; color: transparent;
       filter: saturate(1.35) contrast(1.1) brightness(1.32) drop-shadow(0 8px 34px rgba(0,0,0,0.65));
-    }
-
-    /* L5 — paint splash halo behind the portrait */
-    .splash {
-      position: absolute; right: -6%; bottom: 4%; z-index: 4;
-      width: min(58vw, 42rem);
-      mix-blend-mode: screen; opacity: 0.75;
-      pointer-events: none;
-    }
-
-    /* L6 — the portrait breaks the wordmark */
-    .portrait {
-      position: absolute; right: clamp(0rem, 7vw, 9rem); bottom: 0; z-index: 5;
-      height: min(80vh, 92%); width: auto;
-      /* never squash the subject: keep true aspect ratio and let it bleed off-frame
-         (works for any image shape the owner uploads) */
-      max-width: none;
-      filter: saturate(1.1) contrast(1.05) drop-shadow(-18px 24px 60px rgba(0,0,0,0.6));
     }
 
     /* L7 — mist grounding the bottom */
@@ -267,7 +226,7 @@ const categories = [
     }
 
     @media (prefers-reduced-motion: reduce) {
-      .bg-img, .clouds, .dust span { animation: none; }
+      .bg-img, .dust span { animation: none; }
       .birds { display: none; }
     }
     .btn-solid {
@@ -279,7 +238,7 @@ const categories = [
     .btn-play { color: var(--on-photo); display: inline-flex; align-items: center; gap: 0.7rem; min-height: var(--tap); text-decoration: none; font-weight: 600; font-size: 0.95rem; text-shadow: 0 1px 8px rgba(0,0,0,0.8); }
     .play {
       display: grid; place-content: center; width: 2.6rem; height: 2.6rem; border-radius: 50%;
-      border: 2px solid rgba(243,239,230,0.7); font-size: 0.7rem; padding-left: 2px;
+      border: 2px solid rgba(243,239,230,0.7); font-size: 1rem; padding-left: 0;
     }
     .btn-play:hover .play { border-color: var(--accent); color: var(--accent); }
     .scroll-hint {
@@ -316,7 +275,9 @@ const categories = [
       aspect-ratio: 4 / 5; border: 1px solid var(--line);
       transition: transform 0.18s ease;
     }
-    .city-card img { width: 100%; height: 100%; object-fit: cover; }
+    .city-card img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.9s cubic-bezier(0.2, 0.7, 0.2, 1); }
+    a.city-card:hover img, a.city-card:focus-visible img { transform: scale(1.07); }
+    @media (prefers-reduced-motion: reduce) { .city-card img { transition: none; } a.city-card:hover img { transform: none; } }
     a.city-card:hover { transform: translateY(-5px); border-color: var(--accent); }
     .city-meta {
       position: absolute; inset: auto 0 0 0; padding: 2.2rem 0.9rem 0.9rem;
@@ -336,11 +297,9 @@ const categories = [
     .cat-sub { font-size: 0.75rem; color: var(--text-dim); }
 
     @media (max-width: 56rem) {
-      .portrait { height: 46vh; right: -30%; }
-      .splash { width: 78vw; right: -22%; }
       .word { inset: 16% 0 auto 0; }
-      /* keep the copy on the left, clear of the portrait, with a scrim behind it for contrast */
-      .copy { bottom: 12%; max-width: 64vw; }
+      /* the copy sits low on the photograph, with a scrim behind it for contrast */
+      .copy { bottom: 12%; max-width: 86vw; }
       .copy::before {
         content: ''; position: absolute; inset: -2.5rem -1.5rem -1.5rem -1.5rem; z-index: -1;
         background: radial-gradient(120% 100% at 20% 55%, rgba(11,10,14,0.62), rgba(11,10,14,0) 75%);

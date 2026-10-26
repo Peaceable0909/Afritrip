@@ -4,6 +4,7 @@
 // Search and mood bubbles are instructions to the same camera.
 import { states } from '../data/states';
 import { spots } from '../data/spots';
+import { photoAlt } from '../data/photos';
 
 const moodList = [
   { id: 'party', label: 'Party', emoji: '🎉' },
@@ -38,8 +39,8 @@ const stateCards = Object.fromEntries(
   states.map((s) => [
     s.slug,
     s.slug === 'lagos'
-      ? spots.map((p) => ({ name: p.name, img: p.img, href: `/spots/${p.slug}/`, sub: p.price, moods: p.moods }))
-      : s.highlights.map((h) => ({ name: h.name, img: h.img, href: h.href ?? `/states/${s.slug}/`, sub: h.href ? 'See the guide' : 'Guide coming soon', moods: s.moods })),
+      ? spots.map((p) => ({ name: p.name, img: p.img, alt: photoAlt(p.img, p.name), href: `/spots/${p.slug}/`, sub: p.price, moods: p.moods }))
+      : s.highlights.map((h) => ({ name: h.name, img: h.img, alt: photoAlt(h.img, h.name), href: h.href ?? `/states/${s.slug}/`, sub: h.href ? 'See the guide' : 'Guide coming soon', moods: s.moods })),
   ])
 );
 ---
@@ -107,7 +108,7 @@ const stateCards = Object.fromEntries(
 
     <!-- Altitude 2: the state's illustrated map -->
     <div class="alt-state" aria-hidden="true">
-      <img class="state-img" src="" alt="" />
+      <img class="state-img" alt="" width="1280" height="720" decoding="async" />
       <p class="script state-title"></p>
       <button class="pull-up">↑ Pull up · all Nigeria</button>
     </div>
@@ -124,7 +125,7 @@ const stateCards = Object.fromEntries(
   </template>
 </section>
 
-<script define:vars={{ index, stateCards, stateMeta: states.map((s) => ({ slug: s.slug, name: s.name, mapImg: s.mapImg, mapPos: s.mapPos, moods: s.moods, href: `/states/${s.slug}/` })) }}>
+<script define:vars={{ index, stateCards, stateMeta: states.map((s) => ({ slug: s.slug, name: s.name, mapImg: s.heroImg, mapAlt: photoAlt(s.heroImg, s.name), mapPos: s.mapPos, moods: s.moods, href: `/states/${s.slug}/` })) }}>
   window.__FLIGHT__ = { index, stateCards, stateMeta };
 </script>
 
@@ -160,7 +161,7 @@ const stateCards = Object.fromEntries(
     currentState = slug;
     root.dataset.alt = 'state';
     stateImg.src = meta.mapImg;
-    stateImg.alt = `Illustrated map of ${meta.name}`;
+    stateImg.alt = meta.mapAlt;
     stateTitle.textContent = `Explore ${meta.name}`;
     altState.setAttribute('aria-hidden', 'false');
 
@@ -202,7 +203,7 @@ const stateCards = Object.fromEntries(
       node.href = c.href;
       const img = node.querySelector('img')!;
       img.src = c.img;
-      img.alt = c.name;
+      img.alt = c.alt ?? c.name;
       node.querySelector('.fcard-name')!.textContent = c.name;
       node.querySelector('.fcard-sub')!.textContent = c.sub;
       if (highlightSlug && c.href.includes(highlightSlug)) node.classList.add('lit');
@@ -275,7 +276,7 @@ const stateCards = Object.fromEntries(
           const node = tpl.content.firstElementChild!.cloneNode(true) as HTMLAnchorElement;
           node.href = src.href;
           const img = node.querySelector('img')!;
-          img.src = src.img; img.alt = src.name;
+          img.src = src.img; img.alt = src.alt ?? src.name;
           node.querySelector('.fcard-name')!.textContent = src.name;
           node.querySelector('.fcard-sub')!.textContent = src.sub;
           deck.appendChild(node);
