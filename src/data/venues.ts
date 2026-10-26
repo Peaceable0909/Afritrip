@@ -1,4 +1,4 @@
-import type { SpotMap } from './spots';
+import { spots, type SpotMap } from './spots';
 
 export type CitySlug = 'abuja' | 'lagos';
 
@@ -28,6 +28,22 @@ export function embedUrl(v: Venue): string {
   const q = encodeURIComponent(`${v.mapsName} ${cityLabels[v.city]}`);
   const ll = v.map.coords ? `&ll=${v.map.coords[0]},${v.map.coords[1]}` : '';
   return `https://www.google.com/maps?q=${q}${ll}&z=16&output=embed`;
+}
+
+/**
+ * Picture shown on the card before the map is opened. These are the site's own
+ * illustrations (or the spot photo when the venue has a full guide), not photos
+ * of the venue itself.
+ */
+export function venueImage(v: Venue): string {
+  const guide = v.spot ? spots.find((s) => s.slug === v.spot) : undefined;
+  if (guide) return guide.img;
+  if (/beach/i.test(v.name)) return '/img/cinematic/cat-beaches.jpg';
+  if (/restaurant|grill|hub|skope|cellar|avenue|village chief|evro/i.test(v.name)) return '/img/cinematic/cat-food.jpg';
+  // spread the remaining venues across a few site images so a long list isn't one picture repeated
+  const pool = ['/img/cinematic/cat-nightlife.jpg', '/img/cinematic/cat-events.jpg', `/img/cinematic/city-${v.city}.jpg`];
+  const n = [...v.slug].reduce((sum, ch) => sum + ch.charCodeAt(0), 0);
+  return pool[n % pool.length];
 }
 
 export const venues: Venue[] = [

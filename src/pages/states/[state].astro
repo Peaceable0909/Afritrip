@@ -20,7 +20,7 @@ const rail = [
 ];
 ---
 
-<Cinematic title={`${s.name} — Waka`} description={s.tagline}>
+<Cinematic title={`${s.name} — Waka`} description={s.tagline} hero>
   <section class="hero">
     <img class="hero-bg" src={s.heroImg} alt="" fetchpriority="high" />
     <div class="hero-shade" aria-hidden="true"></div>
@@ -113,25 +113,25 @@ const rail = [
   </section>
 
   <style>
-    .hero { position: relative; min-height: 92vh; min-height: 92dvh; display: grid; align-content: center; overflow: hidden; }
+    .hero { position: relative; min-height: 92vh; min-height: 92dvh; display: grid; align-content: center; overflow: hidden; color: var(--on-photo); }
     .hero-bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
     .hero-shade {
       position: absolute; inset: 0;
       background:
-        linear-gradient(90deg, rgba(11,10,14,0.85) 0%, rgba(11,10,14,0.35) 50%, rgba(11,10,14,0.15) 75%),
-        linear-gradient(180deg, rgba(11,10,14,0.5) 0%, rgba(11,10,14,0) 25%, rgba(11,10,14,0.92) 100%);
+        linear-gradient(90deg, rgba(8,20,13,0.82) 0%, rgba(8,20,13,0.35) 50%, rgba(8,20,13,0.12) 75%),
+        linear-gradient(180deg, rgba(8,20,13,0.5) 0%, rgba(8,20,13,0) 25%, rgba(8,20,13,0.8) 100%);
     }
     .crumbs {
       position: absolute; top: 4.6rem; left: clamp(1.25rem, 5vw, 4rem);
-      font-size: 0.82rem; color: var(--text-dim); display: flex; gap: 0.5rem; align-items: center;
+      font-size: 0.82rem; color: rgba(255,255,255,0.85); display: flex; gap: 0.5rem; align-items: center;
       text-shadow: 0 1px 6px rgba(0,0,0,0.8); z-index: 2;
     }
     .crumbs a { text-decoration: none; }
-    .crumbs a:hover { color: var(--text); }
-    .crumbs b { color: var(--danfo); font-weight: 600; }
+    .crumbs a:hover { color: #fff; }
+    .crumbs b { color: var(--sun); font-weight: 600; }
 
     .hero-content { position: relative; padding: 7rem clamp(1.25rem, 5vw, 4rem) 4rem; max-width: 46rem; }
-    .welcome { font-size: clamp(1.4rem, 3.5vw, 2rem); color: var(--danfo); text-shadow: 0 2px 14px rgba(0,0,0,0.7); }
+    .welcome { font-size: clamp(1.4rem, 3.5vw, 2rem); color: var(--sun); text-shadow: 0 2px 14px rgba(0,0,0,0.7); }
     .hero h1 {
       font-size: clamp(4rem, 13vw, 8.5rem); font-weight: 400; color: #fff; line-height: 1;
       text-shadow: 0 6px 30px rgba(0,0,0,0.6); transform: rotate(-3deg); width: max-content; max-width: 100%;
@@ -141,9 +141,9 @@ const rail = [
     .chips { display: flex; flex-wrap: wrap; gap: 0.7rem; margin-top: 1.8rem; }
     .chip {
       display: grid; gap: 0; padding: 0.55rem 1rem; border-radius: 0.7rem;
-      background: rgba(22,20,28,0.72); border: 1px solid var(--line); backdrop-filter: blur(6px);
+      background: rgba(255,255,255,0.92); border: 1px solid var(--line); backdrop-filter: blur(6px); color: var(--text);
     }
-    .chip b { font-family: var(--font-mono); font-size: 0.85rem; color: var(--danfo); }
+    .chip b { font-family: var(--font-mono); font-size: 0.85rem; color: var(--green); }
     .chip span { font-size: 0.68rem; color: var(--text-dim); }
 
     .side-nav {
@@ -153,10 +153,10 @@ const rail = [
     .side-nav a {
       font-family: var(--font-mono); font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase;
       text-decoration: none; text-align: center;
-      background: rgba(22,20,28,0.75); border: 1px solid var(--line); border-radius: 0.6rem;
+      background: rgba(255,255,255,0.92); color: var(--text); border: 1px solid var(--line); border-radius: 0.6rem;
       padding: 0.55rem 0.7rem; min-height: 44px; min-width: 44px; display: grid; place-content: center; backdrop-filter: blur(6px);
     }
-    .side-nav a:hover { border-color: var(--danfo); color: var(--danfo); }
+    .side-nav a:hover { border-color: var(--green); color: var(--green); }
 
     .rail-wrap { padding: 2.2rem clamp(1rem, 4vw, 3rem) 0.5rem; }
     .rail { display: grid; grid-template-columns: repeat(6, 1fr); gap: 0.9rem; }
@@ -166,10 +166,10 @@ const rail = [
     }
     .rail-card img { width: 100%; height: 100%; object-fit: cover; }
     .rail-card span {
-      position: absolute; inset: auto 0 0 0; padding: 1.6rem 0.7rem 0.6rem; font-size: 0.85rem; font-weight: 600;
+      position: absolute; inset: auto 0 0 0; padding: 1.6rem 0.7rem 0.6rem; font-size: 0.85rem; font-weight: 600; color: var(--on-photo);
       background: linear-gradient(180deg, transparent, rgba(0,0,0,0.85));
     }
-    .rail-card:hover { transform: translateY(-4px); border-color: var(--danfo); }
+    .rail-card:hover { transform: translateY(-4px); border-color: var(--green); }
 
     .map-row {
       display: grid; grid-template-columns: minmax(0, 1.8fr) minmax(0, 1fr); gap: 1.2rem;
@@ -179,36 +179,36 @@ const rail = [
     .map-card img { width: 100%; height: 100%; object-fit: cover; }
     .map-title {
       position: absolute; top: 1.2rem; left: 1.4rem; font-size: clamp(1.8rem, 4vw, 2.6rem);
-      color: var(--danfo); text-shadow: 0 2px 14px rgba(0,0,0,0.8);
+      color: var(--on-photo); text-shadow: 0 2px 14px rgba(0,0,0,0.8);
     }
     .map-label {
       position: absolute; transform: translate(-50%, -50%);
       font-family: var(--font-mono); font-weight: 700; font-size: 0.68rem; color: #14121a;
       padding: 0.28rem 0.6rem; border-radius: 0.4rem; border: 1.5px solid #14121a;
-      box-shadow: 0 0 14px rgba(255,255,255,0.25), 1.5px 1.5px 0 #000;
+      box-shadow: 0 0 14px rgba(255,255,255,0.25), 1.5px 1.5px 0 var(--edge);
       white-space: nowrap;
     }
     .map-side { display: grid; gap: 1.2rem; align-content: start; }
     .know { background: var(--panel); border: 1px solid var(--line); border-radius: 1rem; padding: 1.5rem; }
     .know h2 { font-family: var(--font-display); font-size: 1.25rem; margin-bottom: 0.6rem; }
     .know p { font-size: 0.9rem; color: var(--text-dim); }
-    .know a { display: inline-block; margin-top: 0.9rem; font-size: 0.85rem; font-weight: 600; color: var(--danfo); text-decoration: none; }
+    .know a { display: inline-block; margin-top: 0.9rem; font-size: 0.85rem; font-weight: 600; color: var(--green); text-decoration: none; }
     .know a:hover { text-decoration: underline; }
-    .reel { position: relative; border-radius: 1rem; overflow: hidden; border: 1px solid var(--line); aspect-ratio: 16/9; text-decoration: none; }
+    .reel { position: relative; border-radius: 1rem; overflow: hidden; border: 1px solid var(--line); aspect-ratio: 16/9; text-decoration: none; color: var(--on-photo); }
     .reel img { width: 100%; height: 100%; object-fit: cover; opacity: 0.85; }
     .reel .play {
       position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
       width: 3rem; height: 3rem; border-radius: 50%; display: grid; place-content: center;
       background: rgba(0,0,0,0.55); border: 2px solid rgba(243,239,230,0.8); font-size: 0.8rem; padding-left: 2px;
     }
-    .reel:hover .play { border-color: var(--danfo); color: var(--danfo); }
+    .reel:hover .play { border-color: var(--green); color: var(--green); }
     .reel-label { position: absolute; bottom: 0.8rem; left: 1rem; font-weight: 600; font-size: 0.9rem; text-shadow: 0 1px 8px rgba(0,0,0,0.9); }
 
     .exps { padding: 1.5rem clamp(1rem, 4vw, 3rem) 4rem; position: relative; }
     .exps-head { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; margin-bottom: 1.4rem; }
     .exps-head h2 { font-size: clamp(1.7rem, 4vw, 2.4rem); font-weight: 400; }
     .exps-head a { font-size: 0.85rem; color: var(--text-dim); text-decoration: none; }
-    .exps-head a:hover { color: var(--danfo); }
+    .exps-head a:hover { color: var(--green); }
     .exp-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.9rem; }
     .exp-row.wide { grid-template-columns: repeat(3, 1fr); }
     .exp-card {
@@ -218,18 +218,17 @@ const rail = [
     .exp-row.wide .exp-card { aspect-ratio: 4/3; }
     .exp-card img { width: 100%; height: 100%; object-fit: cover; }
     .exp-card span {
-      position: absolute; inset: auto 0 0 0; padding: 1.8rem 0.8rem 0.7rem; font-size: 0.82rem; font-weight: 600;
+      position: absolute; inset: auto 0 0 0; padding: 1.8rem 0.8rem 0.7rem; font-size: 0.82rem; font-weight: 600; color: var(--on-photo);
       background: linear-gradient(180deg, transparent, rgba(0,0,0,0.88));
     }
-    a.exp-card:hover { transform: translateY(-4px); border-color: var(--danfo); }
+    a.exp-card:hover { transform: translateY(-4px); border-color: var(--green); }
     .doodle {
       position: absolute; right: clamp(1rem, 4vw, 3rem); bottom: -1.2rem;
       font-size: 1.9rem; line-height: 1.05; text-align: center; transform: rotate(-8deg);
       color: var(--neon-pink);
-      text-shadow: 0 0 14px rgba(255,61,143,0.8), 0 0 30px rgba(255,61,143,0.4);
       pointer-events: none;
     }
-    .doodle::after { content: '♥'; display: block; color: var(--neon-green); font-size: 1.1rem; text-shadow: 0 0 12px rgba(74,222,128,0.8); }
+    .doodle::after { content: '♥'; display: block; color: var(--neon-green); font-size: 1.1rem; }
 
     @media (max-width: 56rem) {
       .side-nav { display: none; }

@@ -2,9 +2,11 @@
 interface Props {
   title: string;
   description?: string;
+  /** page opens on a full-bleed photo, so the nav starts clear with white text */
+  hero?: boolean;
 }
 
-const { title, description = 'Waka — discover Nigeria. Real prices, honest safety notes, cinematic journeys.' } = Astro.props;
+const { title, description = 'Waka — discover Nigeria. Real prices, honest safety notes, cinematic journeys.', hero = false } = Astro.props;
 ---
 
 <!doctype html>
@@ -22,7 +24,7 @@ const { title, description = 'Waka — discover Nigeria. Real prices, honest saf
     />
   </head>
   <body>
-    <header class="nav">
+    <header class:list={['nav', hero && 'over-photo']}>
       <a class="logo" href="/" aria-label="Waka — home">
         <span class="plate">WAKA</span>
         <span class="logo-sub">Discover Nigeria</span>
@@ -62,18 +64,25 @@ const { title, description = 'Waka — discover Nigeria. Real prices, honest saf
 
     <style is:global>
       :root {
-        --danfo: #ffc400;
-        --ink: #0b0a0e;
-        --panel: #16141c;
-        --line: #2a2733;
-        --text: #f3efe6;
-        --text-dim: #a79f92;
-        --neon-pink: #ff3d8f;
-        --neon-green: #4ade80;
-        --neon-teal: #2dd4bf;
-        --safe: #34d399;
-        --watch: #fbbf24;
-        --avoid: #f87171;
+        /* white page, green as the working colour, a little sun-yellow as spice */
+        --green: #16803c;
+        --green-deep: #0f5c2b;
+        --green-soft: #e6f4ea;
+        --sun: #f6c326;
+        --on-accent: #ffffff;
+        --edge: #0e3b22;
+        --on-photo: #ffffff;
+        --ink: #ffffff;
+        --panel: #f3f9f4;
+        --line: #d9e6dd;
+        --text: #0f2419;
+        --text-dim: #4d6556;
+        --neon-pink: #e11d74;
+        --neon-green: #15a34a;
+        --neon-teal: #0d9488;
+        --safe: #16a34a;
+        --watch: #d97706;
+        --avoid: #dc2626;
         --font-display: 'Bricolage Grotesque', system-ui, sans-serif;
         --font-script: 'Kaushan Script', cursive;
         --font-body: 'Instrument Sans', system-ui, sans-serif;
@@ -114,55 +123,58 @@ const { title, description = 'Waka — discover Nigeria. Real prices, honest saf
       }
       img { max-width: 100%; display: block; }
       a { color: inherit; }
-      :focus-visible { outline: 3px solid var(--danfo); outline-offset: 2px; border-radius: 2px; }
+      :focus-visible { outline: 3px solid var(--green); outline-offset: 2px; border-radius: 2px; }
 
+      /* the danfo number-plate: the one place yellow stays */
       .plate {
         display: inline-flex; align-items: center; gap: 0.5rem;
-        background: var(--danfo); color: #191410;
+        background: var(--sun); color: #1b1606;
         font-family: var(--font-mono); font-weight: 700; font-size: 0.85rem;
         padding: 0.28rem 0.65rem 0.28rem 0.5rem;
-        border-radius: 0.35rem; border: 2px solid #191410;
-        box-shadow: 2px 2px 0 #000;
+        border-radius: 0.35rem; border: 2px solid #1b1606;
+        box-shadow: 2px 2px 0 var(--edge);
         letter-spacing: 0.08em;
       }
       .plate::before {
         content: ''; width: 0.7rem; align-self: stretch; border-radius: 2px;
-        background: repeating-linear-gradient(-55deg, #191410 0 3px, transparent 3px 7px);
+        background: repeating-linear-gradient(-55deg, #1b1606 0 3px, transparent 3px 7px);
       }
 
       .nav {
         position: fixed; inset: 0 0 auto 0; z-index: 50;
         display: flex; align-items: center; gap: 1.5rem;
         padding: 0.9rem clamp(1rem, 4vw, 3rem);
-        background: linear-gradient(180deg, rgba(11,10,14,0.85), rgba(11,10,14,0));
-        transition: background-color 0.25s ease, backdrop-filter 0.25s ease, border-color 0.25s ease;
-        border-bottom: 1px solid transparent;
-      }
-      /* once the page scrolls, give the bar a solid blurred backing so it never
-         fights with the content passing underneath it */
-      .nav.scrolled {
-        background: rgba(11,10,14,0.88);
+        /* default: a white bar, readable on every page */
+        background: rgba(255,255,255,0.92);
         -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
-        border-bottom-color: var(--line);
+        border-bottom: 1px solid var(--line);
+        transition: background-color 0.25s ease, border-color 0.25s ease;
+      }
+      /* pages that open on a full-bleed photo: clear bar with white text until the page scrolls */
+      .nav.over-photo:not(.scrolled) {
+        background: linear-gradient(180deg, rgba(8,20,13,0.7), rgba(8,20,13,0));
+        -webkit-backdrop-filter: none; backdrop-filter: none;
+        border-bottom-color: transparent;
       }
       .logo { display: flex; align-items: center; gap: 0.6rem; text-decoration: none; min-height: var(--tap); }
       .logo-sub {
-        font-family: var(--font-script); font-size: 0.95rem; color: var(--text);
-        text-shadow: 0 1px 8px rgba(0,0,0,0.8);
+        font-family: var(--font-script); font-size: 0.95rem; color: var(--green-deep);
       }
       .links { display: flex; gap: var(--space-sm); margin-left: auto; font-size: var(--text-sm); font-weight: 500; }
       .links a {
-        text-decoration: none; color: var(--text); opacity: 0.85; text-shadow: 0 1px 6px rgba(0,0,0,0.7);
+        text-decoration: none; color: var(--text); opacity: 0.9;
         display: inline-flex; align-items: center; min-height: var(--tap); padding-inline: 0.6rem;
       }
-      .links a:hover { opacity: 1; text-decoration: underline; text-decoration-color: var(--danfo); text-decoration-thickness: 3px; text-underline-offset: 5px; }
+      .links a:hover { opacity: 1; text-decoration: underline; text-decoration-color: var(--sun); text-decoration-thickness: 3px; text-underline-offset: 5px; }
+      .nav.over-photo:not(.scrolled) .logo-sub,
+      .nav.over-photo:not(.scrolled) .links a { color: var(--on-photo); text-shadow: 0 1px 8px rgba(0,0,0,0.6); }
       .cta-pill {
-        background: var(--danfo); color: #191410; font-weight: 700; font-size: var(--text-sm);
+        background: var(--green); color: var(--on-accent); font-weight: 700; font-size: var(--text-sm);
         text-decoration: none; padding: 0.55rem 1.2rem; border-radius: 999px;
-        border: 2px solid #191410; box-shadow: 2px 2px 0 #000; white-space: nowrap;
+        border: 2px solid var(--edge); box-shadow: 2px 2px 0 var(--edge); white-space: nowrap;
         display: inline-flex; align-items: center; min-height: var(--tap);
       }
-      .cta-pill:hover { transform: translate(-1px,-1px); box-shadow: 3px 3px 0 #000; }
+      .cta-pill:hover { transform: translate(-1px,-1px); box-shadow: 3px 3px 0 var(--edge); background: var(--green-deep); }
 
       .foot {
         border-top: 1px solid var(--line);
@@ -170,7 +182,7 @@ const { title, description = 'Waka — discover Nigeria. Real prices, honest saf
         display: grid; gap: 0.8rem; color: var(--text-dim); font-size: 0.9rem;
       }
       .foot-logo { font-family: var(--font-display); font-weight: 800; font-size: 1.4rem; color: var(--text); }
-      .foot-logo span { color: var(--danfo); }
+      .foot-logo span { color: var(--green); }
       .fine { font-size: 0.78rem; max-width: 72ch; opacity: 0.8; }
 
       .script { font-family: var(--font-script); }

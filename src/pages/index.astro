@@ -11,15 +11,15 @@ const cities = [
 ];
 
 const categories = [
-  { name: 'Beaches', sub: 'Stunning coastlines', color: 'var(--danfo)' },
+  { name: 'Beaches', sub: 'Stunning coastlines', color: 'var(--green)' },
   { name: 'Adventures', sub: 'Thrills & nature', color: 'var(--neon-green)' },
   { name: 'Culture', sub: 'Traditions & festivals', color: 'var(--neon-pink)' },
-  { name: 'Food', sub: 'A taste of Nigeria', color: 'var(--danfo)' },
+  { name: 'Food', sub: 'A taste of Nigeria', color: 'var(--green)' },
   { name: 'Nightlife', sub: 'Party all night', color: 'var(--neon-teal)' },
 ];
 ---
 
-<Cinematic title="Waka — Welcome to Nigeria">
+<Cinematic title="Waka — Welcome to Nigeria" hero>
   <section class="hero">
     <div class="bg-wrap" aria-hidden="true">
       <img class="bg-img" src="/img/cinematic/hero-land.jpg" alt="" fetchpriority="high" />
@@ -230,7 +230,7 @@ const categories = [
     /* L7 — mist grounding the bottom */
     .mist {
       position: absolute; inset: auto 0 0 0; height: 34%; z-index: 6;
-      background: linear-gradient(180deg, transparent, rgba(11,10,14,0.55) 55%, var(--ink));
+      background: linear-gradient(180deg, transparent, rgba(8,20,13,0.55) 55%, rgba(8,20,13,0.88));
       pointer-events: none;
     }
 
@@ -250,10 +250,10 @@ const categories = [
     /* L9 — copy block */
     .copy { position: absolute; left: clamp(1.25rem, 6vw, 5rem); bottom: 10%; z-index: 8; max-width: 34rem; }
     .welcome {
-      font-size: clamp(1.6rem, 4vw, 2.4rem); color: var(--danfo);
+      font-size: clamp(1.6rem, 4vw, 2.4rem); color: var(--sun);
       text-shadow: 0 2px 16px rgba(0,0,0,0.6); margin-bottom: 0.4rem;
     }
-    .lede { max-width: 40ch; font-size: 1.02rem; color: var(--text); text-shadow: 0 1px 10px rgba(0,0,0,0.8); }
+    .lede { max-width: 40ch; font-size: 1.02rem; color: var(--on-photo); text-shadow: 0 1px 10px rgba(0,0,0,0.8); }
     .hero-ctas { display: flex; flex-wrap: wrap; align-items: center; gap: 1.2rem; margin-top: 1.6rem; }
 
     /* L10 — cinematic color grade: warm highlights, cool shadows, vignette */
@@ -272,16 +272,16 @@ const categories = [
     }
     .btn-solid {
       display: inline-flex; align-items: center; min-height: var(--tap);
-      background: var(--danfo); color: #191410; font-weight: 700; text-decoration: none;
-      padding: 0.8rem 1.6rem; border-radius: 999px; border: 2px solid #191410; box-shadow: 3px 3px 0 #000;
+      background: var(--green); color: var(--on-accent); font-weight: 700; text-decoration: none;
+      padding: 0.8rem 1.6rem; border-radius: 999px; border: 2px solid var(--edge); box-shadow: 3px 3px 0 var(--edge);
     }
-    .btn-solid:hover { transform: translate(-1px,-1px); box-shadow: 4px 4px 0 #000; }
-    .btn-play { display: inline-flex; align-items: center; gap: 0.7rem; min-height: var(--tap); text-decoration: none; font-weight: 600; font-size: 0.95rem; text-shadow: 0 1px 8px rgba(0,0,0,0.8); }
+    .btn-solid:hover { transform: translate(-1px,-1px); box-shadow: 4px 4px 0 var(--edge); }
+    .btn-play { color: var(--on-photo); display: inline-flex; align-items: center; gap: 0.7rem; min-height: var(--tap); text-decoration: none; font-weight: 600; font-size: 0.95rem; text-shadow: 0 1px 8px rgba(0,0,0,0.8); }
     .play {
       display: grid; place-content: center; width: 2.6rem; height: 2.6rem; border-radius: 50%;
       border: 2px solid rgba(243,239,230,0.7); font-size: 0.7rem; padding-left: 2px;
     }
-    .btn-play:hover .play { border-color: var(--danfo); color: var(--danfo); }
+    .btn-play:hover .play { border-color: var(--green); color: var(--green); }
     .scroll-hint {
       position: absolute; bottom: 1.4rem; left: 50%; transform: translateX(-50%); z-index: 10;
       font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.3em; text-transform: uppercase;
@@ -291,14 +291,14 @@ const categories = [
     .stats {
       display: grid; grid-template-columns: repeat(5, 1fr);
       border-block: 1px solid var(--line);
-      background: rgba(22,20,28,0.6); backdrop-filter: blur(8px);
+      background: rgba(255,255,255,0.9); backdrop-filter: blur(8px);
       margin-top: -4.5rem; position: relative; z-index: 2;
       margin-inline: clamp(1rem, 4vw, 3rem); border: 1px solid var(--line); border-radius: 1rem;
       overflow: hidden;
     }
     .stat { display: grid; gap: 0.1rem; place-items: center; padding: 1.3rem 0.5rem; text-align: center; }
     .stat + .stat { border-left: 1px solid var(--line); }
-    .stat b { font-family: var(--font-mono); font-size: 1.15rem; color: var(--danfo); }
+    .stat b { font-family: var(--font-mono); font-size: 1.15rem; color: var(--green); }
     .stat span { font-size: 0.78rem; color: var(--text-dim); }
 
     .explore { padding: 5rem clamp(1rem, 4vw, 3rem) 3rem; }
@@ -317,21 +317,22 @@ const categories = [
       transition: transform 0.18s ease;
     }
     .city-card img { width: 100%; height: 100%; object-fit: cover; }
-    a.city-card:hover { transform: translateY(-5px); border-color: var(--danfo); }
+    a.city-card:hover { transform: translateY(-5px); border-color: var(--green); }
     .city-meta {
       position: absolute; inset: auto 0 0 0; padding: 2.2rem 0.9rem 0.9rem;
       background: linear-gradient(180deg, transparent, rgba(0,0,0,0.85));
       display: grid; gap: 0.05rem;
     }
+    .city-meta { color: var(--on-photo); }
     .city-meta strong { font-family: var(--font-display); font-size: 1.15rem; }
-    .city-meta span { font-size: 0.75rem; color: var(--text-dim); }
+    .city-meta span { font-size: 0.75rem; color: rgba(255,255,255,0.82); }
     .cats {
       display: grid; grid-template-columns: repeat(5, 1fr);
       border-top: 1px solid var(--line);
       padding: 2.2rem clamp(1rem, 4vw, 3rem); gap: 1rem;
     }
     .cat { display: grid; gap: 0.15rem; place-items: center; text-align: center; }
-    .cat-name { font-size: 1.3rem; text-shadow: 0 0 18px currentColor; }
+    .cat-name { font-size: 1.3rem; }
     .cat-sub { font-size: 0.75rem; color: var(--text-dim); }
 
     @media (max-width: 56rem) {
